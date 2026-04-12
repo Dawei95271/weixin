@@ -33,7 +33,7 @@ public class AdminBanquetFollowServiceImpl implements AdminBanquetFollowService 
                 item.getId(),
                 item.getFollowContent(),
                 item.getNextFollowTime(),
-                null
+                item.getCreatedAt()
             ))
             .toList();
     }
@@ -55,7 +55,7 @@ public class AdminBanquetFollowServiceImpl implements AdminBanquetFollowService 
             record.getId(),
             record.getFollowContent(),
             record.getNextFollowTime(),
-            null
+            record.getCreatedAt()
         );
     }
 

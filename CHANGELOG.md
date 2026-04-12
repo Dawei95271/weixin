@@ -49,3 +49,9 @@
 - Added backend admin order filtering by order status and order scene.
 - Added admin UI filter controls for order status and ordering scene.
 - Improved admin order list usability for day-to-day operations.
+
+### Admin Status and Follow-up Display
+
+- Added banquet follow-record creation timestamps to backend responses.
+- Improved admin tables with readable status labels and color tags.
+- Extended banquet detail view with follow-up record timestamps for easier tracking.

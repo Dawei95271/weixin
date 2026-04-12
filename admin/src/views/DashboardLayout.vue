@@ -69,7 +69,13 @@
           <el-table-column prop="orderScene" label="场景" width="170" />
           <el-table-column prop="contactName" label="联系人" width="120" />
           <el-table-column prop="contactPhone" label="联系电话" width="160" />
-          <el-table-column prop="orderStatus" label="状态" width="140" />
+          <el-table-column label="状态" width="140">
+            <template #default="{ row }">
+              <el-tag :type="orderStatusTagType(row.orderStatus)">
+                {{ orderStatusLabel(row.orderStatus) }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column prop="payableAmount" label="金额" width="120" />
           <el-table-column label="操作" width="240" fixed="right">
             <template #default="{ row }">
@@ -143,7 +149,13 @@
           <el-table-column prop="reserveDate" label="日期" width="140" />
           <el-table-column prop="timeslotCode" label="时段" width="140" />
           <el-table-column prop="contactName" label="联系人" width="120" />
-          <el-table-column prop="reservationStatus" label="状态" width="140" />
+          <el-table-column label="状态" width="140">
+            <template #default="{ row }">
+              <el-tag :type="reservationStatusTagType(row.reservationStatus)">
+                {{ reservationStatusLabel(row.reservationStatus) }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="240" fixed="right">
             <template #default="{ row }">
               <div class="action-row">
@@ -162,7 +174,13 @@
           <el-table-column prop="reserveDate" label="日期" width="140" />
           <el-table-column prop="guestCount" label="人数" width="100" />
           <el-table-column prop="contactName" label="联系人" width="120" />
-          <el-table-column prop="status" label="状态" width="140" />
+          <el-table-column label="状态" width="140">
+            <template #default="{ row }">
+              <el-tag :type="banquetStatusTagType(row.status)">
+                {{ banquetStatusLabel(row.status) }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="260" fixed="right">
             <template #default="{ row }">
               <div class="action-row">
@@ -248,7 +266,7 @@
           </div>
           <div class="detail-block">
             <div class="detail-label">状态</div>
-            <div class="detail-value">{{ orderDetail.orderStatus }}</div>
+            <div class="detail-value">{{ orderStatusLabel(orderDetail.orderStatus) }}</div>
           </div>
         </div>
 
@@ -296,7 +314,7 @@
           </div>
           <div class="detail-block">
             <div class="detail-label">状态</div>
-            <div class="detail-value">{{ privateRoomDetail.reservationStatus }}</div>
+            <div class="detail-value">{{ reservationStatusLabel(privateRoomDetail.reservationStatus) }}</div>
           </div>
         </div>
 
@@ -341,7 +359,7 @@
           </div>
           <div class="detail-block">
             <div class="detail-label">状态</div>
-            <div class="detail-value">{{ banquetDetail.status }}</div>
+            <div class="detail-value">{{ banquetStatusLabel(banquetDetail.status) }}</div>
           </div>
         </div>
 
@@ -361,6 +379,7 @@
 
         <el-table :data="banquetFollowRecords" stripe>
           <el-table-column prop="followContent" label="跟进内容" min-width="260" />
+          <el-table-column prop="createdAt" label="记录时间" min-width="180" />
           <el-table-column prop="nextFollowTime" label="下次跟进时间" min-width="180" />
         </el-table>
       </template>
@@ -464,6 +483,72 @@ const title = computed(() => {
 const privateRoomDishRows = computed(() =>
   (privateRoomDetail.value?.preorderDishes || []).map((name: string) => ({ name }))
 )
+
+function orderStatusLabel(value: string) {
+  const map: Record<string, string> = {
+    WAIT_PAY: '待支付',
+    WAIT_ACCEPT: '待接单',
+    COOKING: '制作中',
+    DELIVERING: '配送中',
+    COMPLETED: '已完成',
+    CANCELLED: '已取消'
+  }
+  return map[value] || value
+}
+
+function orderStatusTagType(value: string) {
+  const map: Record<string, string> = {
+    WAIT_PAY: 'warning',
+    WAIT_ACCEPT: '',
+    COOKING: 'warning',
+    DELIVERING: 'primary',
+    COMPLETED: 'success',
+    CANCELLED: 'info'
+  }
+  return map[value] || 'info'
+}
+
+function reservationStatusLabel(value: string) {
+  const map: Record<string, string> = {
+    WAIT_PAY: '待支付',
+    RESERVED: '已预约',
+    ARRIVED: '已到店',
+    COMPLETED: '已完成',
+    CANCELLED: '已取消'
+  }
+  return map[value] || value
+}
+
+function reservationStatusTagType(value: string) {
+  const map: Record<string, string> = {
+    WAIT_PAY: 'warning',
+    RESERVED: 'success',
+    ARRIVED: 'primary',
+    COMPLETED: 'success',
+    CANCELLED: 'info'
+  }
+  return map[value] || 'info'
+}
+
+function banquetStatusLabel(value: string) {
+  const map: Record<string, string> = {
+    WAIT_FOLLOW: '待跟进',
+    CONTACTED: '已联系',
+    CONFIRMED: '已确认',
+    CANCELLED: '已取消'
+  }
+  return map[value] || value
+}
+
+function banquetStatusTagType(value: string) {
+  const map: Record<string, string> = {
+    WAIT_FOLLOW: 'warning',
+    CONTACTED: 'primary',
+    CONFIRMED: 'success',
+    CANCELLED: 'info'
+  }
+  return map[value] || 'info'
+}
 
 async function loadAll() {
   try {

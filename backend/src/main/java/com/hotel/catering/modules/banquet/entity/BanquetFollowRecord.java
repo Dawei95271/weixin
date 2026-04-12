@@ -16,4 +16,5 @@ public class BanquetFollowRecord {
     private String followContent;
     private Long followUserId;
     private LocalDateTime nextFollowTime;
+    private LocalDateTime createdAt;
 }
