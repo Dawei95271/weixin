@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface AdminManagementService {
 
-    List<OrderVO> listOrders();
+    List<OrderVO> listOrders(String orderStatus, String orderScene);
 
     OrderVO getOrderDetail(Long orderId);
 

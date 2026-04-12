@@ -46,6 +46,24 @@
           <el-button v-if="currentTab === 'dishes'" type="primary" @click="openDishDialog()">新增菜品</el-button>
         </div>
 
+        <div v-if="currentTab === 'orders'" class="filter-row">
+          <el-select v-model="orderFilters.orderStatus" clearable placeholder="按订单状态筛选" style="width: 220px">
+            <el-option label="待支付" value="WAIT_PAY" />
+            <el-option label="待接单" value="WAIT_ACCEPT" />
+            <el-option label="制作中" value="COOKING" />
+            <el-option label="配送中" value="DELIVERING" />
+            <el-option label="已完成" value="COMPLETED" />
+            <el-option label="已取消" value="CANCELLED" />
+          </el-select>
+          <el-select v-model="orderFilters.orderScene" clearable placeholder="按下单场景筛选" style="width: 220px">
+            <el-option label="普通点餐" value="NORMAL" />
+            <el-option label="客房送餐" value="ROOM_DELIVERY" />
+            <el-option label="包间预点菜" value="PRIVATE_ROOM_PREORDER" />
+          </el-select>
+          <el-button type="primary" @click="loadAll">应用筛选</el-button>
+          <el-button @click="resetOrderFilters">重置</el-button>
+        </div>
+
         <el-table v-if="currentTab === 'orders'" :data="orders" stripe>
           <el-table-column prop="orderNo" label="订单号" min-width="220" />
           <el-table-column prop="orderScene" label="场景" width="170" />
@@ -429,6 +447,10 @@ const dishForm = ref({
   supportsRoomDelivery: 1,
   isRecommend: 0
 })
+const orderFilters = ref({
+  orderStatus: '',
+  orderScene: ''
+})
 
 const realName = computed(() => localStorage.getItem('admin_real_name') || '管理员')
 const title = computed(() => {
@@ -446,7 +468,10 @@ const privateRoomDishRows = computed(() =>
 async function loadAll() {
   try {
     const [orderData, categoryData, dishData, roomData, banquetData] = await Promise.all([
-      fetchOrders(),
+      fetchOrders({
+        orderStatus: orderFilters.value.orderStatus || undefined,
+        orderScene: orderFilters.value.orderScene || undefined
+      }),
       fetchDishCategories(),
       fetchDishes(),
       fetchPrivateRoomReservations(),
@@ -460,6 +485,14 @@ async function loadAll() {
   } catch (error) {
     ElMessage.error(error instanceof Error ? error.message : '加载失败')
   }
+}
+
+function resetOrderFilters() {
+  orderFilters.value = {
+    orderStatus: '',
+    orderScene: ''
+  }
+  loadAll()
 }
 
 async function changeOrderStatus(orderId: number, orderStatus: string) {
@@ -747,6 +780,13 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
 .detail-grid {

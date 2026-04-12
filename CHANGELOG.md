@@ -43,3 +43,9 @@
 - Added user-facing reservation detail APIs for private-room and banquet records.
 - Added a mini-program reservation detail page reachable from the reservation history list.
 - Improved the reservation history page with direct detail navigation links.
+
+### Admin Order Filtering
+
+- Added backend admin order filtering by order status and order scene.
+- Added admin UI filter controls for order status and ordering scene.
+- Improved admin order list usability for day-to-day operations.

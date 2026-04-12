@@ -23,7 +23,8 @@ request.interceptors.response.use((response) => {
 export const login = (payload: { username: string; password: string }) =>
   request.post('/admin/auth/login', payload)
 
-export const fetchOrders = () => request.get('/admin/order/list')
+export const fetchOrders = (params?: { orderStatus?: string; orderScene?: string }) =>
+  request.get('/admin/order/list', { params })
 export const fetchOrderDetail = (id: number) => request.get(`/admin/order/detail/${id}`)
 
 export const fetchPrivateRoomReservations = () => request.get('/admin/private-room/reservation/list')

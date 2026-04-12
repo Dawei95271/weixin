@@ -36,9 +36,16 @@ public class AdminManagementServiceImpl implements AdminManagementService {
     private final BanquetReservationMapper banquetReservationMapper;
 
     @Override
-    public List<OrderVO> listOrders() {
-        return foodOrderMapper.selectList(new LambdaQueryWrapper<FoodOrder>()
-                .orderByDesc(FoodOrder::getId))
+    public List<OrderVO> listOrders(String orderStatus, String orderScene) {
+        LambdaQueryWrapper<FoodOrder> queryWrapper = new LambdaQueryWrapper<FoodOrder>()
+            .orderByDesc(FoodOrder::getId);
+        if (orderStatus != null && !orderStatus.isBlank()) {
+            queryWrapper.eq(FoodOrder::getOrderStatus, orderStatus);
+        }
+        if (orderScene != null && !orderScene.isBlank()) {
+            queryWrapper.eq(FoodOrder::getOrderScene, orderScene);
+        }
+        return foodOrderMapper.selectList(queryWrapper)
             .stream()
             .map(this::toOrderVO)
             .toList();
