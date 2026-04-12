@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -22,8 +23,8 @@ public class AdminBanquetController {
     private final AdminManagementService adminManagementService;
 
     @GetMapping("/list")
-    public ApiResponse<List<BanquetReservationVO>> list() {
-        return ApiResponse.success(adminManagementService.listBanquetReservations());
+    public ApiResponse<List<BanquetReservationVO>> list(@RequestParam(required = false) String status) {
+        return ApiResponse.success(adminManagementService.listBanquetReservations(status));
     }
 
     @GetMapping("/detail/{id}")

@@ -16,13 +16,13 @@ public interface AdminManagementService {
 
     OrderVO updateOrderStatus(AdminOrderStatusUpdateDTO dto);
 
-    List<PrivateRoomReservationVO> listPrivateRoomReservations();
+    List<PrivateRoomReservationVO> listPrivateRoomReservations(String reservationStatus);
 
     PrivateRoomReservationVO getPrivateRoomReservationDetail(Long reservationId);
 
     PrivateRoomReservationVO updatePrivateRoomReservationStatus(AdminReservationStatusUpdateDTO dto);
 
-    List<BanquetReservationVO> listBanquetReservations();
+    List<BanquetReservationVO> listBanquetReservations(String status);
 
     BanquetReservationVO getBanquetReservationDetail(Long reservationId);
 

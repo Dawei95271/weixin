@@ -64,6 +64,39 @@
           <el-button @click="resetOrderFilters">重置</el-button>
         </div>
 
+        <div v-if="currentTab === 'privateRooms'" class="filter-row">
+          <el-select
+            v-model="privateRoomFilters.reservationStatus"
+            clearable
+            placeholder="按预约状态筛选"
+            style="width: 220px"
+          >
+            <el-option label="待支付" value="WAIT_PAY" />
+            <el-option label="已预约" value="RESERVED" />
+            <el-option label="已到店" value="ARRIVED" />
+            <el-option label="已完成" value="COMPLETED" />
+            <el-option label="已取消" value="CANCELLED" />
+          </el-select>
+          <el-button type="primary" @click="loadAll">应用筛选</el-button>
+          <el-button @click="resetPrivateRoomFilters">重置</el-button>
+        </div>
+
+        <div v-if="currentTab === 'banquets'" class="filter-row">
+          <el-select
+            v-model="banquetFilters.status"
+            clearable
+            placeholder="按宴席状态筛选"
+            style="width: 220px"
+          >
+            <el-option label="待跟进" value="WAIT_FOLLOW" />
+            <el-option label="已联系" value="CONTACTED" />
+            <el-option label="已确认" value="CONFIRMED" />
+            <el-option label="已取消" value="CANCELLED" />
+          </el-select>
+          <el-button type="primary" @click="loadAll">应用筛选</el-button>
+          <el-button @click="resetBanquetFilters">重置</el-button>
+        </div>
+
         <el-table v-if="currentTab === 'orders'" :data="orders" stripe>
           <el-table-column prop="orderNo" label="订单号" min-width="220" />
           <el-table-column prop="orderScene" label="场景" width="170" />
@@ -470,6 +503,12 @@ const orderFilters = ref({
   orderStatus: '',
   orderScene: ''
 })
+const privateRoomFilters = ref({
+  reservationStatus: ''
+})
+const banquetFilters = ref({
+  status: ''
+})
 
 const realName = computed(() => localStorage.getItem('admin_real_name') || '管理员')
 const title = computed(() => {
@@ -559,8 +598,12 @@ async function loadAll() {
       }),
       fetchDishCategories(),
       fetchDishes(),
-      fetchPrivateRoomReservations(),
-      fetchBanquetReservations()
+      fetchPrivateRoomReservations({
+        reservationStatus: privateRoomFilters.value.reservationStatus || undefined
+      }),
+      fetchBanquetReservations({
+        status: banquetFilters.value.status || undefined
+      })
     ])
     orders.value = orderData
     categories.value = categoryData
@@ -576,6 +619,20 @@ function resetOrderFilters() {
   orderFilters.value = {
     orderStatus: '',
     orderScene: ''
+  }
+  loadAll()
+}
+
+function resetPrivateRoomFilters() {
+  privateRoomFilters.value = {
+    reservationStatus: ''
+  }
+  loadAll()
+}
+
+function resetBanquetFilters() {
+  banquetFilters.value = {
+    status: ''
   }
   loadAll()
 }

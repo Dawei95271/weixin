@@ -27,11 +27,13 @@ export const fetchOrders = (params?: { orderStatus?: string; orderScene?: string
   request.get('/admin/order/list', { params })
 export const fetchOrderDetail = (id: number) => request.get(`/admin/order/detail/${id}`)
 
-export const fetchPrivateRoomReservations = () => request.get('/admin/private-room/reservation/list')
+export const fetchPrivateRoomReservations = (params?: { reservationStatus?: string }) =>
+  request.get('/admin/private-room/reservation/list', { params })
 export const fetchPrivateRoomReservationDetail = (id: number) =>
   request.get(`/admin/private-room/reservation/detail/${id}`)
 
-export const fetchBanquetReservations = () => request.get('/admin/banquet/list')
+export const fetchBanquetReservations = (params?: { status?: string }) =>
+  request.get('/admin/banquet/list', { params })
 export const fetchBanquetReservationDetail = (id: number) => request.get(`/admin/banquet/detail/${id}`)
 export const fetchBanquetFollowRecords = (reservationId: number) =>
   request.get(`/admin/banquet/follow/list/${reservationId}`)

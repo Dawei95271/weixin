@@ -73,9 +73,13 @@ public class AdminManagementServiceImpl implements AdminManagementService {
     }
 
     @Override
-    public List<PrivateRoomReservationVO> listPrivateRoomReservations() {
-        return privateRoomReservationMapper.selectList(new LambdaQueryWrapper<PrivateRoomReservation>()
-                .orderByDesc(PrivateRoomReservation::getReserveDate, PrivateRoomReservation::getId))
+    public List<PrivateRoomReservationVO> listPrivateRoomReservations(String reservationStatus) {
+        LambdaQueryWrapper<PrivateRoomReservation> queryWrapper = new LambdaQueryWrapper<PrivateRoomReservation>()
+            .orderByDesc(PrivateRoomReservation::getReserveDate, PrivateRoomReservation::getId);
+        if (reservationStatus != null && !reservationStatus.isBlank()) {
+            queryWrapper.eq(PrivateRoomReservation::getReservationStatus, reservationStatus);
+        }
+        return privateRoomReservationMapper.selectList(queryWrapper)
             .stream()
             .map(this::toPrivateRoomReservationVO)
             .toList();
@@ -103,9 +107,13 @@ public class AdminManagementServiceImpl implements AdminManagementService {
     }
 
     @Override
-    public List<BanquetReservationVO> listBanquetReservations() {
-        return banquetReservationMapper.selectList(new LambdaQueryWrapper<BanquetReservation>()
-                .orderByDesc(BanquetReservation::getId))
+    public List<BanquetReservationVO> listBanquetReservations(String status) {
+        LambdaQueryWrapper<BanquetReservation> queryWrapper = new LambdaQueryWrapper<BanquetReservation>()
+            .orderByDesc(BanquetReservation::getId);
+        if (status != null && !status.isBlank()) {
+            queryWrapper.eq(BanquetReservation::getStatus, status);
+        }
+        return banquetReservationMapper.selectList(queryWrapper)
             .stream()
             .map(BanquetReservationVO::fromEntity)
             .toList();

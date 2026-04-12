@@ -55,3 +55,9 @@
 - Added banquet follow-record creation timestamps to backend responses.
 - Improved admin tables with readable status labels and color tags.
 - Extended banquet detail view with follow-up record timestamps for easier tracking.
+
+### Admin Reservation Filtering
+
+- Added backend filtering for private-room reservations by reservation status.
+- Added backend filtering for banquet reservations by follow-up status.
+- Added admin UI filter controls and reset actions for both reservation tabs.
