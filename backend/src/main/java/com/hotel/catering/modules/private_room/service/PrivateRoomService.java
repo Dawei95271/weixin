@@ -15,4 +15,6 @@ public interface PrivateRoomService {
     PrivateRoomReservationVO reserve(PrivateRoomReserveDTO dto);
 
     List<PrivateRoomReservationVO> listReservations();
+
+    PrivateRoomReservationVO getReservationDetail(Long id);
 }

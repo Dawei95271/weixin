@@ -42,4 +42,13 @@ public class BanquetServiceImpl implements BanquetService {
             .map(BanquetReservationVO::fromEntity)
             .toList();
     }
+
+    @Override
+    public BanquetReservationVO detail(Long id) {
+        BanquetReservation reservation = banquetReservationMapper.selectById(id);
+        if (reservation == null) {
+            throw new com.hotel.catering.common.exception.BusinessException("宴席预约不存在");
+        }
+        return BanquetReservationVO.fromEntity(reservation);
+    }
 }

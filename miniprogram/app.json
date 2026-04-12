@@ -9,6 +9,7 @@
     "pages/order/detail/index",
     "pages/order/confirm/index",
     "pages/reservation/list/index",
+    "pages/reservation/detail/index",
     "pages/private-room/index",
     "pages/banquet/index",
     "pages/order-result/index"

@@ -30,6 +30,13 @@
   color: #6b7280;
 }
 
+.reservation-link {
+  display: block;
+  margin-top: 14rpx;
+  color: #9a5a1e;
+  font-weight: 600;
+}
+
 .empty-text {
   color: #6b7280;
 }

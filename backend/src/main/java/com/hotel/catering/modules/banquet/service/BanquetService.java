@@ -9,4 +9,6 @@ public interface BanquetService {
     BanquetReservationVO create(BanquetReservationCreateDTO dto);
 
     List<BanquetReservationVO> list();
+
+    BanquetReservationVO detail(Long id);
 }

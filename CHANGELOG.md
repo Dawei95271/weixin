@@ -37,3 +37,9 @@
 - Improved the order confirmation page with item amount, delivery fee, and payable total breakdown.
 - Added a direct "view my orders" action on the order success page.
 - Updated development notes to reflect the improved checkout flow.
+
+### Reservation Detail Support
+
+- Added user-facing reservation detail APIs for private-room and banquet records.
+- Added a mini-program reservation detail page reachable from the reservation history list.
+- Improved the reservation history page with direct detail navigation links.

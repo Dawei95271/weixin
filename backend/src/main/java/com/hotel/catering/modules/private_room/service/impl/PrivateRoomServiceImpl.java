@@ -126,6 +126,27 @@ public class PrivateRoomServiceImpl implements PrivateRoomService {
             .toList();
     }
 
+    @Override
+    public PrivateRoomReservationVO getReservationDetail(Long id) {
+        PrivateRoomReservation item = privateRoomReservationMapper.selectById(id);
+        if (item == null) {
+            throw new BusinessException("包间预约不存在");
+        }
+        return new PrivateRoomReservationVO(
+            item.getId(),
+            item.getReservationNo(),
+            item.getPrivateRoomId(),
+            item.getReserveDate(),
+            item.getTimeslotCode(),
+            item.getGuestCount(),
+            item.getContactName(),
+            item.getContactPhone(),
+            item.getDepositAmount(),
+            item.getReservationStatus(),
+            listReservationItems(item.getId())
+        );
+    }
+
     private PrivateRoomReservationItem buildReservationItem(Long reservationId, PrivateRoomReserveItemDTO item) {
         BigDecimal unitPrice = mockPrice(item.getDishId());
         PrivateRoomReservationItem reservationItem = new PrivateRoomReservationItem();

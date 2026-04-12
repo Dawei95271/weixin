@@ -41,5 +41,12 @@ Page({
     wx.navigateTo({
       url: '/pages/banquet/index'
     })
+  },
+
+  goDetail(event) {
+    const { id, type } = event.currentTarget.dataset
+    wx.navigateTo({
+      url: `/pages/reservation/detail/index?id=${id}&type=${type}`
+    })
   }
 })

@@ -1,0 +1,36 @@
+<view wx:if="{{detail}}" class="reservation-detail-page">
+  <view class="section-card">
+    <view class="section-title">{{type === 'banquet' ? '宴席预约详情' : '包间预约详情'}}</view>
+
+    <block wx:if="{{type === 'banquet'}}">
+      <text class="detail-line">预约号：{{detail.reservationNo}}</text>
+      <text class="detail-line">宴席类型：{{detail.banquetType}}</text>
+      <text class="detail-line">预约日期：{{detail.reserveDate}}</text>
+      <text class="detail-line">预计人数：{{detail.guestCount}}</text>
+      <text class="detail-line">预算金额：¥{{detail.budgetAmount}}</text>
+      <text class="detail-line">联系人：{{detail.contactName}}</text>
+      <text class="detail-line">联系电话：{{detail.contactPhone}}</text>
+      <text class="detail-line">状态：{{detail.status}}</text>
+      <text class="detail-line">需求说明：{{detail.requirementDesc || '无'}}</text>
+    </block>
+
+    <block wx:else>
+      <text class="detail-line">预约号：{{detail.reservationNo}}</text>
+      <text class="detail-line">包间ID：{{detail.privateRoomId}}</text>
+      <text class="detail-line">预约日期：{{detail.reserveDate}}</text>
+      <text class="detail-line">时段：{{detail.timeslotCode}}</text>
+      <text class="detail-line">人数：{{detail.guestCount}}</text>
+      <text class="detail-line">联系人：{{detail.contactName}}</text>
+      <text class="detail-line">联系电话：{{detail.contactPhone}}</text>
+      <text class="detail-line">定金：¥{{detail.depositAmount}}</text>
+      <text class="detail-line">状态：{{detail.reservationStatus}}</text>
+    </block>
+  </view>
+
+  <view wx:if="{{type !== 'banquet' && detail.preorderDishes && detail.preorderDishes.length}}" class="section-card">
+    <view class="section-title">预点菜品</view>
+    <view class="dish-list">
+      <text class="dish-line" wx:for="{{detail.preorderDishes}}" wx:key="*this">{{item}}</text>
+    </view>
+  </view>
+</view>
