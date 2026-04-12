@@ -17,3 +17,10 @@
 - Going forward, every meaningful change will include:
 - a git commit
 - an updated changelog entry in this file
+
+### Banquet Follow-up Support
+
+- Added backend banquet follow-record entity, mapper, service, and admin APIs.
+- Added admin UI support for viewing banquet follow-up records inside the banquet detail dialog.
+- Added an admin dialog for creating banquet follow-up notes and optional next-follow timestamps.
+- Extended development documentation to reflect banquet follow-up support.

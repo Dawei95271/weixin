@@ -333,6 +333,36 @@
           <div class="detail-label">需求说明</div>
           <div class="detail-value">{{ banquetDetail.requirementDesc || '无' }}</div>
         </div>
+
+        <el-divider />
+
+        <div class="panel-head">
+          <h3>跟进记录</h3>
+          <el-button type="primary" @click="openBanquetFollowDialog">新增跟进</el-button>
+        </div>
+
+        <el-table :data="banquetFollowRecords" stripe>
+          <el-table-column prop="followContent" label="跟进内容" min-width="260" />
+          <el-table-column prop="nextFollowTime" label="下次跟进时间" min-width="180" />
+        </el-table>
+      </template>
+    </el-dialog>
+
+    <el-dialog v-model="banquetFollowDialogVisible" title="新增宴席跟进" width="560px">
+      <el-form label-width="110px">
+        <el-form-item label="跟进内容">
+          <el-input v-model="banquetFollowForm.followContent" type="textarea" />
+        </el-form-item>
+        <el-form-item label="下次跟进时间">
+          <el-input
+            v-model="banquetFollowForm.nextFollowTime"
+            placeholder="例如 2026-04-13T10:00:00"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="banquetFollowDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitBanquetFollow">保存</el-button>
       </template>
     </el-dialog>
   </div>
@@ -345,12 +375,14 @@ import { ElMessage } from 'element-plus'
 import {
   fetchBanquetReservations,
   fetchBanquetReservationDetail,
+  fetchBanquetFollowRecords,
   fetchDishCategories,
   fetchDishes,
   fetchOrderDetail,
   fetchOrders,
   fetchPrivateRoomReservationDetail,
   fetchPrivateRoomReservations,
+  createBanquetFollowRecord,
   saveDishCategory,
   saveDish,
   updateBanquetReservationStatus,
@@ -373,6 +405,13 @@ const privateRoomDetailVisible = ref(false)
 const privateRoomDetail = ref<any | null>(null)
 const banquetDetailVisible = ref(false)
 const banquetDetail = ref<any | null>(null)
+const banquetFollowRecords = ref<any[]>([])
+const banquetFollowDialogVisible = ref(false)
+const banquetFollowForm = ref({
+  reservationId: 0,
+  followContent: '',
+  nextFollowTime: ''
+})
 const categoryDialogVisible = ref(false)
 const dishDialogVisible = ref(false)
 const categoryForm = ref({
@@ -453,10 +492,41 @@ async function showPrivateRoomDetail(reservationId: number) {
 
 async function showBanquetDetail(reservationId: number) {
   try {
-    banquetDetail.value = await fetchBanquetReservationDetail(reservationId)
+    const [detail, follows] = await Promise.all([
+      fetchBanquetReservationDetail(reservationId),
+      fetchBanquetFollowRecords(reservationId)
+    ])
+    banquetDetail.value = detail
+    banquetFollowRecords.value = follows
     banquetDetailVisible.value = true
   } catch (error) {
     ElMessage.error(error instanceof Error ? error.message : '详情加载失败')
+  }
+}
+
+function openBanquetFollowDialog() {
+  banquetFollowForm.value = {
+    reservationId: banquetDetail.value?.id || 0,
+    followContent: '',
+    nextFollowTime: ''
+  }
+  banquetFollowDialogVisible.value = true
+}
+
+async function submitBanquetFollow() {
+  try {
+    await createBanquetFollowRecord({
+      reservationId: banquetFollowForm.value.reservationId,
+      followContent: banquetFollowForm.value.followContent,
+      nextFollowTime: banquetFollowForm.value.nextFollowTime || undefined
+    })
+    ElMessage.success('跟进记录已保存')
+    banquetFollowDialogVisible.value = false
+    if (banquetDetail.value?.id) {
+      banquetFollowRecords.value = await fetchBanquetFollowRecords(banquetDetail.value.id)
+    }
+  } catch (error) {
+    ElMessage.error(error instanceof Error ? error.message : '保存失败')
   }
 }
 

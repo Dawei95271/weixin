@@ -32,6 +32,8 @@ export const fetchPrivateRoomReservationDetail = (id: number) =>
 
 export const fetchBanquetReservations = () => request.get('/admin/banquet/list')
 export const fetchBanquetReservationDetail = (id: number) => request.get(`/admin/banquet/detail/${id}`)
+export const fetchBanquetFollowRecords = (reservationId: number) =>
+  request.get(`/admin/banquet/follow/list/${reservationId}`)
 export const fetchDishes = () => request.get('/admin/dish/list')
 export const fetchDishCategories = () => request.get('/admin/dish-category/list')
 
@@ -43,6 +45,12 @@ export const updatePrivateRoomReservationStatus = (payload: { reservationId: num
 
 export const updateBanquetReservationStatus = (payload: { reservationId: number; status: string }) =>
   request.post('/admin/banquet/status', payload)
+
+export const createBanquetFollowRecord = (payload: {
+  reservationId: number
+  followContent: string
+  nextFollowTime?: string
+}) => request.post('/admin/banquet/follow/create', payload)
 
 export const saveDish = (payload: {
   id?: number
