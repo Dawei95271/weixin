@@ -1,0 +1,26 @@
+page {
+  background: linear-gradient(180deg, #f8f2e9 0%, #f5eee5 100%);
+  color: #2b2118;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.section-card {
+  margin: 24rpx;
+  padding: 28rpx;
+  border-radius: 28rpx;
+  background: rgba(255, 250, 242, 0.94);
+  box-shadow: 0 16rpx 40rpx rgba(80, 53, 24, 0.08);
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  margin-bottom: 20rpx;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #ca8d41, #8d5524);
+  color: #fff;
+  border-radius: 999rpx;
+  border: 0;
+}

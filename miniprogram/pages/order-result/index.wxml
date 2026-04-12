@@ -1,0 +1,13 @@
+<view class="result-page">
+  <view class="section-card result-card">
+    <text class="result-tag">ORDER CREATED</text>
+    <text class="result-title">订单已提交</text>
+    <text class="result-desc">当前版本已完成下单请求，下一步我们会继续接支付和订单详情。</text>
+    <view class="result-info">
+      <text>订单号：{{orderNo}}</text>
+      <text>场景：{{orderScene}}</text>
+      <text>金额：¥{{payableAmount}}</text>
+    </view>
+    <button class="primary-btn" bindtap="backToMenu">继续点餐</button>
+  </view>
+</view>

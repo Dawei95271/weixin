@@ -1,0 +1,18 @@
+<view class="mine-page">
+  <view class="section-card profile-card">
+    <text class="profile-tag">MY SERVICE</text>
+    <text class="profile-title">欢迎来到酒店餐饮服务</text>
+    <text class="profile-desc">这里后面会接订单、包间预约、宴席预约、个人信息与客服入口。</text>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">服务入口</view>
+    <view class="service-list">
+      <view class="service-item" wx:for="{{sections}}" wx:key="title" data-url="{{item.url}}" bindtap="goFeature">
+        <text class="service-title">{{item.title}}</text>
+        <text class="service-desc">{{item.desc}}</text>
+        <text class="service-arrow">进入 ></text>
+      </view>
+    </view>
+  </view>
+</view>

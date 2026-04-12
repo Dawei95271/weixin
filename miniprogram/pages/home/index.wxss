@@ -1,0 +1,65 @@
+.hero {
+  margin: 24rpx;
+  padding: 40rpx 32rpx;
+  border-radius: 36rpx;
+  background:
+    radial-gradient(circle at top right, rgba(255, 214, 153, 0.35), transparent 32%),
+    linear-gradient(135deg, #3d2517, #8a5527);
+  color: #fff8f0;
+}
+
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.hero-tag {
+  font-size: 22rpx;
+  letter-spacing: 0.32em;
+  color: #f3c98d;
+}
+
+.hero-title {
+  font-size: 56rpx;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.hero-desc {
+  font-size: 28rpx;
+  line-height: 1.7;
+  color: rgba(255, 248, 240, 0.9);
+}
+
+.hero-btn {
+  width: 240rpx;
+  margin: 10rpx 0 0;
+}
+
+.scope-list,
+.entry-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.scope-item,
+.entry-card {
+  padding: 24rpx;
+  border-radius: 22rpx;
+  background: #fff;
+}
+
+.entry-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.entry-desc {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  color: #6b7280;
+}

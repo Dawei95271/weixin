@@ -1,0 +1,48 @@
+<view class="private-room-page">
+  <view class="section-card">
+    <view class="section-title">包间预约</view>
+
+    <view class="form-group">
+      <text class="label">预约日期</text>
+      <picker mode="date" value="{{reserveDate}}" bindchange="onDateChange">
+        <view class="picker-value">{{reserveDate}}</view>
+      </picker>
+    </view>
+
+    <view class="form-group">
+      <text class="label">选择包间</text>
+      <picker range="{{rooms}}" range-key="name" value="{{roomIndex}}" bindchange="onRoomChange">
+        <view class="picker-value">{{rooms[roomIndex].name || '请选择包间'}}</view>
+      </picker>
+    </view>
+
+    <view class="form-group">
+      <text class="label">选择时段</text>
+      <picker range="{{timeslots}}" value="{{timeslotIndex}}" bindchange="onTimeslotChange">
+        <view class="picker-value">{{timeslots[timeslotIndex] || '请选择时段'}}</view>
+      </picker>
+    </view>
+
+    <view class="form-group">
+      <text class="label">人数</text>
+      <input class="text-input" type="number" value="{{guestCount}}" bindinput="onGuestInput" />
+    </view>
+
+    <view class="form-group">
+      <text class="label">联系人</text>
+      <input class="text-input" value="{{contactName}}" bindinput="onNameInput" />
+    </view>
+
+    <view class="form-group">
+      <text class="label">手机号</text>
+      <input class="text-input" type="number" value="{{contactPhone}}" bindinput="onPhoneInput" />
+    </view>
+
+    <view class="form-group">
+      <text class="label">备注</text>
+      <textarea class="text-area" value="{{remark}}" bindinput="onRemarkInput" placeholder="如有特殊需求可以先写在这里"></textarea>
+    </view>
+
+    <button class="primary-btn reserve-btn" loading="{{submitting}}" bindtap="submitReservation">提交预约</button>
+  </view>
+</view>

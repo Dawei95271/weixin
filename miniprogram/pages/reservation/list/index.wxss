@@ -1,0 +1,35 @@
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18rpx;
+}
+
+.reservation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.reservation-item {
+  padding: 22rpx;
+  border-radius: 22rpx;
+  background: #fff;
+}
+
+.reservation-no {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  margin-bottom: 10rpx;
+}
+
+.reservation-meta {
+  display: block;
+  margin-top: 8rpx;
+  color: #6b7280;
+}
+
+.empty-text {
+  color: #6b7280;
+}

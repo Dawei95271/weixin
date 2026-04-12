@@ -1,0 +1,26 @@
+<view class="menu-page">
+  <scroll-view scroll-x class="category-scroll">
+    <view class="category-row">
+      <view
+        wx:for="{{categories}}"
+        wx:key="id"
+        class="category-pill {{currentCategoryId === item.id ? 'active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="switchCategory"
+      >
+        {{item.name}}
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="dish-list">
+    <view class="dish-card" wx:for="{{dishes}}" wx:key="id">
+      <view class="dish-copy">
+        <text class="dish-name">{{item.name}}</text>
+        <text class="dish-subtitle">{{item.subtitle}}</text>
+        <text class="dish-price">¥{{item.price}}</text>
+      </view>
+      <button class="primary-btn add-btn" data-dish="{{item}}" bindtap="addDish">加入购物车</button>
+    </view>
+  </view>
+</view>

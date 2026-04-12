@@ -1,0 +1,35 @@
+<view class="reservation-page">
+  <view class="section-card">
+    <view class="section-head">
+      <view class="section-title">包间预约</view>
+      <button size="mini" bindtap="goPrivateRoom">新建预约</button>
+    </view>
+    <view wx:if="{{privateRoomReservations.length === 0}}" class="empty-text">暂时还没有包间预约记录。</view>
+    <view wx:else class="reservation-list">
+      <view class="reservation-item" wx:for="{{privateRoomReservations}}" wx:key="id">
+        <text class="reservation-no">{{item.reservationNo}}</text>
+        <text class="reservation-meta">日期：{{item.reserveDate}}</text>
+        <text class="reservation-meta">时段：{{item.timeslotCode}}</text>
+        <text class="reservation-meta">状态：{{item.reservationStatus}}</text>
+        <text class="reservation-meta">定金：¥{{item.depositAmount}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-head">
+      <view class="section-title">宴席预约</view>
+      <button size="mini" bindtap="goBanquet">新建预约</button>
+    </view>
+    <view wx:if="{{banquetReservations.length === 0}}" class="empty-text">暂时还没有宴席预约记录。</view>
+    <view wx:else class="reservation-list">
+      <view class="reservation-item" wx:for="{{banquetReservations}}" wx:key="id">
+        <text class="reservation-no">{{item.reservationNo}}</text>
+        <text class="reservation-meta">类型：{{item.banquetType}}</text>
+        <text class="reservation-meta">日期：{{item.reserveDate}}</text>
+        <text class="reservation-meta">人数：{{item.guestCount}}</text>
+        <text class="reservation-meta">状态：{{item.status}}</text>
+      </view>
+    </view>
+  </view>
+</view>

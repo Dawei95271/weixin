@@ -1,0 +1,47 @@
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.profile-tag {
+  color: #9a6b2f;
+  font-size: 22rpx;
+  letter-spacing: 0.28em;
+}
+
+.profile-title {
+  font-size: 40rpx;
+  font-weight: 700;
+}
+
+.profile-desc,
+.service-desc {
+  color: #6b7280;
+  line-height: 1.7;
+}
+
+.service-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.service-item {
+  padding: 22rpx;
+  border-radius: 22rpx;
+  background: #fff;
+}
+
+.service-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.service-arrow {
+  display: block;
+  margin-top: 12rpx;
+  color: #9a5a1e;
+  font-weight: 600;
+}

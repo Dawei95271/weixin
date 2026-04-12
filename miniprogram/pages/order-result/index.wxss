@@ -1,0 +1,32 @@
+.result-page {
+  padding-top: 80rpx;
+}
+
+.result-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.result-tag {
+  color: #9a6b2f;
+  font-size: 22rpx;
+  letter-spacing: 0.28em;
+}
+
+.result-title {
+  font-size: 48rpx;
+  font-weight: 700;
+}
+
+.result-desc {
+  color: #6b7280;
+  line-height: 1.7;
+}
+
+.result-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  padding: 20rpx 0;
+}

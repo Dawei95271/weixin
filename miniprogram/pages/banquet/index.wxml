@@ -1,0 +1,46 @@
+<view class="banquet-page">
+  <view class="section-card">
+    <view class="section-title">宴席预约</view>
+
+    <view class="form-group">
+      <text class="label">宴席类型</text>
+      <picker range="{{banquetTypes}}" value="{{banquetTypeIndex}}" bindchange="onBanquetTypeChange">
+        <view class="picker-value">{{banquetTypes[banquetTypeIndex]}}</view>
+      </picker>
+    </view>
+
+    <view class="form-group">
+      <text class="label">预约日期</text>
+      <picker mode="date" value="{{reserveDate}}" bindchange="onDateChange">
+        <view class="picker-value">{{reserveDate}}</view>
+      </picker>
+    </view>
+
+    <view class="form-group">
+      <text class="label">预计人数</text>
+      <input class="text-input" type="number" value="{{guestCount}}" bindinput="onGuestCountInput" />
+    </view>
+
+    <view class="form-group">
+      <text class="label">预算金额</text>
+      <input class="text-input" type="digit" value="{{budgetAmount}}" bindinput="onBudgetInput" />
+    </view>
+
+    <view class="form-group">
+      <text class="label">联系人</text>
+      <input class="text-input" value="{{contactName}}" bindinput="onNameInput" />
+    </view>
+
+    <view class="form-group">
+      <text class="label">联系电话</text>
+      <input class="text-input" type="number" value="{{contactPhone}}" bindinput="onPhoneInput" />
+    </view>
+
+    <view class="form-group">
+      <text class="label">需求说明</text>
+      <textarea class="text-area" value="{{requirementDesc}}" bindinput="onRequirementInput" placeholder="比如婚礼风格、桌数、场地布置、是否需要舞台"></textarea>
+    </view>
+
+    <button class="primary-btn reserve-btn" loading="{{submitting}}" bindtap="submitReservation">提交宴席预约</button>
+  </view>
+</view>

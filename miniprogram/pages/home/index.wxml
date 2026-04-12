@@ -1,0 +1,53 @@
+<view class="home-page">
+  <view class="hero">
+    <view class="hero-copy">
+      <text class="hero-tag">HOTEL FLOOR 2 DINING</text>
+      <text class="hero-title">{{projectName || '酒店二楼餐饮服务'}}</text>
+      <text class="hero-desc">早餐、中餐、晚餐、包间预约、客房扫码送餐，一次放进一个小程序里。</text>
+      <button class="primary-btn hero-btn" bindtap="goMenu">立即点餐</button>
+    </view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">服务范围</view>
+    <view class="scope-list">
+      <view class="scope-item" wx:for="{{businessScopes}}" wx:key="*this">
+        <text>{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">推荐入口</view>
+    <view class="entry-grid">
+      <navigator class="entry-card" url="/pages/menu/index">
+        <text class="entry-title">在线点餐</text>
+        <text class="entry-desc">浏览菜品，加入购物车，快速下单</text>
+      </navigator>
+      <navigator class="entry-card" url="/pages/cart/index">
+        <text class="entry-title">购物车</text>
+        <text class="entry-desc">查看已选菜品，准备提交订单</text>
+      </navigator>
+      <navigator class="entry-card" url="/pages/room/index">
+        <text class="entry-title">客房扫码点餐</text>
+        <text class="entry-desc">先识别房间，再进入送餐场景下单</text>
+      </navigator>
+      <navigator class="entry-card" url="/pages/private-room/index">
+        <text class="entry-title">包间预约</text>
+        <text class="entry-desc">选择日期、时段和包间，提前预约到店</text>
+      </navigator>
+      <navigator class="entry-card" url="/pages/banquet/index">
+        <text class="entry-title">宴席预约</text>
+        <text class="entry-desc">婚宴、寿宴、商务宴先线上留资，后续人工跟进</text>
+      </navigator>
+      <navigator class="entry-card" url="/pages/reservation/list/index">
+        <text class="entry-title">我的预约</text>
+        <text class="entry-desc">查看包间预约和宴席预约记录</text>
+      </navigator>
+      <navigator class="entry-card" url="/pages/mine/index">
+        <text class="entry-title">我的服务</text>
+        <text class="entry-desc">后续接订单、预约和个人信息</text>
+      </navigator>
+    </view>
+  </view>
+</view>

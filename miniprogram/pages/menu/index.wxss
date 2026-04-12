@@ -1,0 +1,66 @@
+.category-scroll {
+  white-space: nowrap;
+  padding: 24rpx 0 0 24rpx;
+}
+
+.category-row {
+  display: flex;
+  gap: 16rpx;
+  padding-right: 24rpx;
+}
+
+.category-pill {
+  padding: 16rpx 28rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 250, 242, 0.92);
+  color: #7c5533;
+}
+
+.category-pill.active {
+  background: linear-gradient(135deg, #c58a3a, #8d5524);
+  color: #fff;
+}
+
+.dish-list {
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.dish-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 20rpx;
+  padding: 28rpx;
+  border-radius: 28rpx;
+  background: rgba(255, 250, 242, 0.94);
+  box-shadow: 0 16rpx 40rpx rgba(80, 53, 24, 0.08);
+}
+
+.dish-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.dish-name {
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.dish-subtitle {
+  font-size: 26rpx;
+  color: #6b7280;
+}
+
+.dish-price {
+  font-size: 32rpx;
+  color: #9a5a1e;
+  font-weight: 600;
+}
+
+.add-btn {
+  width: 180rpx;
+  font-size: 26rpx;
+}
