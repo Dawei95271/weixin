@@ -1,0 +1,57 @@
+.form-group {
+  margin-bottom: 22rpx;
+}
+
+.label {
+  display: block;
+  margin-bottom: 12rpx;
+  font-size: 28rpx;
+  color: #6b7280;
+}
+
+.text-input,
+.text-area {
+  width: 100%;
+  padding: 22rpx 24rpx;
+  border-radius: 20rpx;
+  background: #fff;
+}
+
+.text-area {
+  min-height: 160rpx;
+}
+
+.info-row,
+.confirm-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14rpx 0;
+}
+
+.info-label,
+.item-sub,
+.total-label {
+  color: #6b7280;
+}
+
+.info-value,
+.item-name {
+  font-weight: 600;
+}
+
+.item-price,
+.total-price {
+  color: #9a5a1e;
+  font-weight: 700;
+}
+
+.total-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.submit-btn {
+  width: 100%;
+}

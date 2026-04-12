@@ -24,3 +24,10 @@
 - Added admin UI support for viewing banquet follow-up records inside the banquet detail dialog.
 - Added an admin dialog for creating banquet follow-up notes and optional next-follow timestamps.
 - Extended development documentation to reflect banquet follow-up support.
+
+### Order Confirmation Flow
+
+- Added a mini-program order confirmation page before order submission.
+- Moved order submission logic out of the cart page into the new confirmation page.
+- Added editable contact, phone, and remark fields for order confirmation.
+- Updated project documentation to reflect the new confirmation step.

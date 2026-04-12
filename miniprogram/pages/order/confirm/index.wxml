@@ -1,0 +1,48 @@
+<view class="confirm-page">
+  <view class="section-card">
+    <view class="section-title">订单确认</view>
+    <view class="info-row">
+      <text class="info-label">下单场景</text>
+      <text class="info-value">{{orderScene}}</text>
+    </view>
+    <view class="info-row" wx:if="{{roomNo}}">
+      <text class="info-label">房号</text>
+      <text class="info-value">{{roomNo}}</text>
+    </view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">联系人信息</view>
+    <view class="form-group">
+      <text class="label">联系人</text>
+      <input class="text-input" value="{{contactName}}" bindinput="onNameInput" />
+    </view>
+    <view class="form-group">
+      <text class="label">联系电话</text>
+      <input class="text-input" type="number" value="{{contactPhone}}" bindinput="onPhoneInput" />
+    </view>
+    <view class="form-group">
+      <text class="label">备注</text>
+      <textarea class="text-area" value="{{remark}}" bindinput="onRemarkInput"></textarea>
+    </view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">菜品清单</view>
+    <view class="confirm-items">
+      <view class="confirm-item" wx:for="{{cart}}" wx:key="id">
+        <view>
+          <text class="item-name">{{item.name}}</text>
+          <text class="item-sub">x{{item.quantity}}</text>
+        </view>
+        <text class="item-price">¥{{item.price}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-card total-card">
+    <text class="total-label">应付金额</text>
+    <text class="total-price">¥{{totalAmount}}</text>
+    <button class="primary-btn submit-btn" loading="{{submitting}}" bindtap="submitOrder">确认提交</button>
+  </view>
+</view>
