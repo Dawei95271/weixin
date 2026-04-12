@@ -31,3 +31,9 @@
 - Moved order submission logic out of the cart page into the new confirmation page.
 - Added editable contact, phone, and remark fields for order confirmation.
 - Updated project documentation to reflect the new confirmation step.
+
+### Checkout UX Improvements
+
+- Improved the order confirmation page with item amount, delivery fee, and payable total breakdown.
+- Added a direct "view my orders" action on the order success page.
+- Updated development notes to reflect the improved checkout flow.

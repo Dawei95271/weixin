@@ -4,6 +4,8 @@ const { request } = require('../../../utils/request')
 Page({
   data: {
     cart: [],
+    itemTotalAmount: '0.00',
+    deliveryFee: '0.00',
     totalAmount: '0.00',
     orderScene: 'NORMAL',
     roomNo: '',
@@ -20,12 +22,16 @@ Page({
   refreshData() {
     const cart = getCart()
     const currentRoom = wx.getStorageSync('currentRoomDelivery')
-    const totalAmount = cart
+    const itemTotalAmount = cart
       .reduce((sum, item) => sum + Number(item.price) * item.quantity, 0)
       .toFixed(2)
+    const deliveryFee = currentRoom ? '5.00' : '0.00'
+    const totalAmount = (Number(itemTotalAmount) + Number(deliveryFee)).toFixed(2)
 
     this.setData({
       cart,
+      itemTotalAmount,
+      deliveryFee,
       totalAmount,
       orderScene: currentRoom ? 'ROOM_DELIVERY' : 'NORMAL',
       roomNo: currentRoom ? currentRoom.roomNo : '',

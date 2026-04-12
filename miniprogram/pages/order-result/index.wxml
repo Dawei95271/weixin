@@ -8,6 +8,9 @@
       <text>场景：{{orderScene}}</text>
       <text>金额：¥{{payableAmount}}</text>
     </view>
-    <button class="primary-btn" bindtap="backToMenu">继续点餐</button>
+    <view class="result-actions">
+      <button bindtap="goOrders">查看我的订单</button>
+      <button class="primary-btn" bindtap="backToMenu">继续点餐</button>
+    </view>
   </view>
 </view>

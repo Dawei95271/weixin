@@ -17,5 +17,11 @@ Page({
     wx.switchTab({
       url: '/pages/menu/index'
     })
+  },
+
+  goOrders() {
+    wx.navigateTo({
+      url: '/pages/order/list/index'
+    })
   }
 })

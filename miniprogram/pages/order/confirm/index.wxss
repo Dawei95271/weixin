@@ -52,6 +52,21 @@
   gap: 16rpx;
 }
 
+.amount-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.amount-value {
+  color: #4b5563;
+}
+
+.total-row {
+  padding-top: 8rpx;
+  border-top: 1rpx solid rgba(139, 94, 52, 0.12);
+}
+
 .submit-btn {
   width: 100%;
 }

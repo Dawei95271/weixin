@@ -41,8 +41,18 @@
   </view>
 
   <view class="section-card total-card">
-    <text class="total-label">应付金额</text>
-    <text class="total-price">¥{{totalAmount}}</text>
+    <view class="amount-row">
+      <text class="total-label">菜品金额</text>
+      <text class="amount-value">¥{{itemTotalAmount}}</text>
+    </view>
+    <view class="amount-row">
+      <text class="total-label">配送费</text>
+      <text class="amount-value">¥{{deliveryFee}}</text>
+    </view>
+    <view class="amount-row total-row">
+      <text class="total-label">应付金额</text>
+      <text class="total-price">¥{{totalAmount}}</text>
+    </view>
     <button class="primary-btn submit-btn" loading="{{submitting}}" bindtap="submitOrder">确认提交</button>
   </view>
 </view>

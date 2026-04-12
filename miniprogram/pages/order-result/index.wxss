@@ -30,3 +30,12 @@
   gap: 12rpx;
   padding: 20rpx 0;
 }
+
+.result-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.result-actions button {
+  flex: 1;
+}
