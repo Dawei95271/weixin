@@ -184,3 +184,8 @@
 
 - Added a prioritized admin task list that aggregates pending orders, private-room arrivals, and banquet follow-ups.
 - Added one-click actions to open detail dialogs or jump into the matching filtered management list.
+
+### Admin Activity Timeline
+
+- Added a latest-activity timeline that mixes orders, private-room reservations, and banquet reservations into one workspace feed.
+- Added one-click actions from each activity item to open detail dialogs or jump back into the corresponding management list.

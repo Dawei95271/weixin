@@ -101,6 +101,37 @@
 
       <section class="panel">
         <div class="panel-head">
+          <h3>最新动态</h3>
+          <span class="workspace-caption">汇总订单、包间、宴席的最新业务变化</span>
+        </div>
+        <div v-if="recentActivities.length" class="activity-list">
+          <div v-for="item in recentActivities" :key="item.key" class="activity-item">
+            <div class="activity-meta">
+              <span class="activity-type">{{ item.typeLabel }}</span>
+              <span class="activity-time">{{ item.timeLabel }}</span>
+            </div>
+            <div class="activity-main">
+              <div class="activity-copy">
+                <div class="activity-head">
+                  <strong class="activity-title">{{ item.title }}</strong>
+                  <el-tag :type="item.tagType">{{ item.statusLabel }}</el-tag>
+                </div>
+                <span class="activity-desc">{{ item.desc }}</span>
+              </div>
+              <div class="activity-actions">
+                <el-button size="small" @click="openActivityDetail(item)">查看详情</el-button>
+                <el-button size="small" type="primary" @click="applyWorkspaceShortcut(item.shortcutKey)">进入列表</el-button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-else class="task-empty">
+          暂时还没有可展示的最新动态，刷新数据后会自动汇总最近订单和预约变化。
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
           <h3>{{ title }}</h3>
           <el-button v-if="currentTab === 'categories'" type="primary" @click="openCategoryDialog()">新增分类</el-button>
           <el-button v-if="currentTab === 'dishes'" type="primary" @click="openDishDialog()">新增菜品</el-button>
@@ -1070,6 +1101,54 @@ const pendingTasks = computed(() => {
   return [...orderTasks, ...privateRoomTasks, ...banquetTasks]
 })
 
+const recentActivities = computed(() => {
+  const orderActivities = orders.value.slice(0, 5).map((item) => ({
+    key: `activity-order-${item.id}`,
+    entityType: 'order',
+    id: item.id,
+    shortcutKey: 'allOrders',
+    typeLabel: '订单',
+    statusLabel: orderStatusLabel(item.orderStatus),
+    tagType: orderStatusTagType(item.orderStatus),
+    title: `${item.orderNo} / ${item.contactName || '未填写联系人'}`,
+    desc: `${orderSceneLabel(item.orderScene)}，联系电话 ${item.contactPhone || '未填写'}`,
+    timeLabel: formatActivityTime(item.createdAt || item.payTime || item.updatedAt),
+    sortValue: parseActivityTime(item.createdAt || item.payTime || item.updatedAt, item.id)
+  }))
+
+  const privateRoomActivities = privateRooms.value.slice(0, 4).map((item) => ({
+    key: `activity-private-room-${item.id}`,
+    entityType: 'privateRoom',
+    id: item.id,
+    shortcutKey: 'allPrivateRooms',
+    typeLabel: '包间',
+    statusLabel: reservationStatusLabel(item.reservationStatus),
+    tagType: reservationStatusTagType(item.reservationStatus),
+    title: `${item.reservationNo} / ${item.privateRoomName || '未命名包间'}`,
+    desc: `${formatDate(item.reserveDate)} ${item.timeslotName || item.timeslotCode}，联系人 ${item.contactName || '未填写'}`,
+    timeLabel: `预约 ${formatDate(item.reserveDate)}`,
+    sortValue: parseActivityTime(item.reserveDate, item.id)
+  }))
+
+  const banquetActivities = banquets.value.slice(0, 4).map((item) => ({
+    key: `activity-banquet-${item.id}`,
+    entityType: 'banquet',
+    id: item.id,
+    shortcutKey: 'allBanquets',
+    typeLabel: '宴席',
+    statusLabel: banquetStatusLabel(item.status),
+    tagType: banquetStatusTagType(item.status),
+    title: `${item.reservationNo} / ${item.banquetType || '宴席预约'}`,
+    desc: `${formatDate(item.reserveDate)}，联系人 ${item.contactName || '未填写'} / ${item.contactPhone || '未填写'}`,
+    timeLabel: `预约 ${formatDate(item.reserveDate)}`,
+    sortValue: parseActivityTime(item.reserveDate, item.id)
+  }))
+
+  return [...orderActivities, ...privateRoomActivities, ...banquetActivities]
+    .sort((a, b) => b.sortValue - a.sortValue)
+    .slice(0, 10)
+})
+
 const privateRoomDishRows = computed(() =>
   ((privateRoomDetail.value?.preorderDishes?.length
     ? privateRoomDetail.value.preorderDishes
@@ -1298,6 +1377,34 @@ function formatCurrency(value?: number | string) {
   return `¥${amount.toFixed(2)}`
 }
 
+function parseActivityTime(value?: string, fallback = 0) {
+  if (!value) {
+    return fallback
+  }
+  const normalized = value.includes('T') ? value : value.replace(' ', 'T')
+  const timestamp = new Date(normalized).getTime()
+  if (Number.isNaN(timestamp)) {
+    return fallback
+  }
+  return timestamp
+}
+
+function formatActivityTime(value?: string) {
+  if (!value) {
+    return '最近更新'
+  }
+  const normalized = value.includes('T') ? value : value.replace(' ', 'T')
+  const date = new Date(normalized)
+  if (Number.isNaN(date.getTime())) {
+    return value
+  }
+  const month = `${date.getMonth() + 1}`.padStart(2, '0')
+  const day = `${date.getDate()}`.padStart(2, '0')
+  const hour = `${date.getHours()}`.padStart(2, '0')
+  const minute = `${date.getMinutes()}`.padStart(2, '0')
+  return `${month}.${day} ${hour}:${minute}`
+}
+
 async function loadAll() {
   try {
     const [orderData, categoryData, dishData, roomData, banquetData] = await Promise.all([
@@ -1388,6 +1495,13 @@ function toggleBanquetStatusFilter(value: string) {
 }
 
 function applyWorkspaceShortcut(key: string) {
+  if (key === 'allOrders') {
+    currentTab.value = 'orders'
+    orderFilters.value.orderStatus = ''
+    orderFilters.value.orderScene = ''
+    loadAll()
+    return
+  }
   if (key === 'waitAcceptOrders') {
     currentTab.value = 'orders'
     orderFilters.value.orderStatus = 'WAIT_ACCEPT'
@@ -1408,6 +1522,18 @@ function applyWorkspaceShortcut(key: string) {
     loadAll()
     return
   }
+  if (key === 'allPrivateRooms') {
+    currentTab.value = 'privateRooms'
+    privateRoomFilters.value.reservationStatus = ''
+    loadAll()
+    return
+  }
+  if (key === 'allBanquets') {
+    currentTab.value = 'banquets'
+    banquetFilters.value.status = ''
+    loadAll()
+    return
+  }
   currentTab.value = 'banquets'
   banquetFilters.value.status = 'WAIT_FOLLOW'
   loadAll()
@@ -1423,6 +1549,10 @@ function openPendingTask(task: any) {
     return
   }
   showBanquetDetail(task.id)
+}
+
+function openActivityDetail(item: any) {
+  openPendingTask(item)
 }
 
 async function changeOrderStatus(orderId: number, orderStatus: string) {
@@ -1856,6 +1986,79 @@ onMounted(() => {
 .task-empty {
   color: #8b5e34;
   font-size: 14px;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.activity-item {
+  display: flex;
+  gap: 18px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.activity-meta {
+  min-width: 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.activity-type {
+  color: #8b5e34;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.activity-time {
+  color: #a58a72;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.activity-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.activity-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.activity-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.activity-title {
+  color: #2b2118;
+  font-size: 16px;
+}
+
+.activity-desc {
+  color: #6f5a46;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.activity-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .filter-row {
