@@ -76,3 +76,8 @@
 
 - Expanded banquet reservation tables with direct phone and budget visibility.
 - Highlighted private-room deposit amounts in reservation detail dialogs.
+
+### Admin Detail Actions
+
+- Formatted admin dates and amounts consistently across order and reservation views.
+- Added direct status action buttons inside order, private-room, and banquet detail dialogs.

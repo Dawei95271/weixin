@@ -115,7 +115,11 @@
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="payableAmount" label="金额" width="120" />
+          <el-table-column label="金额" width="120">
+            <template #default="{ row }">
+              {{ formatCurrency(row.payableAmount) }}
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="240" fixed="right">
             <template #default="{ row }">
               <div class="action-row">
@@ -185,7 +189,11 @@
         <el-table v-else-if="currentTab === 'privateRooms'" :data="privateRooms" stripe>
           <el-table-column prop="reservationNo" label="预约号" min-width="220" />
           <el-table-column prop="privateRoomName" label="包间" width="140" />
-          <el-table-column prop="reserveDate" label="日期" width="140" />
+          <el-table-column label="日期" width="140">
+            <template #default="{ row }">
+              {{ formatDate(row.reserveDate) }}
+            </template>
+          </el-table-column>
           <el-table-column prop="timeslotName" label="时段" width="120" />
           <el-table-column prop="contactName" label="联系人" width="120" />
           <el-table-column label="状态" width="140">
@@ -210,7 +218,11 @@
         <el-table v-else :data="banquets" stripe>
           <el-table-column prop="reservationNo" label="预约号" min-width="220" />
           <el-table-column prop="banquetType" label="宴席类型" width="140" />
-          <el-table-column prop="reserveDate" label="日期" width="140" />
+          <el-table-column label="日期" width="140">
+            <template #default="{ row }">
+              {{ formatDate(row.reserveDate) }}
+            </template>
+          </el-table-column>
           <el-table-column prop="guestCount" label="人数" width="100" />
           <el-table-column prop="contactName" label="联系人" width="120" />
           <el-table-column prop="contactPhone" label="联系电话" width="160" />
@@ -288,6 +300,12 @@
 
     <el-dialog v-model="orderDetailVisible" title="订单详情" width="720px">
       <template v-if="orderDetail">
+        <div class="dialog-actions">
+          <el-button size="small" @click="changeOrderStatus(orderDetail.id, 'WAIT_ACCEPT')">接单</el-button>
+          <el-button size="small" @click="changeOrderStatus(orderDetail.id, 'COOKING')">制作中</el-button>
+          <el-button size="small" type="success" @click="changeOrderStatus(orderDetail.id, 'COMPLETED')">完成</el-button>
+        </div>
+
         <div class="detail-grid">
           <div class="detail-block">
             <div class="detail-label">订单号</div>
@@ -320,14 +338,28 @@
         <el-table :data="orderDetail.items" stripe>
           <el-table-column prop="dishName" label="菜品" min-width="180" />
           <el-table-column prop="quantity" label="数量" width="100" />
-          <el-table-column prop="unitPrice" label="单价" width="120" />
-          <el-table-column prop="totalPrice" label="小计" width="120" />
+          <el-table-column label="单价" width="120">
+            <template #default="{ row }">
+              {{ formatCurrency(row.unitPrice) }}
+            </template>
+          </el-table-column>
+          <el-table-column label="小计" width="120">
+            <template #default="{ row }">
+              {{ formatCurrency(row.totalPrice) }}
+            </template>
+          </el-table-column>
         </el-table>
       </template>
     </el-dialog>
 
     <el-dialog v-model="privateRoomDetailVisible" title="包间预约详情" width="720px">
       <template v-if="privateRoomDetail">
+        <div class="dialog-actions">
+          <el-button size="small" @click="changePrivateRoomStatus(privateRoomDetail.id, 'RESERVED')">确认预约</el-button>
+          <el-button size="small" @click="changePrivateRoomStatus(privateRoomDetail.id, 'ARRIVED')">已到店</el-button>
+          <el-button size="small" type="danger" @click="changePrivateRoomStatus(privateRoomDetail.id, 'CANCELLED')">取消</el-button>
+        </div>
+
         <div class="detail-grid">
           <div class="detail-block">
             <div class="detail-label">预约号</div>
@@ -339,7 +371,7 @@
           </div>
           <div class="detail-block">
             <div class="detail-label">预约日期</div>
-            <div class="detail-value">{{ privateRoomDetail.reserveDate }}</div>
+            <div class="detail-value">{{ formatDate(privateRoomDetail.reserveDate) }}</div>
           </div>
           <div class="detail-block">
             <div class="detail-label">时段</div>
@@ -363,7 +395,7 @@
           </div>
           <div class="detail-block">
             <div class="detail-label">定金</div>
-            <div class="detail-value detail-value--highlight">¥{{ privateRoomDetail.depositAmount }}</div>
+            <div class="detail-value detail-value--highlight">{{ formatCurrency(privateRoomDetail.depositAmount) }}</div>
           </div>
         </div>
 
@@ -377,6 +409,12 @@
 
     <el-dialog v-model="banquetDetailVisible" title="宴席预约详情" width="720px">
       <template v-if="banquetDetail">
+        <div class="dialog-actions">
+          <el-button size="small" @click="changeBanquetStatus(banquetDetail.id, 'CONTACTED')">已联系</el-button>
+          <el-button size="small" type="success" @click="changeBanquetStatus(banquetDetail.id, 'CONFIRMED')">已确认</el-button>
+          <el-button size="small" type="danger" @click="changeBanquetStatus(banquetDetail.id, 'CANCELLED')">取消</el-button>
+        </div>
+
         <div class="detail-grid">
           <div class="detail-block">
             <div class="detail-label">预约号</div>
@@ -388,7 +426,7 @@
           </div>
           <div class="detail-block">
             <div class="detail-label">预约日期</div>
-            <div class="detail-value">{{ banquetDetail.reserveDate }}</div>
+            <div class="detail-value">{{ formatDate(banquetDetail.reserveDate) }}</div>
           </div>
           <div class="detail-block">
             <div class="detail-label">预计人数</div>
@@ -404,7 +442,7 @@
           </div>
           <div class="detail-block">
             <div class="detail-label">预算</div>
-            <div class="detail-value">¥{{ banquetDetail.budgetAmount }}</div>
+            <div class="detail-value">{{ formatCurrency(banquetDetail.budgetAmount) }}</div>
           </div>
           <div class="detail-block">
             <div class="detail-label">状态</div>
@@ -623,6 +661,21 @@ function banquetStatusTagType(value: string) {
     CANCELLED: 'info'
   }
   return map[value] || 'info'
+}
+
+function formatDate(value?: string) {
+  if (!value) {
+    return '-'
+  }
+  return value.replaceAll('-', '.')
+}
+
+function formatCurrency(value?: number | string) {
+  const amount = Number(value ?? 0)
+  if (Number.isNaN(amount)) {
+    return '¥0.00'
+  }
+  return `¥${amount.toFixed(2)}`
 }
 
 async function loadAll() {
@@ -963,6 +1016,13 @@ onMounted(() => {
 .filter-row {
   display: flex;
   gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 10px;
   margin-bottom: 16px;
   flex-wrap: wrap;
 }
