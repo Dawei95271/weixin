@@ -1,4 +1,9 @@
 <view class="menu-page">
+  <view class="menu-hero">
+    <text class="menu-title">在线点餐</text>
+    <text class="menu-desc">支持堂食、包间预点菜与客房扫码送餐，先选分类，再快速下单。</text>
+  </view>
+
   <scroll-view scroll-x class="category-scroll">
     <view class="category-row">
       <view
@@ -16,8 +21,15 @@
   <view class="dish-list">
     <view class="dish-card" wx:for="{{dishes}}" wx:key="id">
       <view class="dish-copy">
-        <text class="dish-name">{{item.name}}</text>
+        <view class="dish-head">
+          <text class="dish-name">{{item.name}}</text>
+          <text class="dish-tag" wx:if="{{item.isRecommend === 1}}">推荐</text>
+        </view>
         <text class="dish-subtitle">{{item.subtitle}}</text>
+        <view class="dish-meta">
+          <text class="dish-badge" wx:if="{{item.supportsRoomDelivery === 1}}">支持客房送餐</text>
+          <text class="dish-badge dish-badge--muted" wx:else>仅现场/包间使用</text>
+        </view>
         <text class="dish-price">¥{{item.price}}</text>
       </view>
       <button class="primary-btn add-btn" data-dish="{{item}}" bindtap="addDish">加入购物车</button>

@@ -143,3 +143,9 @@
 - Expanded dish management with recommendation and room-delivery visibility in the list view.
 - Added direct recommendation and room-delivery switches to the dish editing dialog.
 - Improved category and dish result summaries with status breakdown text.
+
+### Mini Program Menu Experience Enhancements
+
+- Added featured dishes to the home page with quick add-to-cart actions.
+- Added clearer dining entry buttons for standard ordering and room-delivery ordering.
+- Expanded the menu page with recommendation and room-delivery badges for each dish.

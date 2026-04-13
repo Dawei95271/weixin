@@ -1,3 +1,25 @@
+.menu-hero {
+  margin: 24rpx 24rpx 0;
+  padding: 28rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(135deg, rgba(255, 246, 235, 0.96), rgba(255, 251, 245, 0.96));
+}
+
+.menu-title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #2f1f14;
+}
+
+.menu-desc {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  line-height: 1.7;
+  color: #6b7280;
+}
+
 .category-scroll {
   white-space: nowrap;
   padding: 24rpx 0 0 24rpx;
@@ -44,9 +66,39 @@
   gap: 10rpx;
 }
 
+.dish-head,
+.dish-meta {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  flex-wrap: wrap;
+}
+
 .dish-name {
   font-size: 34rpx;
   font-weight: 700;
+}
+
+.dish-tag,
+.dish-badge {
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+}
+
+.dish-tag {
+  background: rgba(213, 140, 53, 0.16);
+  color: #a35d1f;
+}
+
+.dish-badge {
+  background: rgba(63, 140, 92, 0.14);
+  color: #2f7d4e;
+}
+
+.dish-badge--muted {
+  background: rgba(107, 114, 128, 0.12);
+  color: #6b7280;
 }
 
 .dish-subtitle {
