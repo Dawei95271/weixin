@@ -47,7 +47,17 @@
         </div>
 
         <div v-if="currentTab === 'categories'" class="result-summary">
-          当前共找到 {{ categories.length }} 条分类记录
+          当前共找到 {{ filteredCategories.length }} 条分类记录
+        </div>
+
+        <div v-if="currentTab === 'categories'" class="filter-row">
+          <el-input
+            v-model="categoryFilters.keyword"
+            clearable
+            placeholder="搜索分类名称"
+            style="width: 260px"
+          />
+          <el-button @click="resetCategoryFilters">重置</el-button>
         </div>
 
         <div v-if="currentTab === 'orders'" class="filter-row">
@@ -170,6 +180,11 @@
           </el-table-column>
           <el-table-column prop="contactName" label="联系人" width="120" />
           <el-table-column prop="contactPhone" label="联系电话" width="160" />
+          <el-table-column label="快捷操作" width="120">
+            <template #default="{ row }">
+              <el-button size="small" text type="primary" @click="copyText(row.contactPhone)">复制电话</el-button>
+            </template>
+          </el-table-column>
           <el-table-column label="状态" width="140">
             <template #default="{ row }">
               <el-tag :type="orderStatusTagType(row.orderStatus)">
@@ -196,7 +211,7 @@
 
         <el-table
           v-else-if="currentTab === 'categories'"
-          :data="categories"
+          :data="filteredCategories"
           stripe
           empty-text="暂无分类记录"
         >
@@ -625,6 +640,9 @@ const categoryForm = ref({
   name: '',
   sort: 0
 })
+const categoryFilters = ref({
+  keyword: ''
+})
 const dishForm = ref({
   id: undefined as number | undefined,
   categoryId: 1,
@@ -667,6 +685,16 @@ const privateRoomDishRows = computed(() =>
     ? privateRoomDetail.value.preorderDishes
     : ['暂未预点菜']) as string[]).map((name: string) => ({ name }))
 )
+
+const filteredCategories = computed(() => {
+  const keyword = categoryFilters.value.keyword.trim().toLowerCase()
+  if (!keyword) {
+    return categories.value
+  }
+  return categories.value.filter((item) =>
+    String(item.name || '').toLowerCase().includes(keyword)
+  )
+})
 
 const filteredOrders = computed(() => {
   const keyword = orderFilters.value.keyword.trim().toLowerCase()
@@ -847,6 +875,12 @@ function resetOrderFilters() {
     orderScene: ''
   }
   loadAll()
+}
+
+function resetCategoryFilters() {
+  categoryFilters.value = {
+    keyword: ''
+  }
 }
 
 function resetDishFilters() {
@@ -1049,6 +1083,19 @@ async function submitDish() {
     await loadAll()
   } catch (error) {
     ElMessage.error(error instanceof Error ? error.message : '保存失败')
+  }
+}
+
+async function copyText(value?: string) {
+  if (!value) {
+    ElMessage.warning('暂无可复制的内容')
+    return
+  }
+  try {
+    await navigator.clipboard.writeText(value)
+    ElMessage.success('已复制到剪贴板')
+  } catch {
+    ElMessage.error('复制失败，请手动复制')
   }
 }
 

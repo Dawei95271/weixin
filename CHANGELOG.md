@@ -106,3 +106,8 @@
 
 - Updated dashboard stat cards to reflect active order and dish filters.
 - Added category list result feedback and empty-state messaging for consistency.
+
+### Admin Category Search And Copy
+
+- Added keyword search for category management in the admin console.
+- Added one-click phone copy actions in the order management list.
