@@ -170,7 +170,14 @@
           stripe
           empty-text="暂无符合条件的订单记录"
         >
-          <el-table-column prop="orderNo" label="订单号" min-width="220" />
+          <el-table-column label="订单号" min-width="220">
+            <template #default="{ row }">
+              <div class="cell-inline-action">
+                <span>{{ row.orderNo }}</span>
+                <el-button size="small" text type="primary" @click="copyText(row.orderNo)">复制</el-button>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="场景" width="170">
             <template #default="{ row }">
               <el-tag :type="orderSceneTagType(row.orderScene)">
@@ -279,7 +286,14 @@
           stripe
           empty-text="暂无符合条件的包间预约记录"
         >
-          <el-table-column prop="reservationNo" label="预约号" min-width="220" />
+          <el-table-column label="预约号" min-width="220">
+            <template #default="{ row }">
+              <div class="cell-inline-action">
+                <span>{{ row.reservationNo }}</span>
+                <el-button size="small" text type="primary" @click="copyText(row.reservationNo)">复制</el-button>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column prop="privateRoomName" label="包间" width="140" />
           <el-table-column label="日期" width="140">
             <template #default="{ row }">
@@ -319,7 +333,14 @@
           stripe
           empty-text="暂无符合条件的宴席预约记录"
         >
-          <el-table-column prop="reservationNo" label="预约号" min-width="220" />
+          <el-table-column label="预约号" min-width="220">
+            <template #default="{ row }">
+              <div class="cell-inline-action">
+                <span>{{ row.reservationNo }}</span>
+                <el-button size="small" text type="primary" @click="copyText(row.reservationNo)">复制</el-button>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column prop="banquetType" label="宴席类型" width="140" />
           <el-table-column label="日期" width="140">
             <template #default="{ row }">
@@ -417,7 +438,17 @@
         <div class="detail-grid">
           <div class="detail-block">
             <div class="detail-label">订单号</div>
-            <div class="detail-value">{{ orderDetail.orderNo }}</div>
+            <div class="detail-value detail-inline-action">
+              <span>{{ orderDetail.orderNo }}</span>
+              <el-button
+                size="small"
+                text
+                type="primary"
+                @click="copyText(orderDetail.orderNo)"
+              >
+                复制
+              </el-button>
+            </div>
           </div>
           <div class="detail-block">
             <div class="detail-label">场景</div>
@@ -481,7 +512,17 @@
         <div class="detail-grid">
           <div class="detail-block">
             <div class="detail-label">预约号</div>
-            <div class="detail-value">{{ privateRoomDetail.reservationNo }}</div>
+            <div class="detail-value detail-inline-action">
+              <span>{{ privateRoomDetail.reservationNo }}</span>
+              <el-button
+                size="small"
+                text
+                type="primary"
+                @click="copyText(privateRoomDetail.reservationNo)"
+              >
+                复制
+              </el-button>
+            </div>
           </div>
           <div class="detail-block">
             <div class="detail-label">包间</div>
@@ -546,7 +587,17 @@
         <div class="detail-grid">
           <div class="detail-block">
             <div class="detail-label">预约号</div>
-            <div class="detail-value">{{ banquetDetail.reservationNo }}</div>
+            <div class="detail-value detail-inline-action">
+              <span>{{ banquetDetail.reservationNo }}</span>
+              <el-button
+                size="small"
+                text
+                type="primary"
+                @click="copyText(banquetDetail.reservationNo)"
+              >
+                复制
+              </el-button>
+            </div>
           </div>
           <div class="detail-block">
             <div class="detail-label">宴席类型</div>
@@ -602,7 +653,7 @@
           <el-button type="primary" @click="openBanquetFollowDialog">新增跟进</el-button>
         </div>
 
-        <el-table :data="banquetFollowRecords" stripe>
+        <el-table :data="banquetFollowRecords" stripe empty-text="暂无宴席跟进记录">
           <el-table-column prop="followContent" label="跟进内容" min-width="260" />
           <el-table-column prop="createdAt" label="记录时间" min-width="180" />
           <el-table-column prop="nextFollowTime" label="下次跟进时间" min-width="180" />
@@ -1300,6 +1351,12 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+
+.cell-inline-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .stat-card span {

@@ -121,3 +121,8 @@
 
 - Added one-click phone copy actions inside order, private-room, and banquet detail dialogs.
 - Made contact handling consistent between list views and detail views.
+
+### Admin Business Number Actions
+
+- Added one-click copy actions for order numbers and reservation numbers in both lists and detail dialogs.
+- Added an explicit empty-state message for banquet follow-up records in the detail dialog.
