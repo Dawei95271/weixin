@@ -47,6 +47,12 @@
         </div>
 
         <div v-if="currentTab === 'orders'" class="filter-row">
+          <el-input
+            v-model="orderFilters.keyword"
+            clearable
+            placeholder="搜索订单号 / 联系人 / 电话"
+            style="width: 260px"
+          />
           <el-select v-model="orderFilters.orderStatus" clearable placeholder="按订单状态筛选" style="width: 220px">
             <el-option label="待支付" value="WAIT_PAY" />
             <el-option label="待接单" value="WAIT_ACCEPT" />
@@ -65,6 +71,12 @@
         </div>
 
         <div v-if="currentTab === 'privateRooms'" class="filter-row">
+          <el-input
+            v-model="privateRoomFilters.keyword"
+            clearable
+            placeholder="搜索预约号 / 联系人 / 电话"
+            style="width: 260px"
+          />
           <el-select
             v-model="privateRoomFilters.reservationStatus"
             clearable
@@ -82,6 +94,12 @@
         </div>
 
         <div v-if="currentTab === 'banquets'" class="filter-row">
+          <el-input
+            v-model="banquetFilters.keyword"
+            clearable
+            placeholder="搜索预约号 / 联系人 / 电话"
+            style="width: 260px"
+          />
           <el-select
             v-model="banquetFilters.status"
             clearable
@@ -97,7 +115,7 @@
           <el-button @click="resetBanquetFilters">重置</el-button>
         </div>
 
-        <el-table v-if="currentTab === 'orders'" :data="orders" stripe>
+        <el-table v-if="currentTab === 'orders'" :data="filteredOrders" stripe>
           <el-table-column prop="orderNo" label="订单号" min-width="220" />
           <el-table-column label="场景" width="170">
             <template #default="{ row }">
@@ -186,7 +204,7 @@
           </el-table-column>
         </el-table>
 
-        <el-table v-else-if="currentTab === 'privateRooms'" :data="privateRooms" stripe>
+        <el-table v-else-if="currentTab === 'privateRooms'" :data="filteredPrivateRooms" stripe>
           <el-table-column prop="reservationNo" label="预约号" min-width="220" />
           <el-table-column prop="privateRoomName" label="包间" width="140" />
           <el-table-column label="日期" width="140">
@@ -215,7 +233,7 @@
           </el-table-column>
         </el-table>
 
-        <el-table v-else :data="banquets" stripe>
+        <el-table v-else :data="filteredBanquets" stripe>
           <el-table-column prop="reservationNo" label="预约号" min-width="220" />
           <el-table-column prop="banquetType" label="宴席类型" width="140" />
           <el-table-column label="日期" width="140">
@@ -554,13 +572,16 @@ const dishForm = ref({
   isRecommend: 0
 })
 const orderFilters = ref({
+  keyword: '',
   orderStatus: '',
   orderScene: ''
 })
 const privateRoomFilters = ref({
+  keyword: '',
   reservationStatus: ''
 })
 const banquetFilters = ref({
+  keyword: '',
   status: ''
 })
 
@@ -578,6 +599,42 @@ const privateRoomDishRows = computed(() =>
     ? privateRoomDetail.value.preorderDishes
     : ['暂未预点菜']) as string[]).map((name: string) => ({ name }))
 )
+
+const filteredOrders = computed(() => {
+  const keyword = orderFilters.value.keyword.trim().toLowerCase()
+  if (!keyword) {
+    return orders.value
+  }
+  return orders.value.filter((item) =>
+    [item.orderNo, item.contactName, item.contactPhone].some((field) =>
+      String(field || '').toLowerCase().includes(keyword)
+    )
+  )
+})
+
+const filteredPrivateRooms = computed(() => {
+  const keyword = privateRoomFilters.value.keyword.trim().toLowerCase()
+  if (!keyword) {
+    return privateRooms.value
+  }
+  return privateRooms.value.filter((item) =>
+    [item.reservationNo, item.contactName, item.contactPhone, item.privateRoomName].some((field) =>
+      String(field || '').toLowerCase().includes(keyword)
+    )
+  )
+})
+
+const filteredBanquets = computed(() => {
+  const keyword = banquetFilters.value.keyword.trim().toLowerCase()
+  if (!keyword) {
+    return banquets.value
+  }
+  return banquets.value.filter((item) =>
+    [item.reservationNo, item.contactName, item.contactPhone, item.banquetType].some((field) =>
+      String(field || '').toLowerCase().includes(keyword)
+    )
+  )
+})
 
 function orderSceneLabel(value: string) {
   const map: Record<string, string> = {
@@ -706,6 +763,7 @@ async function loadAll() {
 
 function resetOrderFilters() {
   orderFilters.value = {
+    keyword: '',
     orderStatus: '',
     orderScene: ''
   }
@@ -714,6 +772,7 @@ function resetOrderFilters() {
 
 function resetPrivateRoomFilters() {
   privateRoomFilters.value = {
+    keyword: '',
     reservationStatus: ''
   }
   loadAll()
@@ -721,6 +780,7 @@ function resetPrivateRoomFilters() {
 
 function resetBanquetFilters() {
   banquetFilters.value = {
+    keyword: '',
     status: ''
   }
   loadAll()

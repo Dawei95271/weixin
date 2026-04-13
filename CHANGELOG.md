@@ -81,3 +81,8 @@
 
 - Formatted admin dates and amounts consistently across order and reservation views.
 - Added direct status action buttons inside order, private-room, and banquet detail dialogs.
+
+### Admin Quick Search
+
+- Added local keyword search for orders, private-room reservations, and banquet reservations.
+- Search supports matching business numbers, contact names, and phone numbers directly in the admin console.
