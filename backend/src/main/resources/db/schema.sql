@@ -263,6 +263,16 @@ CREATE TABLE IF NOT EXISTS delivery_record (
   KEY idx_order_id (order_id)
 ) COMMENT='配送记录表';
 
+CREATE TABLE IF NOT EXISTS business_config (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  config_key VARCHAR(100) NOT NULL COMMENT '配置键',
+  config_value VARCHAR(2000) NOT NULL DEFAULT '' COMMENT '配置值',
+  config_name VARCHAR(100) NOT NULL DEFAULT '' COMMENT '配置名称',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_config_key (config_key)
+) COMMENT='营业配置表';
+
 INSERT INTO private_room_timeslot (timeslot_code, timeslot_name, start_time, end_time, sort, status)
 VALUES
   ('BREAKFAST', '早餐', '07:00:00', '09:30:00', 1, 1),
@@ -343,3 +353,17 @@ ON DUPLICATE KEY UPDATE
   real_name = VALUES(real_name),
   phone = VALUES(phone),
   status = VALUES(status);
+
+INSERT INTO business_config (config_key, config_value, config_name)
+VALUES
+  ('CONTACT_PHONE', '13800000000', '联系电话'),
+  ('DELIVERY_FEE', '6', '客房配送费'),
+  ('MIN_ORDER_AMOUNT', '38', '起送金额'),
+  ('BREAKFAST_HOURS', '07:00-09:30', '早餐营业时段'),
+  ('LUNCH_HOURS', '11:00-14:00', '中餐营业时段'),
+  ('DINNER_HOURS', '17:00-21:00', '晚餐营业时段'),
+  ('HOME_NOTICE', '欢迎使用酒店二楼餐饮服务，客房扫码即可点餐。', '首页公告'),
+  ('ROOM_DELIVERY_NOTICE', '客房送餐默认送至房门，请保持电话畅通。', '客房送餐提示')
+ON DUPLICATE KEY UPDATE
+  config_value = VALUES(config_value),
+  config_name = VALUES(config_name);

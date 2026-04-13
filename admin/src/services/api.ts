@@ -39,6 +39,7 @@ export const fetchBanquetFollowRecords = (reservationId: number) =>
   request.get(`/admin/banquet/follow/list/${reservationId}`)
 export const fetchDishes = () => request.get('/admin/dish/list')
 export const fetchDishCategories = () => request.get('/admin/dish-category/list')
+export const fetchBusinessConfigs = () => request.get('/admin/config/list')
 
 export const updateOrderStatus = (payload: { orderId: number; orderStatus: string }) =>
   request.post('/admin/order/status', payload)
@@ -74,3 +75,11 @@ export const saveDishCategory = (payload: { id?: number; name: string; sort: num
 
 export const updateDishCategoryStatus = (payload: { id: number; status: number }) =>
   request.post('/admin/dish-category/status', payload)
+
+export const saveBusinessConfigs = (payload: {
+  items: Array<{
+    configKey: string
+    configName: string
+    configValue: string
+  }>
+}) => request.post('/admin/config/save', payload)

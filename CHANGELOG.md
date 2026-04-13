@@ -194,3 +194,8 @@
 
 - Added activity-type summary pills and keyword search to the admin activity timeline.
 - Added result feedback and empty-state guidance for filtered activity views.
+
+### Admin Business Configurations
+
+- Added admin business configuration APIs backed by the `business_config` table for contact info, delivery fees, opening hours, and notice text.
+- Added a dedicated admin operations-configuration page for editing and saving business settings in grouped sections.

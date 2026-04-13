@@ -11,6 +11,7 @@
         <button :class="{ active: currentTab === 'dishes' }" @click="currentTab = 'dishes'">菜品管理</button>
         <button :class="{ active: currentTab === 'privateRooms' }" @click="currentTab = 'privateRooms'">包间预约</button>
         <button :class="{ active: currentTab === 'banquets' }" @click="currentTab = 'banquets'">宴席预约</button>
+        <button :class="{ active: currentTab === 'configs' }" @click="currentTab = 'configs'">运营配置</button>
       </div>
       <button class="logout-btn" @click="logout">退出登录</button>
     </aside>
@@ -159,6 +160,39 @@
           <h3>{{ title }}</h3>
           <el-button v-if="currentTab === 'categories'" type="primary" @click="openCategoryDialog()">新增分类</el-button>
           <el-button v-if="currentTab === 'dishes'" type="primary" @click="openDishDialog()">新增菜品</el-button>
+          <el-button v-if="currentTab === 'configs'" type="primary" @click="submitBusinessConfigs">保存配置</el-button>
+        </div>
+
+        <div v-if="currentTab === 'configs'" class="result-summary">
+          当前共管理 {{ configSections.length }} 组运营配置
+          <span class="result-summary-detail">支持修改营业时段、配送费用、公告和客房送餐提示</span>
+        </div>
+
+        <div v-if="currentTab === 'configs'" class="config-grid">
+          <section v-for="section in configSections" :key="section.title" class="config-card">
+            <div class="config-card-head">
+              <h4>{{ section.title }}</h4>
+              <span>{{ section.description }}</span>
+            </div>
+            <div class="config-fields">
+              <label v-for="field in section.fields" :key="field.key" class="config-field">
+                <span class="config-label">{{ field.label }}</span>
+                <el-input
+                  v-if="field.type !== 'textarea'"
+                  v-model="configForm[field.key]"
+                  :placeholder="field.placeholder"
+                />
+                <el-input
+                  v-else
+                  v-model="configForm[field.key]"
+                  :placeholder="field.placeholder"
+                  type="textarea"
+                  :rows="3"
+                />
+                <small class="config-hint">{{ field.hint }}</small>
+              </label>
+            </div>
+          </section>
         </div>
 
         <div v-if="currentTab === 'categories'" class="result-summary">
@@ -538,7 +572,7 @@
         </el-table>
 
         <el-table
-          v-else
+          v-else-if="currentTab === 'banquets'"
           :data="filteredBanquets"
           stripe
           empty-text="暂无符合条件的宴席预约记录"
@@ -910,6 +944,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import {
+  fetchBusinessConfigs,
   fetchBanquetReservations,
   fetchBanquetReservationDetail,
   fetchBanquetFollowRecords,
@@ -922,6 +957,7 @@ import {
   createBanquetFollowRecord,
   saveDishCategory,
   saveDish,
+  saveBusinessConfigs,
   updateBanquetReservationStatus,
   updateDishCategoryStatus,
   updateDishStatus,
@@ -930,12 +966,13 @@ import {
 } from '../services/api'
 
 const router = useRouter()
-const currentTab = ref<'orders' | 'categories' | 'dishes' | 'privateRooms' | 'banquets'>('orders')
+const currentTab = ref<'orders' | 'categories' | 'dishes' | 'privateRooms' | 'banquets' | 'configs'>('orders')
 const orders = ref<any[]>([])
 const categories = ref<any[]>([])
 const dishes = ref<any[]>([])
 const privateRooms = ref<any[]>([])
 const banquets = ref<any[]>([])
+const businessConfigs = ref<any[]>([])
 const orderDetailVisible = ref(false)
 const orderDetail = ref<any | null>(null)
 const privateRoomDetailVisible = ref(false)
@@ -992,6 +1029,45 @@ const activityFilters = ref({
   keyword: '',
   type: 'ALL'
 })
+const configForm = ref<Record<string, string>>({
+  CONTACT_PHONE: '',
+  DELIVERY_FEE: '',
+  MIN_ORDER_AMOUNT: '',
+  BREAKFAST_HOURS: '',
+  LUNCH_HOURS: '',
+  DINNER_HOURS: '',
+  HOME_NOTICE: '',
+  ROOM_DELIVERY_NOTICE: ''
+})
+
+const configSections = [
+  {
+    title: '基础运营',
+    description: '用于后台和小程序展示基础经营信息',
+    fields: [
+      { key: 'CONTACT_PHONE', label: '联系电话', placeholder: '例如 13800000000', hint: '用于小程序联系商家和后台联络展示', type: 'text' },
+      { key: 'MIN_ORDER_AMOUNT', label: '起送金额', placeholder: '例如 38', hint: '客房送餐和普通点餐的起送门槛', type: 'text' },
+      { key: 'DELIVERY_FEE', label: '客房配送费', placeholder: '例如 6', hint: '客房送餐默认配送费用', type: 'text' }
+    ]
+  },
+  {
+    title: '营业时段',
+    description: '用于菜单页和预约页展示每日营业安排',
+    fields: [
+      { key: 'BREAKFAST_HOURS', label: '早餐时段', placeholder: '例如 07:00-09:30', hint: '建议与包间早餐时段保持一致', type: 'text' },
+      { key: 'LUNCH_HOURS', label: '中餐时段', placeholder: '例如 11:00-14:00', hint: '用于提示顾客当前中餐营业范围', type: 'text' },
+      { key: 'DINNER_HOURS', label: '晚餐时段', placeholder: '例如 17:00-21:00', hint: '用于提示顾客当前晚餐营业范围', type: 'text' }
+    ]
+  },
+  {
+    title: '前台提示',
+    description: '用于首页公告和客房送餐说明',
+    fields: [
+      { key: 'HOME_NOTICE', label: '首页公告', placeholder: '输入首页公告内容', hint: '建议放置当前活动、营业提醒或服务说明', type: 'textarea' },
+      { key: 'ROOM_DELIVERY_NOTICE', label: '客房送餐提示', placeholder: '输入客房送餐提示', hint: '例如请保持电话畅通、默认送至房门', type: 'textarea' }
+    ]
+  }
+] as const
 
 const realName = computed(() => localStorage.getItem('admin_real_name') || '管理员')
 const title = computed(() => {
@@ -999,6 +1075,7 @@ const title = computed(() => {
   if (currentTab.value === 'categories') return '分类总览'
   if (currentTab.value === 'dishes') return '菜品总览'
   if (currentTab.value === 'privateRooms') return '包间预约总览'
+  if (currentTab.value === 'configs') return '运营配置'
   return '宴席预约总览'
 })
 
@@ -1029,6 +1106,13 @@ const statCards = computed(() => {
       { label: '订单总数', value: orders.value.length },
       { label: '分类总数', value: categories.value.length },
       { label: '筛选后包间预约', value: filteredPrivateRooms.value.length }
+    ]
+  }
+  if (currentTab.value === 'configs') {
+    return [
+      { label: '订单总数', value: orders.value.length },
+      { label: '菜品总数', value: dishes.value.length },
+      { label: '配置项数量', value: businessConfigs.value.length }
     ]
   }
   return [
@@ -1465,7 +1549,7 @@ function formatActivityTime(value?: string) {
 
 async function loadAll() {
   try {
-    const [orderData, categoryData, dishData, roomData, banquetData] = await Promise.all([
+    const [orderData, categoryData, dishData, roomData, banquetData, configData] = await Promise.all([
       fetchOrders({
         orderStatus: orderFilters.value.orderStatus || undefined,
         orderScene: orderFilters.value.orderScene || undefined
@@ -1477,16 +1561,27 @@ async function loadAll() {
       }),
       fetchBanquetReservations({
         status: banquetFilters.value.status || undefined
-      })
+      }),
+      fetchBusinessConfigs()
     ])
     orders.value = orderData
     categories.value = categoryData
     dishes.value = dishData
     privateRooms.value = roomData
     banquets.value = banquetData
+    businessConfigs.value = configData
+    syncConfigForm(configData)
   } catch (error) {
     ElMessage.error(error instanceof Error ? error.message : '加载失败')
   }
+}
+
+function syncConfigForm(configs: Array<{ configKey: string; configValue: string }>) {
+  const nextValue = { ...configForm.value }
+  configs.forEach((item) => {
+    nextValue[item.configKey] = item.configValue || ''
+  })
+  configForm.value = nextValue
 }
 
 function resetOrderFilters() {
@@ -1799,6 +1894,24 @@ async function submitDish() {
     ElMessage.success('菜品已保存')
     dishDialogVisible.value = false
     await loadAll()
+  } catch (error) {
+    ElMessage.error(error instanceof Error ? error.message : '保存失败')
+  }
+}
+
+async function submitBusinessConfigs() {
+  try {
+    const items = configSections.flatMap((section) =>
+      section.fields.map((field) => ({
+        configKey: field.key,
+        configName: field.label,
+        configValue: configForm.value[field.key] || ''
+      }))
+    )
+    const result = await saveBusinessConfigs({ items })
+    businessConfigs.value = result
+    syncConfigForm(result)
+    ElMessage.success('运营配置已保存')
   } catch (error) {
     ElMessage.error(error instanceof Error ? error.message : '保存失败')
   }
@@ -2128,6 +2241,58 @@ onMounted(() => {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.config-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.config-card {
+  border-radius: 18px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.88);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.config-card-head h4 {
+  margin: 0;
+  color: #2b2118;
+  font-size: 18px;
+}
+
+.config-card-head span {
+  display: block;
+  margin-top: 8px;
+  color: #8b5e34;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.config-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.config-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.config-label {
+  color: #2b2118;
+  font-weight: 600;
+}
+
+.config-hint {
+  color: #a58a72;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .filter-row {
