@@ -75,6 +75,32 @@
 
       <section class="panel">
         <div class="panel-head">
+          <h3>优先处理清单</h3>
+          <span class="workspace-caption">按订单、包间、宴席三类任务汇总展示</span>
+        </div>
+        <div v-if="pendingTasks.length" class="task-list">
+          <div v-for="task in pendingTasks" :key="task.key" class="task-item">
+            <div class="task-copy">
+              <div class="task-head">
+                <span class="task-type">{{ task.typeLabel }}</span>
+                <el-tag :type="task.tagType">{{ task.statusLabel }}</el-tag>
+              </div>
+              <strong class="task-title">{{ task.title }}</strong>
+              <span class="task-desc">{{ task.desc }}</span>
+            </div>
+            <div class="task-actions">
+              <el-button size="small" @click="openPendingTask(task)">查看详情</el-button>
+              <el-button size="small" type="primary" @click="applyWorkspaceShortcut(task.shortcutKey)">进入列表</el-button>
+            </div>
+          </div>
+        </div>
+        <div v-else class="task-empty">
+          当前没有需要优先处理的任务，列表会在有新订单或预约待办时自动展示。
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
           <h3>{{ title }}</h3>
           <el-button v-if="currentTab === 'categories'" type="primary" @click="openCategoryDialog()">新增分类</el-button>
           <el-button v-if="currentTab === 'dishes'" type="primary" @click="openDishDialog()">新增菜品</el-button>
@@ -995,6 +1021,55 @@ const workspaceTips = computed(() => [
   }
 ])
 
+const pendingTasks = computed(() => {
+  const orderTasks = orders.value
+    .filter((item) => item.orderStatus === 'WAIT_ACCEPT' || item.orderStatus === 'DELIVERING')
+    .slice(0, 4)
+    .map((item) => ({
+      key: `order-${item.id}`,
+      entityType: 'order',
+      id: item.id,
+      shortcutKey: item.orderStatus === 'WAIT_ACCEPT' ? 'waitAcceptOrders' : 'deliveringOrders',
+      typeLabel: '订单',
+      statusLabel: orderStatusLabel(item.orderStatus),
+      tagType: orderStatusTagType(item.orderStatus),
+      title: `${item.orderNo} / ${item.contactName || '未填写联系人'}`,
+      desc: `${orderSceneLabel(item.orderScene)}，联系电话 ${item.contactPhone || '未填写'}`
+    }))
+
+  const privateRoomTasks = privateRooms.value
+    .filter((item) => item.reservationStatus === 'RESERVED')
+    .slice(0, 3)
+    .map((item) => ({
+      key: `private-room-${item.id}`,
+      entityType: 'privateRoom',
+      id: item.id,
+      shortcutKey: 'reservedPrivateRooms',
+      typeLabel: '包间',
+      statusLabel: reservationStatusLabel(item.reservationStatus),
+      tagType: reservationStatusTagType(item.reservationStatus),
+      title: `${item.reservationNo} / ${item.privateRoomName || '未命名包间'}`,
+      desc: `${formatDate(item.reserveDate)} ${item.timeslotName || item.timeslotCode}，联系人 ${item.contactName || '未填写'}`
+    }))
+
+  const banquetTasks = banquets.value
+    .filter((item) => item.status === 'WAIT_FOLLOW')
+    .slice(0, 3)
+    .map((item) => ({
+      key: `banquet-${item.id}`,
+      entityType: 'banquet',
+      id: item.id,
+      shortcutKey: 'waitingBanquets',
+      typeLabel: '宴席',
+      statusLabel: banquetStatusLabel(item.status),
+      tagType: banquetStatusTagType(item.status),
+      title: `${item.reservationNo} / ${item.banquetType || '宴席预约'}`,
+      desc: `${formatDate(item.reserveDate)}，联系人 ${item.contactName || '未填写'} / ${item.contactPhone || '未填写'}`
+    }))
+
+  return [...orderTasks, ...privateRoomTasks, ...banquetTasks]
+})
+
 const privateRoomDishRows = computed(() =>
   ((privateRoomDetail.value?.preorderDishes?.length
     ? privateRoomDetail.value.preorderDishes
@@ -1336,6 +1411,18 @@ function applyWorkspaceShortcut(key: string) {
   currentTab.value = 'banquets'
   banquetFilters.value.status = 'WAIT_FOLLOW'
   loadAll()
+}
+
+function openPendingTask(task: any) {
+  if (task.entityType === 'order') {
+    showOrderDetail(task.id)
+    return
+  }
+  if (task.entityType === 'privateRoom') {
+    showPrivateRoomDetail(task.id)
+    return
+  }
+  showBanquetDetail(task.id)
 }
 
 async function changeOrderStatus(orderId: number, orderStatus: string) {
@@ -1711,6 +1798,64 @@ onMounted(() => {
   color: #6f5a46;
   line-height: 1.6;
   font-size: 13px;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.task-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.task-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.task-type {
+  color: #8b5e34;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.task-title {
+  color: #2b2118;
+  font-size: 16px;
+}
+
+.task-desc {
+  color: #6f5a46;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.task-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.task-empty {
+  color: #8b5e34;
+  font-size: 14px;
 }
 
 .filter-row {

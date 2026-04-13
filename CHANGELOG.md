@@ -179,3 +179,8 @@
 - Added a lightweight workbench with pending-order, delivery, private-room, and banquet shortcuts.
 - Added contextual operating tips based on current order and reservation data.
 - Added one-click navigation from workbench cards into filtered management lists.
+
+### Admin Priority Task List
+
+- Added a prioritized admin task list that aggregates pending orders, private-room arrivals, and banquet follow-ups.
+- Added one-click actions to open detail dialogs or jump into the matching filtered management list.
