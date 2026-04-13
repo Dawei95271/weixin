@@ -1,3 +1,7 @@
+.summary-card {
+  margin-bottom: 0;
+}
+
 .form-group {
   margin-bottom: 22rpx;
 }
@@ -29,18 +33,37 @@
   padding: 14rpx 0;
 }
 
+.summary-desc {
+  display: block;
+  padding-top: 10rpx;
+  color: #6b7280;
+  line-height: 1.7;
+}
+
 .info-label,
 .item-sub,
+.item-unit,
 .total-label {
   color: #6b7280;
 }
 
 .info-value,
-.item-name {
+.item-name,
+.item-price {
   font-weight: 600;
 }
 
-.item-price,
+.item-copy,
+.item-amounts {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.item-amounts {
+  align-items: flex-end;
+}
+
 .total-price {
   color: #9a5a1e;
   font-weight: 700;

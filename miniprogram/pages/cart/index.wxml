@@ -1,11 +1,23 @@
 <view class="cart-page">
+  <view wx:if="{{roomInfo}}" class="section-card delivery-card">
+    <view class="section-head">
+      <view class="section-title">当前为客房送餐</view>
+      <button size="mini" bindtap="clearRoomDelivery">切回普通点餐</button>
+    </view>
+    <text class="delivery-desc">已识别房间 {{roomInfo.roomNo}}，提交订单后会按客房送餐场景处理。</text>
+  </view>
+
   <view class="section-card">
     <view class="section-title">已选菜品</view>
-    <view wx:if="{{cart.length === 0}}" class="empty-state">购物车还是空的，先去点几个菜吧。</view>
+    <view wx:if="{{cart.length === 0}}" class="empty-wrapper">
+      <text class="empty-state">购物车还是空的，先去点几个菜吧。</text>
+      <button class="primary-btn empty-btn" bindtap="goMenu">去点餐</button>
+    </view>
     <view wx:else class="cart-list">
       <view class="cart-item" wx:for="{{cart}}" wx:key="id">
-        <view>
+        <view class="cart-copy">
           <text class="cart-name">{{item.name}}</text>
+          <text class="cart-sub">{{item.subtitle || '酒店二楼精选菜品'}}</text>
           <text class="cart-price">¥{{item.price}}</text>
         </view>
         <view class="stepper">
@@ -18,6 +30,7 @@
   </view>
 
   <view class="section-card total-card">
+    <text class="summary-line">共 {{totalCount}} 份菜品，{{summaryText}}</text>
     <text class="total-label">合计</text>
     <text class="total-price">¥{{totalAmount}}</text>
     <view class="action-group">

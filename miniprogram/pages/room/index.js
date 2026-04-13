@@ -47,5 +47,16 @@ Page({
     wx.switchTab({
       url: '/pages/menu/index'
     })
+  },
+
+  clearRoom() {
+    wx.removeStorageSync('currentRoomDelivery')
+    this.setData({
+      room: null
+    })
+    wx.showToast({
+      title: '已清除房间识别',
+      icon: 'success'
+    })
   }
 })

@@ -1,14 +1,15 @@
 <view class="confirm-page">
-  <view class="section-card">
+  <view class="section-card summary-card">
     <view class="section-title">订单确认</view>
     <view class="info-row">
       <text class="info-label">下单场景</text>
-      <text class="info-value">{{orderScene}}</text>
+      <text class="info-value">{{orderSceneLabel}}</text>
     </view>
     <view class="info-row" wx:if="{{roomNo}}">
       <text class="info-label">房号</text>
       <text class="info-value">{{roomNo}}</text>
     </view>
+    <text class="summary-desc">{{sceneHint}}</text>
   </view>
 
   <view class="section-card">
@@ -19,7 +20,7 @@
     </view>
     <view class="form-group">
       <text class="label">联系电话</text>
-      <input class="text-input" type="number" value="{{contactPhone}}" bindinput="onPhoneInput" />
+      <input class="text-input" type="number" maxlength="11" value="{{contactPhone}}" bindinput="onPhoneInput" />
     </view>
     <view class="form-group">
       <text class="label">备注</text>
@@ -31,11 +32,14 @@
     <view class="section-title">菜品清单</view>
     <view class="confirm-items">
       <view class="confirm-item" wx:for="{{cart}}" wx:key="id">
-        <view>
+        <view class="item-copy">
           <text class="item-name">{{item.name}}</text>
-          <text class="item-sub">x{{item.quantity}}</text>
+          <text class="item-sub">{{item.subtitle || '酒店二楼精选菜品'}} / x{{item.quantity}}</text>
         </view>
-        <text class="item-price">¥{{item.price}}</text>
+        <view class="item-amounts">
+          <text class="item-unit">单价 ¥{{item.price}}</text>
+          <text class="item-price">¥{{item.lineTotal}}</text>
+        </view>
       </view>
     </view>
   </view>

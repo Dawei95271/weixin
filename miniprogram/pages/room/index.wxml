@@ -7,12 +7,16 @@
   </view>
 
   <view wx:if="{{room}}" class="section-card">
-    <view class="section-title">当前房间</view>
+    <view class="section-head">
+      <view class="section-title">当前房间</view>
+      <button size="mini" bindtap="clearRoom">清除</button>
+    </view>
     <view class="room-result">
       <text>房号：{{room.roomNo}}</text>
       <text>楼层：{{room.floorNo}} 层</text>
       <text>场景：{{room.scene}}</text>
     </view>
+    <text class="helper-text">房间识别成功后，后续提交订单会自动按客房送餐场景处理。</text>
     <button class="primary-btn room-btn" bindtap="goMenu">去点餐</button>
   </view>
 </view>

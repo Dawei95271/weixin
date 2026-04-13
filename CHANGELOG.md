@@ -167,3 +167,9 @@
 - Added clearer summaries, reminders, and sticky submit actions to private-room and banquet booking forms.
 - Added client-side validation for key booking fields such as contact name, phone, and guest count.
 - Improved booking success feedback with direct navigation to reservation history.
+
+### Mini Program Ordering Flow Enhancements
+
+- Improved cart pages with delivery-scene awareness, item summaries, and empty-state guidance.
+- Improved order confirmation with localized scene labels, form validation, and clearer item/amount breakdowns.
+- Improved room-delivery recognition with clearer current-room guidance and reset actions.

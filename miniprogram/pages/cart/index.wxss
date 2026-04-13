@@ -1,7 +1,31 @@
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.delivery-desc,
+.cart-sub,
+.summary-line {
+  color: #6b7280;
+  line-height: 1.7;
+}
+
+.delivery-card {
+  margin-bottom: 0;
+}
+
 .cart-list {
   display: flex;
   flex-direction: column;
   gap: 18rpx;
+}
+
+.cart-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
 }
 
 .cart-item {
@@ -18,6 +42,10 @@
   font-weight: 600;
 }
 
+.cart-sub {
+  display: block;
+}
+
 .cart-price {
   display: block;
   margin-top: 8rpx;
@@ -30,9 +58,20 @@
   gap: 16rpx;
 }
 
+.empty-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .empty-state {
   color: #6b7280;
   line-height: 1.7;
+}
+
+.empty-btn {
+  width: 220rpx;
+  margin-top: 24rpx;
 }
 
 .total-card {

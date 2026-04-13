@@ -8,6 +8,8 @@ Page({
     deliveryFee: '0.00',
     totalAmount: '0.00',
     orderScene: 'NORMAL',
+    orderSceneLabel: '普通点餐',
+    sceneHint: '当前订单按普通点餐处理，可直接确认提交。',
     roomNo: '',
     contactName: '堂食顾客',
     contactPhone: '13800000000',
@@ -20,7 +22,10 @@ Page({
   },
 
   refreshData() {
-    const cart = getCart()
+    const cart = getCart().map((item) => ({
+      ...item,
+      lineTotal: (Number(item.price) * item.quantity).toFixed(2)
+    }))
     const currentRoom = wx.getStorageSync('currentRoomDelivery')
     const itemTotalAmount = cart
       .reduce((sum, item) => sum + Number(item.price) * item.quantity, 0)
@@ -34,6 +39,10 @@ Page({
       deliveryFee,
       totalAmount,
       orderScene: currentRoom ? 'ROOM_DELIVERY' : 'NORMAL',
+      orderSceneLabel: currentRoom ? '客房送餐' : '普通点餐',
+      sceneHint: currentRoom
+        ? '当前订单会按客房送餐处理，请确认房号与联系电话。'
+        : '当前订单按普通点餐处理，可直接确认提交。',
       roomNo: currentRoom ? currentRoom.roomNo : '',
       contactName: currentRoom ? `房客-${currentRoom.roomNo}` : '堂食顾客',
       contactPhone: '13800000000',
@@ -53,12 +62,33 @@ Page({
     this.setData({ remark: event.detail.value })
   },
 
-  async submitOrder() {
+  validateForm() {
     if (!this.data.cart.length) {
       wx.showToast({
         title: '购物车为空',
         icon: 'none'
       })
+      return false
+    }
+    if (!this.data.contactName.trim()) {
+      wx.showToast({
+        title: '请填写联系人',
+        icon: 'none'
+      })
+      return false
+    }
+    if (!/^1\d{10}$/.test(this.data.contactPhone)) {
+      wx.showToast({
+        title: '请输入正确手机号',
+        icon: 'none'
+      })
+      return false
+    }
+    return true
+  },
+
+  async submitOrder() {
+    if (!this.validateForm()) {
       return
     }
 
