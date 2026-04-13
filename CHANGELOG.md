@@ -189,3 +189,8 @@
 
 - Added a latest-activity timeline that mixes orders, private-room reservations, and banquet reservations into one workspace feed.
 - Added one-click actions from each activity item to open detail dialogs or jump back into the corresponding management list.
+
+### Admin Activity Filters
+
+- Added activity-type summary pills and keyword search to the admin activity timeline.
+- Added result feedback and empty-state guidance for filtered activity views.

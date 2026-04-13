@@ -104,8 +104,32 @@
           <h3>最新动态</h3>
           <span class="workspace-caption">汇总订单、包间、宴席的最新业务变化</span>
         </div>
-        <div v-if="recentActivities.length" class="activity-list">
-          <div v-for="item in recentActivities" :key="item.key" class="activity-item">
+        <div class="result-summary">
+          当前共找到 {{ filteredRecentActivities.length }} 条动态
+          <span class="result-summary-detail">默认按最近时间倒序展示，支持按类型和关键字快速筛选</span>
+        </div>
+        <div class="filter-row">
+          <el-input
+            v-model="activityFilters.keyword"
+            clearable
+            placeholder="搜索单号 / 联系人 / 电话 / 类型"
+            style="width: 300px"
+          />
+          <el-button @click="resetActivityFilters">重置</el-button>
+        </div>
+        <div class="status-summary">
+          <button
+            v-for="item in activityTypeSummary"
+            :key="item.value"
+            class="status-pill"
+            :class="{ active: activityFilters.type === item.value }"
+            @click="toggleActivityTypeFilter(item.value)"
+          >
+            {{ item.label }} {{ item.count }}
+          </button>
+        </div>
+        <div v-if="filteredRecentActivities.length" class="activity-list">
+          <div v-for="item in filteredRecentActivities" :key="item.key" class="activity-item">
             <div class="activity-meta">
               <span class="activity-type">{{ item.typeLabel }}</span>
               <span class="activity-time">{{ item.timeLabel }}</span>
@@ -126,7 +150,7 @@
           </div>
         </div>
         <div v-else class="task-empty">
-          暂时还没有可展示的最新动态，刷新数据后会自动汇总最近订单和预约变化。
+          当前筛选条件下没有找到匹配的动态记录，可以清空关键字或切换类型后再看。
         </div>
       </section>
 
@@ -964,6 +988,10 @@ const banquetFilters = ref({
   keyword: '',
   status: ''
 })
+const activityFilters = ref({
+  keyword: '',
+  type: 'ALL'
+})
 
 const realName = computed(() => localStorage.getItem('admin_real_name') || '管理员')
 const title = computed(() => {
@@ -1147,6 +1175,36 @@ const recentActivities = computed(() => {
   return [...orderActivities, ...privateRoomActivities, ...banquetActivities]
     .sort((a, b) => b.sortValue - a.sortValue)
     .slice(0, 10)
+})
+
+const activityTypeSummary = computed(() => {
+  const items = [
+    { value: 'ALL', label: '全部' },
+    { value: 'order', label: '订单' },
+    { value: 'privateRoom', label: '包间' },
+    { value: 'banquet', label: '宴席' }
+  ]
+  return items.map((item) => ({
+    ...item,
+    count:
+      item.value === 'ALL'
+        ? recentActivities.value.length
+        : recentActivities.value.filter((activity) => activity.entityType === item.value).length
+  }))
+})
+
+const filteredRecentActivities = computed(() => {
+  const keyword = activityFilters.value.keyword.trim().toLowerCase()
+  const type = activityFilters.value.type
+  return recentActivities.value.filter((item) => {
+    const matchesType = type === 'ALL' || item.entityType === type
+    const matchesKeyword =
+      !keyword
+      || [item.title, item.desc, item.typeLabel, item.statusLabel].some((field) =>
+        String(field || '').toLowerCase().includes(keyword)
+      )
+    return matchesType && matchesKeyword
+  })
 })
 
 const privateRoomDishRows = computed(() =>
@@ -1492,6 +1550,17 @@ function resetBanquetFilters() {
 function toggleBanquetStatusFilter(value: string) {
   banquetFilters.value.status = banquetFilters.value.status === value ? '' : value
   loadAll()
+}
+
+function resetActivityFilters() {
+  activityFilters.value = {
+    keyword: '',
+    type: 'ALL'
+  }
+}
+
+function toggleActivityTypeFilter(value: string) {
+  activityFilters.value.type = activityFilters.value.type === value ? 'ALL' : value
 }
 
 function applyWorkspaceShortcut(key: string) {
