@@ -1,7 +1,7 @@
 .profile-card {
   display: flex;
   flex-direction: column;
-  gap: 12rpx;
+  gap: 14rpx;
 }
 
 .profile-tag {
@@ -11,37 +11,94 @@
 }
 
 .profile-title {
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 700;
+  color: #2f1f14;
 }
 
 .profile-desc,
-.service-desc {
+.service-desc,
+.summary-label,
+.tip-text {
   color: #6b7280;
   line-height: 1.7;
 }
 
-.service-list {
+.profile-actions {
+  margin-top: 8rpx;
+}
+
+.profile-btn {
+  width: 220rpx;
+}
+
+.summary-grid,
+.service-list,
+.tips-list {
   display: flex;
   flex-direction: column;
   gap: 18rpx;
 }
 
-.service-item {
+.summary-item,
+.service-item,
+.tip-item {
   padding: 22rpx;
   border-radius: 22rpx;
   background: #fff;
 }
 
+.summary-value {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #2f1f14;
+}
+
+.summary-label {
+  display: block;
+  margin-top: 8rpx;
+}
+
+.service-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.service-badge {
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
+  background: rgba(213, 140, 53, 0.16);
+  color: #a35d1f;
+  font-size: 22rpx;
+}
+
 .service-title {
   display: block;
-  font-size: 30rpx;
+  margin-top: 14rpx;
+  font-size: 32rpx;
   font-weight: 600;
 }
 
 .service-arrow {
-  display: block;
-  margin-top: 12rpx;
   color: #9a5a1e;
   font-weight: 600;
+  font-size: 24rpx;
+}
+
+.tip-item {
+  display: flex;
+  gap: 14rpx;
+  align-items: flex-start;
+}
+
+.tip-dot {
+  width: 14rpx;
+  height: 14rpx;
+  margin-top: 14rpx;
+  border-radius: 50%;
+  background: #c58a3a;
+  flex-shrink: 0;
 }

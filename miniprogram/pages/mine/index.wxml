@@ -1,17 +1,51 @@
 <view class="mine-page">
   <view class="section-card profile-card">
-    <text class="profile-tag">MY SERVICE</text>
-    <text class="profile-title">欢迎来到酒店餐饮服务</text>
-    <text class="profile-desc">这里后面会接订单、包间预约、宴席预约、个人信息与客服入口。</text>
+    <text class="profile-tag">DINING SERVICE CENTER</text>
+    <text class="profile-title">餐饮服务中心</text>
+    <text class="profile-desc">在这里统一查看订单、预约和客房送餐入口，把点餐、预约和跟进都放在一个页面里。</text>
+    <view class="profile-actions">
+      <button class="primary-btn profile-btn" bindtap="goMenu">继续点餐</button>
+    </view>
+  </view>
+
+  <view class="section-card summary-card">
+    <view class="section-title">常用服务</view>
+    <view class="summary-grid">
+      <view class="summary-item">
+        <text class="summary-value">点餐</text>
+        <text class="summary-label">在线点餐 / 客房送餐</text>
+      </view>
+      <view class="summary-item">
+        <text class="summary-value">预约</text>
+        <text class="summary-label">包间 / 宴席统一查看</text>
+      </view>
+      <view class="summary-item">
+        <text class="summary-value">跟进</text>
+        <text class="summary-label">宴席需求后续人工确认</text>
+      </view>
+    </view>
   </view>
 
   <view class="section-card">
     <view class="section-title">服务入口</view>
     <view class="service-list">
-      <view class="service-item" wx:for="{{sections}}" wx:key="title" data-url="{{item.url}}" bindtap="goFeature">
+      <view class="service-item" wx:for="{{quickActions}}" wx:key="title" data-url="{{item.url}}" bindtap="goFeature">
+        <view class="service-head">
+          <text class="service-badge">{{item.badge}}</text>
+          <text class="service-arrow">进入 ></text>
+        </view>
         <text class="service-title">{{item.title}}</text>
         <text class="service-desc">{{item.desc}}</text>
-        <text class="service-arrow">进入 ></text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">使用提示</view>
+    <view class="tips-list">
+      <view class="tip-item" wx:for="{{tips}}" wx:key="*this">
+        <text class="tip-dot"></text>
+        <text class="tip-text">{{item}}</text>
       </view>
     </view>
   </view>

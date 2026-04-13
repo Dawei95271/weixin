@@ -1,6 +1,24 @@
 .order-list {
   display: flex;
   flex-direction: column;
+  gap: 18rpx;
+}
+
+.order-summary-card {
+  margin-bottom: 0;
+}
+
+.summary-desc {
+  color: #6b7280;
+  line-height: 1.7;
+}
+
+.order-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  flex-wrap: wrap;
 }
 
 .order-no {
@@ -8,6 +26,14 @@
   font-size: 30rpx;
   font-weight: 700;
   margin-bottom: 12rpx;
+}
+
+.order-status {
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
+  background: rgba(213, 140, 53, 0.16);
+  color: #a35d1f;
+  font-size: 22rpx;
 }
 
 .order-meta {
@@ -25,4 +51,9 @@
 
 .empty-text {
   color: #6b7280;
+}
+
+.empty-btn {
+  width: 220rpx;
+  margin-top: 24rpx;
 }

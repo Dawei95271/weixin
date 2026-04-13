@@ -2,13 +2,21 @@
   <view wx:if="{{orders.length === 0}}" class="section-card">
     <view class="section-title">我的订单</view>
     <text class="empty-text">你还没有订单，先去挑几道菜吧。</text>
+    <button class="primary-btn empty-btn" bindtap="goMenu">去点餐</button>
   </view>
 
   <view wx:else class="order-list">
+    <view class="section-card order-summary-card">
+      <view class="section-title">我的订单</view>
+      <text class="summary-desc">当前共 {{orders.length}} 笔订单，包含普通点餐、客房送餐和包间预点菜。</text>
+    </view>
     <view class="order-card section-card" wx:for="{{orders}}" wx:key="id" data-id="{{item.id}}" bindtap="goDetail">
-      <text class="order-no">{{item.orderNo}}</text>
-      <text class="order-meta">场景：{{item.orderScene}}</text>
-      <text class="order-meta">状态：{{item.orderStatus}}</text>
+      <view class="order-head">
+        <text class="order-no">{{item.orderNo}}</text>
+        <text class="order-status">{{item.orderStatusLabel}}</text>
+      </view>
+      <text class="order-meta">场景：{{item.orderSceneLabel}}</text>
+      <text class="order-meta">联系人：{{item.contactName || '未填写'}}</text>
       <text class="order-meta">金额：¥{{item.payableAmount}}</text>
       <text class="order-link">查看详情 ></text>
     </view>

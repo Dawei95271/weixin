@@ -149,3 +149,9 @@
 - Added featured dishes to the home page with quick add-to-cart actions.
 - Added clearer dining entry buttons for standard ordering and room-delivery ordering.
 - Expanded the menu page with recommendation and room-delivery badges for each dish.
+
+### Mini Program Personal Center Enhancements
+
+- Redesigned the mini-program personal center with grouped dining, room-service, and reservation shortcuts.
+- Localized order and reservation cards with readable scene, status, and timeslot labels.
+- Added stronger empty-state guidance and quick actions for order and reservation entry points.

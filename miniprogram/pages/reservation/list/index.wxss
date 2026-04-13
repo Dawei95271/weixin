@@ -5,6 +5,15 @@
   margin-bottom: 18rpx;
 }
 
+.reservation-summary-card {
+  margin-bottom: 0;
+}
+
+.summary-desc {
+  color: #6b7280;
+  line-height: 1.7;
+}
+
 .reservation-list {
   display: flex;
   flex-direction: column;
@@ -17,11 +26,27 @@
   background: #fff;
 }
 
+.reservation-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  flex-wrap: wrap;
+}
+
 .reservation-no {
   display: block;
   font-size: 30rpx;
   font-weight: 700;
   margin-bottom: 10rpx;
+}
+
+.reservation-status {
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
+  background: rgba(213, 140, 53, 0.16);
+  color: #a35d1f;
+  font-size: 22rpx;
 }
 
 .reservation-meta {
@@ -37,6 +62,17 @@
   font-weight: 600;
 }
 
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .empty-text {
   color: #6b7280;
+}
+
+.empty-btn {
+  width: 220rpx;
+  margin-top: 24rpx;
 }
