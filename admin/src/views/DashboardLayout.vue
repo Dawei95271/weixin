@@ -69,6 +69,9 @@
           <el-button type="primary" @click="loadAll">应用筛选</el-button>
           <el-button @click="resetOrderFilters">重置</el-button>
         </div>
+        <div v-if="currentTab === 'orders'" class="result-summary">
+          当前共找到 {{ filteredOrders.length }} 条订单记录
+        </div>
 
         <div v-if="currentTab === 'privateRooms'" class="filter-row">
           <el-input
@@ -143,8 +146,16 @@
           </el-select>
           <el-button @click="resetDishFilters">重置</el-button>
         </div>
+        <div v-if="currentTab === 'dishes'" class="result-summary">
+          当前共找到 {{ filteredDishes.length }} 条菜品记录
+        </div>
 
-        <el-table v-if="currentTab === 'orders'" :data="filteredOrders" stripe>
+        <el-table
+          v-if="currentTab === 'orders'"
+          :data="filteredOrders"
+          stripe
+          empty-text="暂无符合条件的订单记录"
+        >
           <el-table-column prop="orderNo" label="订单号" min-width="220" />
           <el-table-column label="场景" width="170">
             <template #default="{ row }">
@@ -205,7 +216,12 @@
           </el-table-column>
         </el-table>
 
-        <el-table v-else-if="currentTab === 'dishes'" :data="filteredDishes" stripe>
+        <el-table
+          v-else-if="currentTab === 'dishes'"
+          :data="filteredDishes"
+          stripe
+          empty-text="暂无符合条件的菜品记录"
+        >
           <el-table-column prop="name" label="菜品名称" min-width="180" />
           <el-table-column prop="categoryName" label="分类" width="120" />
           <el-table-column prop="subtitle" label="副标题" min-width="180" />

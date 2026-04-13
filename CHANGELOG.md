@@ -96,3 +96,8 @@
 
 - Added result counts for private-room and banquet reservation filters.
 - Added clearer empty-state messages when no reservation records match the current filters.
+
+### Admin List Results Feedback
+
+- Added result counts for order and dish management filters.
+- Added clearer empty-state messages for empty order and dish filter results.
