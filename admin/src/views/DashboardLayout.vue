@@ -26,16 +26,16 @@
 
       <section class="stats">
         <div class="stat-card">
-          <span>订单</span>
-          <strong>{{ orders.length }}</strong>
+          <span>{{ currentTab === 'orders' ? '筛选后订单' : '订单总数' }}</span>
+          <strong>{{ currentTab === 'orders' ? filteredOrders.length : orders.length }}</strong>
         </div>
         <div class="stat-card">
-          <span>分类</span>
+          <span>{{ currentTab === 'categories' ? '当前分类' : '分类总数' }}</span>
           <strong>{{ categories.length }}</strong>
         </div>
         <div class="stat-card">
-          <span>菜品</span>
-          <strong>{{ dishes.length }}</strong>
+          <span>{{ currentTab === 'dishes' ? '筛选后菜品' : '菜品总数' }}</span>
+          <strong>{{ currentTab === 'dishes' ? filteredDishes.length : dishes.length }}</strong>
         </div>
       </section>
 
@@ -44,6 +44,10 @@
           <h3>{{ title }}</h3>
           <el-button v-if="currentTab === 'categories'" type="primary" @click="openCategoryDialog()">新增分类</el-button>
           <el-button v-if="currentTab === 'dishes'" type="primary" @click="openDishDialog()">新增菜品</el-button>
+        </div>
+
+        <div v-if="currentTab === 'categories'" class="result-summary">
+          当前共找到 {{ categories.length }} 条分类记录
         </div>
 
         <div v-if="currentTab === 'orders'" class="filter-row">
@@ -190,7 +194,12 @@
           </el-table-column>
         </el-table>
 
-        <el-table v-else-if="currentTab === 'categories'" :data="categories" stripe>
+        <el-table
+          v-else-if="currentTab === 'categories'"
+          :data="categories"
+          stripe
+          empty-text="暂无分类记录"
+        >
           <el-table-column prop="name" label="分类名称" min-width="180" />
           <el-table-column prop="sort" label="排序" width="100" />
           <el-table-column label="状态" width="100">

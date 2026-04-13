@@ -101,3 +101,8 @@
 
 - Added result counts for order and dish management filters.
 - Added clearer empty-state messages for empty order and dish filter results.
+
+### Admin Stats Consistency
+
+- Updated dashboard stat cards to reflect active order and dish filters.
+- Added category list result feedback and empty-state messaging for consistency.
