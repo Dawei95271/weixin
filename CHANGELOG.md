@@ -126,3 +126,8 @@
 
 - Added one-click copy actions for order numbers and reservation numbers in both lists and detail dialogs.
 - Added an explicit empty-state message for banquet follow-up records in the detail dialog.
+
+### Admin Status Summary Filters
+
+- Added clickable status summary pills for orders, private-room reservations, and banquet reservations.
+- Status summaries now show counts and can toggle the matching filter directly from the list page.

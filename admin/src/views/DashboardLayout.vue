@@ -86,6 +86,17 @@
         <div v-if="currentTab === 'orders'" class="result-summary">
           当前共找到 {{ filteredOrders.length }} 条订单记录
         </div>
+        <div v-if="currentTab === 'orders'" class="status-summary">
+          <button
+            v-for="item in orderStatusSummary"
+            :key="item.value"
+            class="status-pill"
+            :class="{ active: orderFilters.orderStatus === item.value }"
+            @click="toggleOrderStatusFilter(item.value)"
+          >
+            {{ item.label }} {{ item.count }}
+          </button>
+        </div>
 
         <div v-if="currentTab === 'privateRooms'" class="filter-row">
           <el-input
@@ -112,6 +123,17 @@
         <div v-if="currentTab === 'privateRooms'" class="result-summary">
           当前共找到 {{ filteredPrivateRooms.length }} 条包间预约记录
         </div>
+        <div v-if="currentTab === 'privateRooms'" class="status-summary">
+          <button
+            v-for="item in privateRoomStatusSummary"
+            :key="item.value"
+            class="status-pill"
+            :class="{ active: privateRoomFilters.reservationStatus === item.value }"
+            @click="togglePrivateRoomStatusFilter(item.value)"
+          >
+            {{ item.label }} {{ item.count }}
+          </button>
+        </div>
 
         <div v-if="currentTab === 'banquets'" class="filter-row">
           <el-input
@@ -136,6 +158,17 @@
         </div>
         <div v-if="currentTab === 'banquets'" class="result-summary">
           当前共找到 {{ filteredBanquets.length }} 条宴席预约记录
+        </div>
+        <div v-if="currentTab === 'banquets'" class="status-summary">
+          <button
+            v-for="item in banquetStatusSummary"
+            :key="item.value"
+            class="status-pill"
+            :class="{ active: banquetFilters.status === item.value }"
+            @click="toggleBanquetStatusFilter(item.value)"
+          >
+            {{ item.label }} {{ item.count }}
+          </button>
         </div>
 
         <div v-if="currentTab === 'dishes'" class="filter-row">
@@ -800,6 +833,21 @@ const filteredOrders = computed(() => {
   )
 })
 
+const orderStatusSummary = computed(() => {
+  const items = [
+    { value: 'WAIT_PAY', label: '待支付' },
+    { value: 'WAIT_ACCEPT', label: '待接单' },
+    { value: 'COOKING', label: '制作中' },
+    { value: 'DELIVERING', label: '配送中' },
+    { value: 'COMPLETED', label: '已完成' },
+    { value: 'CANCELLED', label: '已取消' }
+  ]
+  return items.map((item) => ({
+    ...item,
+    count: orders.value.filter((order) => order.orderStatus === item.value).length
+  }))
+})
+
 const filteredDishes = computed(() => {
   const keyword = dishFilters.value.keyword.trim().toLowerCase()
   const categoryId = dishFilters.value.categoryId
@@ -823,6 +871,20 @@ const filteredPrivateRooms = computed(() => {
   )
 })
 
+const privateRoomStatusSummary = computed(() => {
+  const items = [
+    { value: 'WAIT_PAY', label: '待支付' },
+    { value: 'RESERVED', label: '已预约' },
+    { value: 'ARRIVED', label: '已到店' },
+    { value: 'COMPLETED', label: '已完成' },
+    { value: 'CANCELLED', label: '已取消' }
+  ]
+  return items.map((item) => ({
+    ...item,
+    count: privateRooms.value.filter((reservation) => reservation.reservationStatus === item.value).length
+  }))
+})
+
 const filteredBanquets = computed(() => {
   const keyword = banquetFilters.value.keyword.trim().toLowerCase()
   if (!keyword) {
@@ -833,6 +895,19 @@ const filteredBanquets = computed(() => {
       String(field || '').toLowerCase().includes(keyword)
     )
   )
+})
+
+const banquetStatusSummary = computed(() => {
+  const items = [
+    { value: 'WAIT_FOLLOW', label: '待跟进' },
+    { value: 'CONTACTED', label: '已联系' },
+    { value: 'CONFIRMED', label: '已确认' },
+    { value: 'CANCELLED', label: '已取消' }
+  ]
+  return items.map((item) => ({
+    ...item,
+    count: banquets.value.filter((reservation) => reservation.status === item.value).length
+  }))
 })
 
 function orderSceneLabel(value: string) {
@@ -969,6 +1044,11 @@ function resetOrderFilters() {
   loadAll()
 }
 
+function toggleOrderStatusFilter(value: string) {
+  orderFilters.value.orderStatus = orderFilters.value.orderStatus === value ? '' : value
+  loadAll()
+}
+
 function resetCategoryFilters() {
   categoryFilters.value = {
     keyword: ''
@@ -990,11 +1070,21 @@ function resetPrivateRoomFilters() {
   loadAll()
 }
 
+function togglePrivateRoomStatusFilter(value: string) {
+  privateRoomFilters.value.reservationStatus = privateRoomFilters.value.reservationStatus === value ? '' : value
+  loadAll()
+}
+
 function resetBanquetFilters() {
   banquetFilters.value = {
     keyword: '',
     status: ''
   }
+  loadAll()
+}
+
+function toggleBanquetStatusFilter(value: string) {
+  banquetFilters.value.status = banquetFilters.value.status === value ? '' : value
   loadAll()
 }
 
@@ -1316,6 +1406,28 @@ onMounted(() => {
   margin: -4px 0 16px;
   color: #8b5e34;
   font-size: 13px;
+}
+
+.status-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: -4px 0 18px;
+}
+
+.status-pill {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: rgba(244, 239, 231, 0.95);
+  color: #8b5e34;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.status-pill.active {
+  background: linear-gradient(135deg, #d8a35d, #9f6731);
+  color: #fff7ec;
 }
 
 .detail-grid {
