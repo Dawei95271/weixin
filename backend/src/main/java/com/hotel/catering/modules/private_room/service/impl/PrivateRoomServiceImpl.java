@@ -94,8 +94,10 @@ public class PrivateRoomServiceImpl implements PrivateRoomService {
             reservation.getId(),
             reservation.getReservationNo(),
             reservation.getPrivateRoomId(),
+            room.getName(),
             reservation.getReserveDate(),
             reservation.getTimeslotCode(),
+            toTimeslotName(reservation.getTimeslotCode()),
             reservation.getGuestCount(),
             reservation.getContactName(),
             reservation.getContactPhone(),
@@ -110,19 +112,7 @@ public class PrivateRoomServiceImpl implements PrivateRoomService {
         return privateRoomReservationMapper.selectList(new LambdaQueryWrapper<PrivateRoomReservation>()
                 .orderByDesc(PrivateRoomReservation::getReserveDate, PrivateRoomReservation::getId))
             .stream()
-            .map(item -> new PrivateRoomReservationVO(
-                item.getId(),
-                item.getReservationNo(),
-                item.getPrivateRoomId(),
-                item.getReserveDate(),
-                item.getTimeslotCode(),
-                item.getGuestCount(),
-                item.getContactName(),
-                item.getContactPhone(),
-                item.getDepositAmount(),
-                item.getReservationStatus(),
-                listReservationItems(item.getId())
-            ))
+            .map(this::toReservationVO)
             .toList();
     }
 
@@ -132,19 +122,7 @@ public class PrivateRoomServiceImpl implements PrivateRoomService {
         if (item == null) {
             throw new BusinessException("包间预约不存在");
         }
-        return new PrivateRoomReservationVO(
-            item.getId(),
-            item.getReservationNo(),
-            item.getPrivateRoomId(),
-            item.getReserveDate(),
-            item.getTimeslotCode(),
-            item.getGuestCount(),
-            item.getContactName(),
-            item.getContactPhone(),
-            item.getDepositAmount(),
-            item.getReservationStatus(),
-            listReservationItems(item.getId())
-        );
+        return toReservationVO(item);
     }
 
     private PrivateRoomReservationItem buildReservationItem(Long reservationId, PrivateRoomReserveItemDTO item) {
@@ -167,6 +145,37 @@ public class PrivateRoomServiceImpl implements PrivateRoomService {
             .stream()
             .map(item -> item.getDishName() + " x" + item.getQuantity())
             .toList();
+    }
+
+    private PrivateRoomReservationVO toReservationVO(PrivateRoomReservation item) {
+        PrivateRoom room = privateRoomMapper.selectById(item.getPrivateRoomId());
+        return new PrivateRoomReservationVO(
+            item.getId(),
+            item.getReservationNo(),
+            item.getPrivateRoomId(),
+            room == null ? "包间-" + item.getPrivateRoomId() : room.getName(),
+            item.getReserveDate(),
+            item.getTimeslotCode(),
+            toTimeslotName(item.getTimeslotCode()),
+            item.getGuestCount(),
+            item.getContactName(),
+            item.getContactPhone(),
+            item.getDepositAmount(),
+            item.getReservationStatus(),
+            listReservationItems(item.getId())
+        );
+    }
+
+    private String toTimeslotName(String timeslotCode) {
+        if (timeslotCode == null) {
+            return "";
+        }
+        return switch (timeslotCode) {
+            case "BREAKFAST" -> "早餐";
+            case "LUNCH" -> "中餐";
+            case "DINNER" -> "晚餐";
+            default -> timeslotCode;
+        };
     }
 
     private BigDecimal mockPrice(Long dishId) {

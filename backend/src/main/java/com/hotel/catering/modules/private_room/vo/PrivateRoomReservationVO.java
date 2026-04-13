@@ -13,8 +13,10 @@ public class PrivateRoomReservationVO {
     private Long id;
     private String reservationNo;
     private Long privateRoomId;
+    private String privateRoomName;
     private LocalDate reserveDate;
     private String timeslotCode;
+    private String timeslotName;
     private Integer guestCount;
     private String contactName;
     private String contactPhone;

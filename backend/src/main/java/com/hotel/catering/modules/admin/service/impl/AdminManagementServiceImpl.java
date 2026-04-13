@@ -17,6 +17,7 @@ import com.hotel.catering.modules.order.vo.OrderItemVO;
 import com.hotel.catering.modules.order.vo.OrderVO;
 import com.hotel.catering.modules.private_room.entity.PrivateRoomReservation;
 import com.hotel.catering.modules.private_room.entity.PrivateRoomReservationItem;
+import com.hotel.catering.modules.private_room.mapper.PrivateRoomMapper;
 import com.hotel.catering.modules.private_room.mapper.PrivateRoomReservationItemMapper;
 import com.hotel.catering.modules.private_room.mapper.PrivateRoomReservationMapper;
 import com.hotel.catering.modules.private_room.vo.PrivateRoomReservationVO;
@@ -31,6 +32,7 @@ public class AdminManagementServiceImpl implements AdminManagementService {
 
     private final FoodOrderMapper foodOrderMapper;
     private final FoodOrderItemMapper foodOrderItemMapper;
+    private final PrivateRoomMapper privateRoomMapper;
     private final PrivateRoomReservationMapper privateRoomReservationMapper;
     private final PrivateRoomReservationItemMapper privateRoomReservationItemMapper;
     private final BanquetReservationMapper banquetReservationMapper;
@@ -177,8 +179,10 @@ public class AdminManagementServiceImpl implements AdminManagementService {
             reservation.getId(),
             reservation.getReservationNo(),
             reservation.getPrivateRoomId(),
+            resolvePrivateRoomName(reservation.getPrivateRoomId()),
             reservation.getReserveDate(),
             reservation.getTimeslotCode(),
+            toTimeslotName(reservation.getTimeslotCode()),
             reservation.getGuestCount(),
             reservation.getContactName(),
             reservation.getContactPhone(),
@@ -186,5 +190,25 @@ public class AdminManagementServiceImpl implements AdminManagementService {
             reservation.getReservationStatus(),
             preorderDishes
         );
+    }
+
+    private String resolvePrivateRoomName(Long privateRoomId) {
+        if (privateRoomId == null) {
+            return "";
+        }
+        var room = privateRoomMapper.selectById(privateRoomId);
+        return room == null ? "包间-" + privateRoomId : room.getName();
+    }
+
+    private String toTimeslotName(String timeslotCode) {
+        if (timeslotCode == null) {
+            return "";
+        }
+        return switch (timeslotCode) {
+            case "BREAKFAST" -> "早餐";
+            case "LUNCH" -> "中餐";
+            case "DINNER" -> "晚餐";
+            default -> timeslotCode;
+        };
     }
 }

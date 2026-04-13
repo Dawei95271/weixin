@@ -178,9 +178,9 @@
 
         <el-table v-else-if="currentTab === 'privateRooms'" :data="privateRooms" stripe>
           <el-table-column prop="reservationNo" label="预约号" min-width="220" />
-          <el-table-column prop="privateRoomId" label="包间ID" width="120" />
+          <el-table-column prop="privateRoomName" label="包间" width="140" />
           <el-table-column prop="reserveDate" label="日期" width="140" />
-          <el-table-column prop="timeslotCode" label="时段" width="140" />
+          <el-table-column prop="timeslotName" label="时段" width="120" />
           <el-table-column prop="contactName" label="联系人" width="120" />
           <el-table-column label="状态" width="140">
             <template #default="{ row }">
@@ -322,8 +322,8 @@
             <div class="detail-value">{{ privateRoomDetail.reservationNo }}</div>
           </div>
           <div class="detail-block">
-            <div class="detail-label">包间ID</div>
-            <div class="detail-value">{{ privateRoomDetail.privateRoomId }}</div>
+            <div class="detail-label">包间</div>
+            <div class="detail-value">{{ privateRoomDetail.privateRoomName || `包间-${privateRoomDetail.privateRoomId}` }}</div>
           </div>
           <div class="detail-block">
             <div class="detail-label">预约日期</div>
@@ -331,7 +331,7 @@
           </div>
           <div class="detail-block">
             <div class="detail-label">时段</div>
-            <div class="detail-value">{{ privateRoomDetail.timeslotCode }}</div>
+            <div class="detail-value">{{ privateRoomDetail.timeslotName || privateRoomDetail.timeslotCode }}</div>
           </div>
           <div class="detail-block">
             <div class="detail-label">联系人</div>

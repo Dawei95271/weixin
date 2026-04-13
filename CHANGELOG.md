@@ -61,3 +61,8 @@
 - Added backend filtering for private-room reservations by reservation status.
 - Added backend filtering for banquet reservations by follow-up status.
 - Added admin UI filter controls and reset actions for both reservation tabs.
+
+### Admin Reservation Readability
+
+- Added private-room names and localized timeslot labels to reservation responses.
+- Updated admin reservation list and detail dialogs to show readable room and timeslot text.
