@@ -131,3 +131,8 @@
 
 - Added clickable status summary pills for orders, private-room reservations, and banquet reservations.
 - Status summaries now show counts and can toggle the matching filter directly from the list page.
+
+### Extended Admin Status Summaries
+
+- Added clickable status summary pills for category enablement and dish shelf status.
+- Updated dashboard stat cards to follow the active management tab and current filtered results more closely.

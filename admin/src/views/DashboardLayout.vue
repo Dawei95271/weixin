@@ -26,16 +26,16 @@
 
       <section class="stats">
         <div class="stat-card">
-          <span>{{ currentTab === 'orders' ? '筛选后订单' : '订单总数' }}</span>
-          <strong>{{ currentTab === 'orders' ? filteredOrders.length : orders.length }}</strong>
+          <span>{{ statCards[0].label }}</span>
+          <strong>{{ statCards[0].value }}</strong>
         </div>
         <div class="stat-card">
-          <span>{{ currentTab === 'categories' ? '当前分类' : '分类总数' }}</span>
-          <strong>{{ categories.length }}</strong>
+          <span>{{ statCards[1].label }}</span>
+          <strong>{{ statCards[1].value }}</strong>
         </div>
         <div class="stat-card">
-          <span>{{ currentTab === 'dishes' ? '筛选后菜品' : '菜品总数' }}</span>
-          <strong>{{ currentTab === 'dishes' ? filteredDishes.length : dishes.length }}</strong>
+          <span>{{ statCards[2].label }}</span>
+          <strong>{{ statCards[2].value }}</strong>
         </div>
       </section>
 
@@ -58,6 +58,17 @@
             style="width: 260px"
           />
           <el-button @click="resetCategoryFilters">重置</el-button>
+        </div>
+        <div v-if="currentTab === 'categories'" class="status-summary">
+          <button
+            v-for="item in categoryStatusSummary"
+            :key="item.value"
+            class="status-pill"
+            :class="{ active: categoryFilters.status === item.value }"
+            @click="toggleCategoryStatusFilter(item.value)"
+          >
+            {{ item.label }} {{ item.count }}
+          </button>
         </div>
 
         <div v-if="currentTab === 'orders'" class="filter-row">
@@ -195,6 +206,17 @@
         </div>
         <div v-if="currentTab === 'dishes'" class="result-summary">
           当前共找到 {{ filteredDishes.length }} 条菜品记录
+        </div>
+        <div v-if="currentTab === 'dishes'" class="status-summary">
+          <button
+            v-for="item in dishStatusSummary"
+            :key="item.value"
+            class="status-pill"
+            :class="{ active: dishFilters.status === item.value }"
+            @click="toggleDishStatusFilter(item.value)"
+          >
+            {{ item.label }} {{ item.count }}
+          </button>
         </div>
 
         <el-table
@@ -766,7 +788,8 @@ const categoryForm = ref({
   sort: 0
 })
 const categoryFilters = ref({
-  keyword: ''
+  keyword: '',
+  status: undefined as number | undefined
 })
 const dishForm = ref({
   id: undefined as number | undefined,
@@ -780,7 +803,8 @@ const dishForm = ref({
 })
 const dishFilters = ref({
   keyword: '',
-  categoryId: undefined as number | undefined
+  categoryId: undefined as number | undefined,
+  status: undefined as number | undefined
 })
 const orderFilters = ref({
   keyword: '',
@@ -805,6 +829,42 @@ const title = computed(() => {
   return '宴席预约总览'
 })
 
+const statCards = computed(() => {
+  if (currentTab.value === 'orders') {
+    return [
+      { label: '筛选后订单', value: filteredOrders.value.length },
+      { label: '分类总数', value: categories.value.length },
+      { label: '菜品总数', value: dishes.value.length }
+    ]
+  }
+  if (currentTab.value === 'categories') {
+    return [
+      { label: '订单总数', value: orders.value.length },
+      { label: '筛选后分类', value: filteredCategories.value.length },
+      { label: '菜品总数', value: dishes.value.length }
+    ]
+  }
+  if (currentTab.value === 'dishes') {
+    return [
+      { label: '订单总数', value: orders.value.length },
+      { label: '分类总数', value: categories.value.length },
+      { label: '筛选后菜品', value: filteredDishes.value.length }
+    ]
+  }
+  if (currentTab.value === 'privateRooms') {
+    return [
+      { label: '订单总数', value: orders.value.length },
+      { label: '分类总数', value: categories.value.length },
+      { label: '筛选后包间预约', value: filteredPrivateRooms.value.length }
+    ]
+  }
+  return [
+    { label: '订单总数', value: orders.value.length },
+    { label: '分类总数', value: categories.value.length },
+    { label: '筛选后宴席预约', value: filteredBanquets.value.length }
+  ]
+})
+
 const privateRoomDishRows = computed(() =>
   ((privateRoomDetail.value?.preorderDishes?.length
     ? privateRoomDetail.value.preorderDishes
@@ -813,12 +873,23 @@ const privateRoomDishRows = computed(() =>
 
 const filteredCategories = computed(() => {
   const keyword = categoryFilters.value.keyword.trim().toLowerCase()
-  if (!keyword) {
-    return categories.value
-  }
-  return categories.value.filter((item) =>
-    String(item.name || '').toLowerCase().includes(keyword)
-  )
+  const status = categoryFilters.value.status
+  return categories.value.filter((item) => {
+    const matchesKeyword = !keyword || String(item.name || '').toLowerCase().includes(keyword)
+    const matchesStatus = status === undefined || Number(item.status) === status
+    return matchesKeyword && matchesStatus
+  })
+})
+
+const categoryStatusSummary = computed(() => {
+  const items = [
+    { value: 1, label: '已启用' },
+    { value: 0, label: '已停用' }
+  ]
+  return items.map((item) => ({
+    ...item,
+    count: categories.value.filter((category) => Number(category.status) === item.value).length
+  }))
 })
 
 const filteredOrders = computed(() => {
@@ -851,12 +922,25 @@ const orderStatusSummary = computed(() => {
 const filteredDishes = computed(() => {
   const keyword = dishFilters.value.keyword.trim().toLowerCase()
   const categoryId = dishFilters.value.categoryId
+  const status = dishFilters.value.status
   return dishes.value.filter((item) => {
     const matchesKeyword = !keyword
       || [item.name, item.subtitle].some((field) => String(field || '').toLowerCase().includes(keyword))
     const matchesCategory = !categoryId || item.categoryId === categoryId
-    return matchesKeyword && matchesCategory
+    const matchesStatus = status === undefined || Number(item.status) === status
+    return matchesKeyword && matchesCategory && matchesStatus
   })
+})
+
+const dishStatusSummary = computed(() => {
+  const items = [
+    { value: 1, label: '已上架' },
+    { value: 0, label: '已下架' }
+  ]
+  return items.map((item) => ({
+    ...item,
+    count: dishes.value.filter((dish) => Number(dish.status) === item.value).length
+  }))
 })
 
 const filteredPrivateRooms = computed(() => {
@@ -1051,15 +1135,25 @@ function toggleOrderStatusFilter(value: string) {
 
 function resetCategoryFilters() {
   categoryFilters.value = {
-    keyword: ''
+    keyword: '',
+    status: undefined
   }
+}
+
+function toggleCategoryStatusFilter(value: number) {
+  categoryFilters.value.status = categoryFilters.value.status === value ? undefined : value
 }
 
 function resetDishFilters() {
   dishFilters.value = {
     keyword: '',
-    categoryId: undefined
+    categoryId: undefined,
+    status: undefined
   }
+}
+
+function toggleDishStatusFilter(value: number) {
+  dishFilters.value.status = dishFilters.value.status === value ? undefined : value
 }
 
 function resetPrivateRoomFilters() {
