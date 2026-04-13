@@ -71,3 +71,8 @@
 
 - Updated admin order tables and detail dialogs to show localized order-scene labels.
 - Added a clearer empty-state fallback for private-room preorder dishes in the detail dialog.
+
+### Admin Reservation Overview
+
+- Expanded banquet reservation tables with direct phone and budget visibility.
+- Highlighted private-room deposit amounts in reservation detail dialogs.

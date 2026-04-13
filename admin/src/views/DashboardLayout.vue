@@ -213,6 +213,12 @@
           <el-table-column prop="reserveDate" label="日期" width="140" />
           <el-table-column prop="guestCount" label="人数" width="100" />
           <el-table-column prop="contactName" label="联系人" width="120" />
+          <el-table-column prop="contactPhone" label="联系电话" width="160" />
+          <el-table-column label="预算" width="120">
+            <template #default="{ row }">
+              ¥{{ row.budgetAmount }}
+            </template>
+          </el-table-column>
           <el-table-column label="状态" width="140">
             <template #default="{ row }">
               <el-tag :type="banquetStatusTagType(row.status)">
@@ -354,6 +360,10 @@
           <div class="detail-block">
             <div class="detail-label">状态</div>
             <div class="detail-value">{{ reservationStatusLabel(privateRoomDetail.reservationStatus) }}</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">定金</div>
+            <div class="detail-value detail-value--highlight">¥{{ privateRoomDetail.depositAmount }}</div>
           </div>
         </div>
 
@@ -979,6 +989,10 @@ onMounted(() => {
   margin-top: 8px;
   font-size: 15px;
   font-weight: 600;
+}
+
+.detail-value--highlight {
+  color: #b7792f;
 }
 
 .stat-card span {
