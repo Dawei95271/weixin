@@ -116,3 +116,8 @@
 
 - Added one-click phone copy actions in private-room and banquet reservation lists.
 - Aligned contact handling workflows across order and reservation management screens.
+
+### Admin Detail Contact Actions
+
+- Added one-click phone copy actions inside order, private-room, and banquet detail dialogs.
+- Made contact handling consistent between list views and detail views.

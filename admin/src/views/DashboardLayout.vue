@@ -429,7 +429,17 @@
           </div>
           <div class="detail-block">
             <div class="detail-label">联系电话</div>
-            <div class="detail-value">{{ orderDetail.contactPhone }}</div>
+            <div class="detail-value detail-inline-action">
+              <span>{{ orderDetail.contactPhone }}</span>
+              <el-button
+                size="small"
+                text
+                type="primary"
+                @click="copyText(orderDetail.contactPhone)"
+              >
+                复制
+              </el-button>
+            </div>
           </div>
           <div class="detail-block">
             <div class="detail-label">房号</div>
@@ -491,7 +501,17 @@
           </div>
           <div class="detail-block">
             <div class="detail-label">联系电话</div>
-            <div class="detail-value">{{ privateRoomDetail.contactPhone }}</div>
+            <div class="detail-value detail-inline-action">
+              <span>{{ privateRoomDetail.contactPhone }}</span>
+              <el-button
+                size="small"
+                text
+                type="primary"
+                @click="copyText(privateRoomDetail.contactPhone)"
+              >
+                复制
+              </el-button>
+            </div>
           </div>
           <div class="detail-block">
             <div class="detail-label">人数</div>
@@ -546,7 +566,17 @@
           </div>
           <div class="detail-block">
             <div class="detail-label">联系电话</div>
-            <div class="detail-value">{{ banquetDetail.contactPhone }}</div>
+            <div class="detail-value detail-inline-action">
+              <span>{{ banquetDetail.contactPhone }}</span>
+              <el-button
+                size="small"
+                text
+                type="primary"
+                @click="copyText(banquetDetail.contactPhone)"
+              >
+                复制
+              </el-button>
+            </div>
           </div>
           <div class="detail-block">
             <div class="detail-label">预算</div>
@@ -1263,6 +1293,13 @@ onMounted(() => {
 
 .detail-value--highlight {
   color: #b7792f;
+}
+
+.detail-inline-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .stat-card span {
