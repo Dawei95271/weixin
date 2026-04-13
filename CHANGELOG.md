@@ -155,3 +155,9 @@
 - Redesigned the mini-program personal center with grouped dining, room-service, and reservation shortcuts.
 - Localized order and reservation cards with readable scene, status, and timeslot labels.
 - Added stronger empty-state guidance and quick actions for order and reservation entry points.
+
+### Mini Program Detail Experience Enhancements
+
+- Redesigned order detail pages with localized scene/status labels and grouped amount summaries.
+- Redesigned reservation detail pages for both private-room and banquet bookings with clearer grouped information.
+- Added better preorder-dish display and empty-state guidance for reservation details.

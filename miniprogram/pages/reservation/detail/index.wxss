@@ -1,7 +1,76 @@
-.detail-line,
-.dish-line {
+.summary-card {
+  margin-bottom: 0;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  flex-wrap: wrap;
+}
+
+.status-tag {
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
+  background: rgba(213, 140, 53, 0.16);
+  color: #a35d1f;
+  font-size: 22rpx;
+}
+
+.summary-no {
   display: block;
-  margin-top: 12rpx;
-  color: #4b5563;
+  margin-top: 10rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #2f1f14;
+}
+
+.summary-desc,
+.detail-label,
+.empty-text {
+  color: #6b7280;
+}
+
+.summary-desc {
+  display: block;
+  margin-top: 10rpx;
+  line-height: 1.7;
+}
+
+.detail-grid,
+.dish-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.detail-item,
+.dish-row {
+  padding: 22rpx;
+  border-radius: 22rpx;
+  background: #fff;
+}
+
+.detail-item--full {
+  margin-top: 18rpx;
+}
+
+.detail-label {
+  display: block;
+  font-size: 24rpx;
+}
+
+.detail-value,
+.dish-name {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2f1f14;
+  line-height: 1.7;
+}
+
+.empty-text {
   line-height: 1.7;
 }

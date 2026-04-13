@@ -1,36 +1,94 @@
 <view wx:if="{{detail}}" class="reservation-detail-page">
+  <view class="section-card summary-card">
+    <view class="section-head">
+      <view class="section-title">{{type === 'banquet' ? '宴席预约详情' : '包间预约详情'}}</view>
+      <text class="status-tag">{{type === 'banquet' ? detail.statusLabel : detail.reservationStatusLabel}}</text>
+    </view>
+    <text class="summary-no">{{detail.reservationNo}}</text>
+    <text class="summary-desc">{{type === 'banquet' ? '宴席档期正在跟进确认中。' : '包间预约信息已生成，可查看时段与定金。'}}</text>
+  </view>
+
   <view class="section-card">
-    <view class="section-title">{{type === 'banquet' ? '宴席预约详情' : '包间预约详情'}}</view>
+    <view class="section-title">基础信息</view>
 
     <block wx:if="{{type === 'banquet'}}">
-      <text class="detail-line">预约号：{{detail.reservationNo}}</text>
-      <text class="detail-line">宴席类型：{{detail.banquetType}}</text>
-      <text class="detail-line">预约日期：{{detail.reserveDate}}</text>
-      <text class="detail-line">预计人数：{{detail.guestCount}}</text>
-      <text class="detail-line">预算金额：¥{{detail.budgetAmount}}</text>
-      <text class="detail-line">联系人：{{detail.contactName}}</text>
-      <text class="detail-line">联系电话：{{detail.contactPhone}}</text>
-      <text class="detail-line">状态：{{detail.status}}</text>
-      <text class="detail-line">需求说明：{{detail.requirementDesc || '无'}}</text>
+      <view class="detail-grid">
+        <view class="detail-item">
+          <text class="detail-label">宴席类型</text>
+          <text class="detail-value">{{detail.banquetType}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">预约日期</text>
+          <text class="detail-value">{{detail.reserveDate}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">预计人数</text>
+          <text class="detail-value">{{detail.guestCount}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">预算金额</text>
+          <text class="detail-value">¥{{detail.budgetAmount || 0}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">联系人</text>
+          <text class="detail-value">{{detail.contactName || '未填写'}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">联系电话</text>
+          <text class="detail-value">{{detail.contactPhone || '未填写'}}</text>
+        </view>
+      </view>
+      <view class="detail-item detail-item--full">
+        <text class="detail-label">需求说明</text>
+        <text class="detail-value">{{detail.requirementDesc || '无'}}</text>
+      </view>
     </block>
 
     <block wx:else>
-      <text class="detail-line">预约号：{{detail.reservationNo}}</text>
-      <text class="detail-line">包间ID：{{detail.privateRoomId}}</text>
-      <text class="detail-line">预约日期：{{detail.reserveDate}}</text>
-      <text class="detail-line">时段：{{detail.timeslotCode}}</text>
-      <text class="detail-line">人数：{{detail.guestCount}}</text>
-      <text class="detail-line">联系人：{{detail.contactName}}</text>
-      <text class="detail-line">联系电话：{{detail.contactPhone}}</text>
-      <text class="detail-line">定金：¥{{detail.depositAmount}}</text>
-      <text class="detail-line">状态：{{detail.reservationStatus}}</text>
+      <view class="detail-grid">
+        <view class="detail-item">
+          <text class="detail-label">包间</text>
+          <text class="detail-value">{{detail.privateRoomDisplayName}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">预约日期</text>
+          <text class="detail-value">{{detail.reserveDate}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">时段</text>
+          <text class="detail-value">{{detail.timeslotLabel}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">人数</text>
+          <text class="detail-value">{{detail.guestCount}} 人</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">联系人</text>
+          <text class="detail-value">{{detail.contactName || '未填写'}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">联系电话</text>
+          <text class="detail-value">{{detail.contactPhone || '未填写'}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">定金</text>
+          <text class="detail-value">¥{{detail.depositAmount || 0}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">备注</text>
+          <text class="detail-value">{{detail.remark || '无'}}</text>
+        </view>
+      </view>
     </block>
   </view>
 
-  <view wx:if="{{type !== 'banquet' && detail.preorderDishes && detail.preorderDishes.length}}" class="section-card">
+  <view wx:if="{{type !== 'banquet'}}" class="section-card">
     <view class="section-title">预点菜品</view>
-    <view class="dish-list">
-      <text class="dish-line" wx:for="{{detail.preorderDishes}}" wx:key="*this">{{item}}</text>
+    <view wx:if="{{detail.preorderDishes && detail.preorderDishes.length}}" class="dish-list">
+      <view class="dish-row" wx:for="{{detail.preorderDishes}}" wx:key="*this">
+        <text class="dish-name">{{item}}</text>
+      </view>
     </view>
+    <view wx:else class="empty-text">暂未预点菜品，可在到店前继续补充。</view>
   </view>
 </view>
