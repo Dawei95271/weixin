@@ -173,3 +173,9 @@
 - Improved cart pages with delivery-scene awareness, item summaries, and empty-state guidance.
 - Improved order confirmation with localized scene labels, form validation, and clearer item/amount breakdowns.
 - Improved room-delivery recognition with clearer current-room guidance and reset actions.
+
+### Admin Workspace Enhancements
+
+- Added a lightweight workbench with pending-order, delivery, private-room, and banquet shortcuts.
+- Added contextual operating tips based on current order and reservation data.
+- Added one-click navigation from workbench cards into filtered management lists.

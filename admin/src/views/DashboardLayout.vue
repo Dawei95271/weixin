@@ -39,6 +39,40 @@
         </div>
       </section>
 
+      <section class="workspace-grid">
+        <div class="panel workspace-panel">
+          <div class="panel-head">
+            <h3>今日待处理</h3>
+            <span class="workspace-caption">点击即可跳转到对应列表</span>
+          </div>
+          <div class="workspace-cards">
+            <button
+              v-for="item in workspaceHighlights"
+              :key="item.key"
+              class="workspace-card"
+              @click="applyWorkspaceShortcut(item.key)"
+            >
+              <span class="workspace-label">{{ item.label }}</span>
+              <strong>{{ item.count }}</strong>
+              <span class="workspace-desc">{{ item.desc }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="panel workspace-panel">
+          <div class="panel-head">
+            <h3>工作建议</h3>
+            <span class="workspace-caption">帮助当班人员快速进入处理节奏</span>
+          </div>
+          <div class="workspace-tips">
+            <div v-for="tip in workspaceTips" :key="tip.title" class="workspace-tip">
+              <span class="workspace-tip-title">{{ tip.title }}</span>
+              <span class="workspace-tip-desc">{{ tip.desc }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="panel">
         <div class="panel-head">
           <h3>{{ title }}</h3>
@@ -919,6 +953,48 @@ const statCards = computed(() => {
   ]
 })
 
+const workspaceHighlights = computed(() => [
+  {
+    key: 'waitAcceptOrders',
+    label: '待接单订单',
+    count: orders.value.filter((item) => item.orderStatus === 'WAIT_ACCEPT').length,
+    desc: '尽快确认厨房是否开始制作'
+  },
+  {
+    key: 'deliveringOrders',
+    label: '配送中订单',
+    count: orders.value.filter((item) => item.orderStatus === 'DELIVERING').length,
+    desc: '重点关注客房送餐的到达情况'
+  },
+  {
+    key: 'reservedPrivateRooms',
+    label: '待到店包间',
+    count: privateRooms.value.filter((item) => item.reservationStatus === 'RESERVED').length,
+    desc: '查看今天和近期的包间预约安排'
+  },
+  {
+    key: 'waitingBanquets',
+    label: '待跟进宴席',
+    count: banquets.value.filter((item) => item.status === 'WAIT_FOLLOW').length,
+    desc: '优先联系高意向宴席客户'
+  }
+])
+
+const workspaceTips = computed(() => [
+  {
+    title: '先看待接单订单',
+    desc: `当前还有 ${orders.value.filter((item) => item.orderStatus === 'WAIT_ACCEPT').length} 笔订单待确认，适合先处理即时收入。`
+  },
+  {
+    title: '关注客房送餐',
+    desc: `当前客房送餐订单 ${orders.value.filter((item) => item.orderScene === 'ROOM_DELIVERY').length} 笔，建议留意配送进度。`
+  },
+  {
+    title: '检查宴席跟进',
+    desc: `待跟进宴席 ${banquets.value.filter((item) => item.status === 'WAIT_FOLLOW').length} 条，及时联系更容易提高转化。`
+  }
+])
+
 const privateRoomDishRows = computed(() =>
   ((privateRoomDetail.value?.preorderDishes?.length
     ? privateRoomDetail.value.preorderDishes
@@ -1236,6 +1312,32 @@ function toggleBanquetStatusFilter(value: string) {
   loadAll()
 }
 
+function applyWorkspaceShortcut(key: string) {
+  if (key === 'waitAcceptOrders') {
+    currentTab.value = 'orders'
+    orderFilters.value.orderStatus = 'WAIT_ACCEPT'
+    orderFilters.value.orderScene = ''
+    loadAll()
+    return
+  }
+  if (key === 'deliveringOrders') {
+    currentTab.value = 'orders'
+    orderFilters.value.orderStatus = 'DELIVERING'
+    orderFilters.value.orderScene = ''
+    loadAll()
+    return
+  }
+  if (key === 'reservedPrivateRooms') {
+    currentTab.value = 'privateRooms'
+    privateRoomFilters.value.reservationStatus = 'RESERVED'
+    loadAll()
+    return
+  }
+  currentTab.value = 'banquets'
+  banquetFilters.value.status = 'WAIT_FOLLOW'
+  loadAll()
+}
+
 async function changeOrderStatus(orderId: number, orderStatus: string) {
   try {
     await updateOrderStatus({ orderId, orderStatus })
@@ -1515,6 +1617,13 @@ onMounted(() => {
   margin: 24px 0;
 }
 
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
 .stat-card,
 .panel {
   border-radius: 22px;
@@ -1534,6 +1643,74 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
+}
+
+.workspace-panel {
+  padding-bottom: 18px;
+}
+
+.workspace-caption {
+  color: #a58a72;
+  font-size: 13px;
+}
+
+.workspace-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.workspace-card {
+  border: 0;
+  border-radius: 18px;
+  padding: 18px;
+  text-align: left;
+  cursor: pointer;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 238, 227, 0.96));
+  color: #2b2118;
+}
+
+.workspace-card strong {
+  display: block;
+  margin: 12px 0 8px;
+  font-size: 30px;
+}
+
+.workspace-label {
+  color: #8b5e34;
+  font-size: 13px;
+}
+
+.workspace-desc {
+  color: #6f5a46;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.workspace-tips {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.workspace-tip {
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.workspace-tip-title {
+  display: block;
+  color: #8b5e34;
+  font-weight: 600;
+}
+
+.workspace-tip-desc {
+  display: block;
+  margin-top: 8px;
+  color: #6f5a46;
+  line-height: 1.6;
+  font-size: 13px;
 }
 
 .filter-row {
