@@ -91,3 +91,8 @@
 
 - Added local quick search for dish names and subtitles in the admin console.
 - Added category-based filtering for the dish management table.
+
+### Admin Reservation Results Feedback
+
+- Added result counts for private-room and banquet reservation filters.
+- Added clearer empty-state messages when no reservation records match the current filters.

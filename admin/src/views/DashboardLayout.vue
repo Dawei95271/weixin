@@ -92,6 +92,9 @@
           <el-button type="primary" @click="loadAll">应用筛选</el-button>
           <el-button @click="resetPrivateRoomFilters">重置</el-button>
         </div>
+        <div v-if="currentTab === 'privateRooms'" class="result-summary">
+          当前共找到 {{ filteredPrivateRooms.length }} 条包间预约记录
+        </div>
 
         <div v-if="currentTab === 'banquets'" class="filter-row">
           <el-input
@@ -113,6 +116,9 @@
           </el-select>
           <el-button type="primary" @click="loadAll">应用筛选</el-button>
           <el-button @click="resetBanquetFilters">重置</el-button>
+        </div>
+        <div v-if="currentTab === 'banquets'" class="result-summary">
+          当前共找到 {{ filteredBanquets.length }} 条宴席预约记录
         </div>
 
         <div v-if="currentTab === 'dishes'" class="filter-row">
@@ -227,7 +233,12 @@
           </el-table-column>
         </el-table>
 
-        <el-table v-else-if="currentTab === 'privateRooms'" :data="filteredPrivateRooms" stripe>
+        <el-table
+          v-else-if="currentTab === 'privateRooms'"
+          :data="filteredPrivateRooms"
+          stripe
+          empty-text="暂无符合条件的包间预约记录"
+        >
           <el-table-column prop="reservationNo" label="预约号" min-width="220" />
           <el-table-column prop="privateRoomName" label="包间" width="140" />
           <el-table-column label="日期" width="140">
@@ -256,7 +267,12 @@
           </el-table-column>
         </el-table>
 
-        <el-table v-else :data="filteredBanquets" stripe>
+        <el-table
+          v-else
+          :data="filteredBanquets"
+          stripe
+          empty-text="暂无符合条件的宴席预约记录"
+        >
           <el-table-column prop="reservationNo" label="预约号" min-width="220" />
           <el-table-column prop="banquetType" label="宴席类型" width="140" />
           <el-table-column label="日期" width="140">
@@ -1130,6 +1146,12 @@ onMounted(() => {
   gap: 10px;
   margin-bottom: 16px;
   flex-wrap: wrap;
+}
+
+.result-summary {
+  margin: -4px 0 16px;
+  color: #8b5e34;
+  font-size: 13px;
 }
 
 .detail-grid {
