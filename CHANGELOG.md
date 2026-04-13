@@ -66,3 +66,8 @@
 
 - Added private-room names and localized timeslot labels to reservation responses.
 - Updated admin reservation list and detail dialogs to show readable room and timeslot text.
+
+### Admin Order Readability
+
+- Updated admin order tables and detail dialogs to show localized order-scene labels.
+- Added a clearer empty-state fallback for private-room preorder dishes in the detail dialog.

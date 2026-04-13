@@ -99,7 +99,13 @@
 
         <el-table v-if="currentTab === 'orders'" :data="orders" stripe>
           <el-table-column prop="orderNo" label="订单号" min-width="220" />
-          <el-table-column prop="orderScene" label="场景" width="170" />
+          <el-table-column label="场景" width="170">
+            <template #default="{ row }">
+              <el-tag :type="orderSceneTagType(row.orderScene)">
+                {{ orderSceneLabel(row.orderScene) }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column prop="contactName" label="联系人" width="120" />
           <el-table-column prop="contactPhone" label="联系电话" width="160" />
           <el-table-column label="状态" width="140">
@@ -283,7 +289,7 @@
           </div>
           <div class="detail-block">
             <div class="detail-label">场景</div>
-            <div class="detail-value">{{ orderDetail.orderScene }}</div>
+            <div class="detail-value">{{ orderSceneLabel(orderDetail.orderScene) }}</div>
           </div>
           <div class="detail-block">
             <div class="detail-label">联系人</div>
@@ -520,8 +526,28 @@ const title = computed(() => {
 })
 
 const privateRoomDishRows = computed(() =>
-  (privateRoomDetail.value?.preorderDishes || []).map((name: string) => ({ name }))
+  ((privateRoomDetail.value?.preorderDishes?.length
+    ? privateRoomDetail.value.preorderDishes
+    : ['暂未预点菜']) as string[]).map((name: string) => ({ name }))
 )
+
+function orderSceneLabel(value: string) {
+  const map: Record<string, string> = {
+    NORMAL: '普通点餐',
+    ROOM_DELIVERY: '客房送餐',
+    PRIVATE_ROOM_PREORDER: '包间预点菜'
+  }
+  return map[value] || value
+}
+
+function orderSceneTagType(value: string) {
+  const map: Record<string, string> = {
+    NORMAL: '',
+    ROOM_DELIVERY: 'primary',
+    PRIVATE_ROOM_PREORDER: 'warning'
+  }
+  return map[value] || 'info'
+}
 
 function orderStatusLabel(value: string) {
   const map: Record<string, string> = {
