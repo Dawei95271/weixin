@@ -1,3 +1,14 @@
+.summary-card {
+  margin-bottom: 0;
+}
+
+.summary-desc,
+.label,
+.tip-line {
+  color: #6b7280;
+  line-height: 1.7;
+}
+
 .form-group {
   margin-bottom: 22rpx;
 }
@@ -6,7 +17,6 @@
   display: block;
   margin-bottom: 12rpx;
   font-size: 28rpx;
-  color: #6b7280;
 }
 
 .picker-value,
@@ -22,7 +32,34 @@
   min-height: 180rpx;
 }
 
+.summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+  padding: 22rpx;
+  border-radius: 22rpx;
+  background: #fff;
+}
+
+.tips-card {
+  margin-bottom: 120rpx;
+}
+
+.tip-line {
+  display: block;
+  margin-top: 10rpx;
+}
+
 .reserve-btn {
-  width: 100%;
-  margin-top: 16rpx;
+  position: fixed;
+  left: 24rpx;
+  right: 24rpx;
+  bottom: 24rpx;
 }

@@ -1,6 +1,11 @@
 <view class="banquet-page">
-  <view class="section-card">
+  <view class="section-card summary-card">
     <view class="section-title">宴席预约</view>
+    <text class="summary-desc">婚宴、寿宴、商务宴等需求可先线上留资，提交后后台会尽快联系你确认方案。</text>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">预约信息</view>
 
     <view class="form-group">
       <text class="label">宴席类型</text>
@@ -33,14 +38,43 @@
 
     <view class="form-group">
       <text class="label">联系电话</text>
-      <input class="text-input" type="number" value="{{contactPhone}}" bindinput="onPhoneInput" />
+      <input class="text-input" type="number" maxlength="11" value="{{contactPhone}}" bindinput="onPhoneInput" />
     </view>
 
     <view class="form-group">
       <text class="label">需求说明</text>
       <textarea class="text-area" value="{{requirementDesc}}" bindinput="onRequirementInput" placeholder="比如婚礼风格、桌数、场地布置、是否需要舞台"></textarea>
     </view>
-
-    <button class="primary-btn reserve-btn" loading="{{submitting}}" bindtap="submitReservation">提交宴席预约</button>
   </view>
+
+  <view class="section-card">
+    <view class="section-title">预约摘要</view>
+    <view class="summary-list">
+      <view class="summary-row">
+        <text>宴席类型</text>
+        <text>{{banquetTypes[banquetTypeIndex]}}</text>
+      </view>
+      <view class="summary-row">
+        <text>预约日期</text>
+        <text>{{reserveDate}}</text>
+      </view>
+      <view class="summary-row">
+        <text>预计人数</text>
+        <text>{{guestCount}} 人</text>
+      </view>
+      <view class="summary-row">
+        <text>预算金额</text>
+        <text>¥{{budgetAmount || 0}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-card tips-card">
+    <view class="section-title">预约提醒</view>
+    <text class="tip-line">1. 宴席预约提交后会先进入待跟进状态。</text>
+    <text class="tip-line">2. 请尽量描述清楚桌数、风格、舞台或布置需求。</text>
+    <text class="tip-line">3. 商家会根据档期和预算与你进一步确认方案。</text>
+  </view>
+
+  <button class="primary-btn reserve-btn" loading="{{submitting}}" bindtap="submitReservation">提交宴席预约</button>
 </view>

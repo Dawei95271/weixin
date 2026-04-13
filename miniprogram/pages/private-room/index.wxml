@@ -1,6 +1,11 @@
 <view class="private-room-page">
-  <view class="section-card">
+  <view class="section-card summary-card">
     <view class="section-title">包间预约</view>
+    <text class="summary-desc">提前锁定日期、时段和包间，提交后可在“我的预约”里继续查看进度。</text>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">预约信息</view>
 
     <view class="form-group">
       <text class="label">预约日期</text>
@@ -12,14 +17,14 @@
     <view class="form-group">
       <text class="label">选择包间</text>
       <picker range="{{rooms}}" range-key="name" value="{{roomIndex}}" bindchange="onRoomChange">
-        <view class="picker-value">{{rooms[roomIndex].name || '请选择包间'}}</view>
+        <view class="picker-value">{{selectedRoomName || '暂无可选包间'}}</view>
       </picker>
     </view>
 
     <view class="form-group">
       <text class="label">选择时段</text>
-      <picker range="{{timeslots}}" value="{{timeslotIndex}}" bindchange="onTimeslotChange">
-        <view class="picker-value">{{timeslots[timeslotIndex] || '请选择时段'}}</view>
+      <picker range="{{timeslots}}" range-key="label" value="{{timeslotIndex}}" bindchange="onTimeslotChange">
+        <view class="picker-value">{{selectedTimeslotLabel || '暂无可选时段'}}</view>
       </picker>
     </view>
 
@@ -35,14 +40,47 @@
 
     <view class="form-group">
       <text class="label">手机号</text>
-      <input class="text-input" type="number" value="{{contactPhone}}" bindinput="onPhoneInput" />
+      <input class="text-input" type="number" maxlength="11" value="{{contactPhone}}" bindinput="onPhoneInput" />
     </view>
 
     <view class="form-group">
       <text class="label">备注</text>
-      <textarea class="text-area" value="{{remark}}" bindinput="onRemarkInput" placeholder="如有特殊需求可以先写在这里"></textarea>
+      <textarea class="text-area" value="{{remark}}" bindinput="onRemarkInput" placeholder="如有特殊需求、预点菜计划或到店说明，可以先写在这里"></textarea>
     </view>
-
-    <button class="primary-btn reserve-btn" loading="{{submitting}}" bindtap="submitReservation">提交预约</button>
   </view>
+
+  <view class="section-card">
+    <view class="section-title">预约摘要</view>
+    <view class="summary-list">
+      <view class="summary-row">
+        <text>包间</text>
+        <text>{{selectedRoomName}}</text>
+      </view>
+      <view class="summary-row">
+        <text>日期</text>
+        <text>{{reserveDate}}</text>
+      </view>
+      <view class="summary-row">
+        <text>时段</text>
+        <text>{{selectedTimeslotLabel}}</text>
+      </view>
+      <view class="summary-row">
+        <text>人数</text>
+        <text>{{guestCount}} 人</text>
+      </view>
+      <view class="summary-row" wx:if="{{rooms.length}}">
+        <text>参考定金</text>
+        <text>¥{{selectedDepositAmount || 0}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-card tips-card">
+    <view class="section-title">预约提醒</view>
+    <text class="tip-line">1. 包间同一日期和时段只能预约一次。</text>
+    <text class="tip-line">2. 建议留下准确联系电话，方便商家确认到店信息。</text>
+    <text class="tip-line">3. 提交后可到“我的预约”里查看状态变化。</text>
+  </view>
+
+  <button class="primary-btn reserve-btn" loading="{{submitting}}" bindtap="submitReservation">提交预约</button>
 </view>

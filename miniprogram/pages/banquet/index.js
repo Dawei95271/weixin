@@ -61,7 +61,36 @@ Page({
     })
   },
 
+  validateForm() {
+    if (!this.data.contactName.trim()) {
+      wx.showToast({
+        title: '请填写联系人',
+        icon: 'none'
+      })
+      return false
+    }
+    if (!/^1\d{10}$/.test(this.data.contactPhone)) {
+      wx.showToast({
+        title: '请输入正确手机号',
+        icon: 'none'
+      })
+      return false
+    }
+    if (Number(this.data.guestCount) < 1) {
+      wx.showToast({
+        title: '预计人数至少为 1',
+        icon: 'none'
+      })
+      return false
+    }
+    return true
+  },
+
   async submitReservation() {
+    if (!this.validateForm()) {
+      return
+    }
+
     try {
       this.setData({ submitting: true })
       const banquetType = this.data.banquetTypes[this.data.banquetTypeIndex]
@@ -77,8 +106,16 @@ Page({
       this.setData({ submitting: false })
       wx.showModal({
         title: '预约提交成功',
-        content: `预约号：${result.reservationNo}\n当前状态：${result.status}`,
-        showCancel: false
+        content: `预约号：${result.reservationNo}\n当前状态：${this.formatBanquetStatus(result.status)}`,
+        confirmText: '查看预约',
+        cancelText: '继续填写',
+        success: ({ confirm }) => {
+          if (confirm) {
+            wx.navigateTo({
+              url: '/pages/reservation/list/index'
+            })
+          }
+        }
       })
     } catch (error) {
       this.setData({ submitting: false })
@@ -87,5 +124,15 @@ Page({
         icon: 'none'
       })
     }
+  },
+
+  formatBanquetStatus(value) {
+    const map = {
+      WAIT_FOLLOW: '待跟进',
+      CONTACTED: '已联系',
+      CONFIRMED: '已确认',
+      CANCELLED: '已取消'
+    }
+    return map[value] || value || '未知状态'
   }
 })

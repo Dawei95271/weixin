@@ -161,3 +161,9 @@
 - Redesigned order detail pages with localized scene/status labels and grouped amount summaries.
 - Redesigned reservation detail pages for both private-room and banquet bookings with clearer grouped information.
 - Added better preorder-dish display and empty-state guidance for reservation details.
+
+### Mini Program Reservation Flow Enhancements
+
+- Added clearer summaries, reminders, and sticky submit actions to private-room and banquet booking forms.
+- Added client-side validation for key booking fields such as contact name, phone, and guest count.
+- Improved booking success feedback with direct navigation to reservation history.
