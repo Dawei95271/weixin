@@ -48,6 +48,9 @@
 
         <div v-if="currentTab === 'categories'" class="result-summary">
           当前共找到 {{ filteredCategories.length }} 条分类记录
+          <span class="result-summary-detail">
+            已启用 {{ categoryStatusSummary[0]?.count || 0 }} 条，已停用 {{ categoryStatusSummary[1]?.count || 0 }} 条
+          </span>
         </div>
 
         <div v-if="currentTab === 'categories'" class="filter-row">
@@ -206,6 +209,9 @@
         </div>
         <div v-if="currentTab === 'dishes'" class="result-summary">
           当前共找到 {{ filteredDishes.length }} 条菜品记录
+          <span class="result-summary-detail">
+            已上架 {{ dishStatusSummary[0]?.count || 0 }} 条，已下架 {{ dishStatusSummary[1]?.count || 0 }} 条
+          </span>
         </div>
         <div v-if="currentTab === 'dishes'" class="status-summary">
           <button
@@ -286,6 +292,14 @@
               </el-tag>
             </template>
           </el-table-column>
+          <el-table-column label="快捷信息" min-width="180">
+            <template #default="{ row }">
+              <div class="cell-inline-action">
+                <span>{{ row.name }}</span>
+                <el-button size="small" text type="primary" @click="copyText(row.name)">复制名称</el-button>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="240" fixed="right">
             <template #default="{ row }">
               <div class="action-row">
@@ -311,12 +325,38 @@
           <el-table-column prop="name" label="菜品名称" min-width="180" />
           <el-table-column prop="categoryName" label="分类" width="120" />
           <el-table-column prop="subtitle" label="副标题" min-width="180" />
-          <el-table-column prop="basePrice" label="价格" width="100" />
+          <el-table-column label="价格" width="120">
+            <template #default="{ row }">
+              {{ formatCurrency(row.basePrice) }}
+            </template>
+          </el-table-column>
+          <el-table-column label="推荐" width="100">
+            <template #default="{ row }">
+              <el-tag :type="Number(row.isRecommend) === 1 ? 'warning' : 'info'">
+                {{ Number(row.isRecommend) === 1 ? '推荐' : '普通' }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="客房配送" width="120">
+            <template #default="{ row }">
+              <el-tag :type="Number(row.supportsRoomDelivery) === 1 ? 'success' : 'info'">
+                {{ Number(row.supportsRoomDelivery) === 1 ? '支持' : '不支持' }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="状态" width="100">
             <template #default="{ row }">
               <el-tag :type="row.status === 1 ? 'success' : 'info'">
                 {{ row.status === 1 ? '上架' : '下架' }}
               </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="快捷信息" min-width="180">
+            <template #default="{ row }">
+              <div class="cell-inline-action">
+                <span>{{ row.name }}</span>
+                <el-button size="small" text type="primary" @click="copyText(row.name)">复制名称</el-button>
+              </div>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="240" fixed="right">
@@ -471,6 +511,20 @@
         </el-form-item>
         <el-form-item label="价格">
           <el-input-number v-model="dishForm.basePrice" :min="0" :precision="2" />
+        </el-form-item>
+        <el-form-item label="推荐菜">
+          <el-switch
+            v-model="dishForm.isRecommend"
+            :active-value="1"
+            :inactive-value="0"
+          />
+        </el-form-item>
+        <el-form-item label="客房配送">
+          <el-switch
+            v-model="dishForm.supportsRoomDelivery"
+            :active-value="1"
+            :inactive-value="0"
+          />
         </el-form-item>
         <el-form-item label="描述">
           <el-input v-model="dishForm.description" type="textarea" />
@@ -1500,6 +1554,14 @@ onMounted(() => {
   margin: -4px 0 16px;
   color: #8b5e34;
   font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.result-summary-detail {
+  color: #a58a72;
 }
 
 .status-summary {

@@ -136,3 +136,10 @@
 
 - Added clickable status summary pills for category enablement and dish shelf status.
 - Updated dashboard stat cards to follow the active management tab and current filtered results more closely.
+
+### Admin Menu Management Enhancements
+
+- Added quick-copy actions for category names and dish names in menu management tables.
+- Expanded dish management with recommendation and room-delivery visibility in the list view.
+- Added direct recommendation and room-delivery switches to the dish editing dialog.
+- Improved category and dish result summaries with status breakdown text.
