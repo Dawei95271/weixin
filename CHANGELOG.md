@@ -86,3 +86,8 @@
 
 - Added local keyword search for orders, private-room reservations, and banquet reservations.
 - Search supports matching business numbers, contact names, and phone numbers directly in the admin console.
+
+### Admin Dish Filtering
+
+- Added local quick search for dish names and subtitles in the admin console.
+- Added category-based filtering for the dish management table.

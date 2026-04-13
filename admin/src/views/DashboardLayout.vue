@@ -115,6 +115,29 @@
           <el-button @click="resetBanquetFilters">重置</el-button>
         </div>
 
+        <div v-if="currentTab === 'dishes'" class="filter-row">
+          <el-input
+            v-model="dishFilters.keyword"
+            clearable
+            placeholder="搜索菜品名称 / 副标题"
+            style="width: 260px"
+          />
+          <el-select
+            v-model="dishFilters.categoryId"
+            clearable
+            placeholder="按分类筛选"
+            style="width: 220px"
+          >
+            <el-option
+              v-for="item in categories"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
+          <el-button @click="resetDishFilters">重置</el-button>
+        </div>
+
         <el-table v-if="currentTab === 'orders'" :data="filteredOrders" stripe>
           <el-table-column prop="orderNo" label="订单号" min-width="220" />
           <el-table-column label="场景" width="170">
@@ -176,7 +199,7 @@
           </el-table-column>
         </el-table>
 
-        <el-table v-else-if="currentTab === 'dishes'" :data="dishes" stripe>
+        <el-table v-else-if="currentTab === 'dishes'" :data="filteredDishes" stripe>
           <el-table-column prop="name" label="菜品名称" min-width="180" />
           <el-table-column prop="categoryName" label="分类" width="120" />
           <el-table-column prop="subtitle" label="副标题" min-width="180" />
@@ -571,6 +594,10 @@ const dishForm = ref({
   supportsRoomDelivery: 1,
   isRecommend: 0
 })
+const dishFilters = ref({
+  keyword: '',
+  categoryId: undefined as number | undefined
+})
 const orderFilters = ref({
   keyword: '',
   orderStatus: '',
@@ -610,6 +637,17 @@ const filteredOrders = computed(() => {
       String(field || '').toLowerCase().includes(keyword)
     )
   )
+})
+
+const filteredDishes = computed(() => {
+  const keyword = dishFilters.value.keyword.trim().toLowerCase()
+  const categoryId = dishFilters.value.categoryId
+  return dishes.value.filter((item) => {
+    const matchesKeyword = !keyword
+      || [item.name, item.subtitle].some((field) => String(field || '').toLowerCase().includes(keyword))
+    const matchesCategory = !categoryId || item.categoryId === categoryId
+    return matchesKeyword && matchesCategory
+  })
 })
 
 const filteredPrivateRooms = computed(() => {
@@ -768,6 +806,13 @@ function resetOrderFilters() {
     orderScene: ''
   }
   loadAll()
+}
+
+function resetDishFilters() {
+  dishFilters.value = {
+    keyword: '',
+    categoryId: undefined
+  }
 }
 
 function resetPrivateRoomFilters() {
