@@ -288,6 +288,12 @@
           </el-table-column>
           <el-table-column prop="timeslotName" label="时段" width="120" />
           <el-table-column prop="contactName" label="联系人" width="120" />
+          <el-table-column prop="contactPhone" label="联系电话" width="160" />
+          <el-table-column label="快捷操作" width="120">
+            <template #default="{ row }">
+              <el-button size="small" text type="primary" @click="copyText(row.contactPhone)">复制电话</el-button>
+            </template>
+          </el-table-column>
           <el-table-column label="状态" width="140">
             <template #default="{ row }">
               <el-tag :type="reservationStatusTagType(row.reservationStatus)">
@@ -323,6 +329,11 @@
           <el-table-column prop="guestCount" label="人数" width="100" />
           <el-table-column prop="contactName" label="联系人" width="120" />
           <el-table-column prop="contactPhone" label="联系电话" width="160" />
+          <el-table-column label="快捷操作" width="120">
+            <template #default="{ row }">
+              <el-button size="small" text type="primary" @click="copyText(row.contactPhone)">复制电话</el-button>
+            </template>
+          </el-table-column>
           <el-table-column label="预算" width="120">
             <template #default="{ row }">
               ¥{{ row.budgetAmount }}

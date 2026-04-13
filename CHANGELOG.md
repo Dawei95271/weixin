@@ -111,3 +111,8 @@
 
 - Added keyword search for category management in the admin console.
 - Added one-click phone copy actions in the order management list.
+
+### Admin Reservation Contact Actions
+
+- Added one-click phone copy actions in private-room and banquet reservation lists.
+- Aligned contact handling workflows across order and reservation management screens.
