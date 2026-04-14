@@ -44,8 +44,11 @@ public class DishServiceImpl implements DishService {
                 item.getCategoryId(),
                 item.getName(),
                 item.getSubtitle(),
+                item.getDescription(),
+                item.getCoverImage(),
                 item.getBasePrice(),
-                item.getSupportsRoomDelivery() != null && item.getSupportsRoomDelivery() == 1
+                item.getIsRecommend(),
+                item.getSupportsRoomDelivery()
             ))
             .toList();
     }
@@ -64,8 +67,11 @@ public class DishServiceImpl implements DishService {
             dish.getCategoryId(),
             dish.getName(),
             dish.getSubtitle(),
+            dish.getDescription(),
+            dish.getCoverImage(),
             dish.getBasePrice(),
-            dish.getSupportsRoomDelivery() != null && dish.getSupportsRoomDelivery() == 1
+            dish.getIsRecommend(),
+            dish.getSupportsRoomDelivery()
         );
     }
 }

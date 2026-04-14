@@ -1,4 +1,5 @@
 const { request } = require('../../../utils/request')
+const { replaceCart } = require('../../../utils/cart')
 
 Page({
   data: {
@@ -49,5 +50,31 @@ Page({
       CANCELLED: '已取消'
     }
     return map[value] || value || '未知状态'
+  },
+
+  reorder() {
+    const order = this.data.order
+    if (!order || !order.items || !order.items.length) {
+      wx.showToast({
+        title: '当前订单没有可复购菜品',
+        icon: 'none'
+      })
+      return
+    }
+    replaceCart(order.items.map((item) => ({
+      id: item.dishId,
+      name: item.dishName,
+      price: item.unitPrice,
+      quantity: item.quantity
+    })))
+    wx.showToast({
+      title: '已加入购物车',
+      icon: 'success'
+    })
+    setTimeout(() => {
+      wx.switchTab({
+        url: '/pages/cart/index'
+      })
+    }, 300)
   }
 })

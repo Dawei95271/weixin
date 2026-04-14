@@ -93,5 +93,12 @@ Page({
       title: '已加入购物车',
       icon: 'success'
     })
+  },
+
+  openDishDetail(event) {
+    const { id } = event.currentTarget.dataset
+    wx.navigateTo({
+      url: `/pages/dish/detail/index?id=${id}`
+    })
   }
 })

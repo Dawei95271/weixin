@@ -62,5 +62,6 @@
         </view>
       </view>
     </view>
+    <button class="primary-btn reorder-btn" bindtap="reorder">再来一单</button>
   </view>
 </view>

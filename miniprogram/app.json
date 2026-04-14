@@ -7,6 +7,7 @@
     "pages/mine/index",
     "pages/order/list/index",
     "pages/order/detail/index",
+    "pages/dish/detail/index",
     "pages/order/confirm/index",
     "pages/reservation/list/index",
     "pages/reservation/detail/index",

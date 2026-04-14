@@ -109,3 +109,7 @@
   color: #9a5a1e;
   font-weight: 700;
 }
+
+.reorder-btn {
+  margin-top: 24rpx;
+}

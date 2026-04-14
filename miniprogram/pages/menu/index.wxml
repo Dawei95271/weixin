@@ -46,7 +46,10 @@
         </view>
         <text class="dish-price">¥{{item.price}}</text>
       </view>
-      <button class="primary-btn add-btn" data-dish="{{item}}" bindtap="addDish">加入购物车</button>
+      <view class="dish-actions">
+        <button class="ghost-btn detail-btn" data-id="{{item.id}}" bindtap="openDishDetail">查看详情</button>
+        <button class="primary-btn add-btn" data-dish="{{item}}" bindtap="addDish">加入购物车</button>
+      </view>
     </view>
   </view>
 </view>

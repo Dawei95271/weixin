@@ -12,6 +12,9 @@ public class DishVO {
     private Long categoryId;
     private String name;
     private String subtitle;
+    private String description;
+    private String coverImage;
     private BigDecimal price;
-    private boolean supportsRoomDelivery;
+    private Integer isRecommend;
+    private Integer supportsRoomDelivery;
 }

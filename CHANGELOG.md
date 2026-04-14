@@ -224,3 +224,9 @@
 
 - Added a shared business-hour helper for mini-program pages to derive current open or upcoming service guidance from configured breakfast, lunch, and dinner periods.
 - Added current business-status prompts to the home page, menu page, order confirmation page, private-room reservation page, and banquet reservation page.
+
+### Mini Program Dish Detail And Reorder
+
+- Added a dedicated mini-program dish detail page with business-hour prompts, merchant contact, quantity selection, and quick add-to-cart actions.
+- Extended dish responses with recommendation, room-delivery, and description fields so home, menu, and detail pages share richer dish content.
+- Added “view detail” entry points from the home featured section and menu list, plus a “reorder” action in order detail pages that restores dishes back into the cart.

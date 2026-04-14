@@ -93,7 +93,10 @@
             <text class="featured-badge" wx:if="{{item.supportsRoomDelivery === 1}}">支持客房送餐</text>
           </view>
         </view>
-        <button class="primary-btn featured-btn" data-dish="{{item}}" bindtap="addFeaturedDish">加入购物车</button>
+        <view class="featured-actions">
+          <button class="ghost-btn featured-sub-btn" data-id="{{item.id}}" bindtap="openDishDetail">查看详情</button>
+          <button class="primary-btn featured-btn" data-dish="{{item}}" bindtap="addFeaturedDish">加入购物车</button>
+        </view>
       </view>
     </view>
   </view>

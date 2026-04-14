@@ -178,6 +178,9 @@
   border-radius: 24rpx;
   background: linear-gradient(180deg, #fffdf8, #fff6eb);
   box-shadow: 0 14rpx 36rpx rgba(101, 67, 33, 0.08);
+  display: flex;
+  justify-content: space-between;
+  gap: 18rpx;
 }
 
 .featured-copy {
@@ -231,6 +234,18 @@
 }
 
 .featured-btn {
-  width: 100%;
-  margin-top: 20rpx;
+  width: 180rpx;
+}
+
+.featured-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16rpx;
+}
+
+.featured-sub-btn {
+  width: 180rpx;
+  color: #8d5524;
+  border-color: rgba(141, 85, 36, 0.22);
 }
