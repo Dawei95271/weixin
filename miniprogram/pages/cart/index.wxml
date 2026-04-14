@@ -38,11 +38,12 @@
   <view class="section-card total-card">
     <text class="summary-line">共 {{totalCount}} 份菜品，{{summaryText}}</text>
     <text class="summary-line">起送金额 ¥{{minOrderAmount || '0.00'}}，当前配送费 ¥{{roomInfo ? deliveryFee : '0.00'}}</text>
+    <text class="summary-line">{{orderHint}}</text>
     <text class="total-label">合计</text>
     <text class="total-price">¥{{totalAmount}}</text>
     <view class="action-group">
       <button bindtap="clearAll">清空购物车</button>
-      <button class="primary-btn" bindtap="submitOrder">提交订单</button>
+      <button class="primary-btn" disabled="{{!businessCanOrder}}" bindtap="submitOrder">提交订单</button>
     </view>
     <button class="ghost-btn contact-btn" wx:if="{{contactPhone}}" bindtap="callMerchant">联系商家</button>
   </view>

@@ -1,6 +1,7 @@
 const { getCart, updateQuantity, clearCart } = require('../../utils/cart')
 const { request } = require('../../utils/request')
 const { getCurrentRoom, clearCurrentRoom, getRoomDeliverySummary } = require('../../utils/room-delivery')
+const { getBusinessStatus } = require('../../utils/business')
 
 Page({
   data: {
@@ -11,6 +12,8 @@ Page({
     summaryText: '当前为普通点餐场景',
     roomDeliveryTitle: '',
     roomDeliveryDetail: '',
+    businessCanOrder: false,
+    orderHint: '',
     deliveryFee: '0.00',
     minOrderAmount: '0.00',
     contactPhone: '',
@@ -28,7 +31,9 @@ Page({
         deliveryFee: config.DELIVERY_FEE || '0.00',
         minOrderAmount: config.MIN_ORDER_AMOUNT || '0.00',
         contactPhone: config.CONTACT_PHONE || '',
-        roomDeliveryNotice: config.ROOM_DELIVERY_NOTICE || ''
+        roomDeliveryNotice: config.ROOM_DELIVERY_NOTICE || '',
+        businessCanOrder: getBusinessStatus(config).canOrder,
+        orderHint: getBusinessStatus(config).orderHint
       })
     } catch (error) {
       // keep page usable even if config loading fails
@@ -113,6 +118,13 @@ Page({
     if (!cart.length) {
       wx.showToast({
         title: '购物车为空',
+        icon: 'none'
+      })
+      return
+    }
+    if (!this.data.businessCanOrder) {
+      wx.showToast({
+        title: '当前非营业时段',
         icon: 'none'
       })
       return

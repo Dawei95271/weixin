@@ -33,7 +33,7 @@ Page({
         contactPhoneConfig: config.CONTACT_PHONE || '',
         homeNotice: config.HOME_NOTICE || '',
         businessStatusTitle: businessStatus.title,
-        businessStatusDetail: businessStatus.detail
+        businessStatusDetail: businessStatus.reserveHint
       })
     } catch (error) {
       // keep page usable even if config loading fails

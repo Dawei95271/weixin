@@ -43,6 +43,7 @@ Page({
         code,
         label: this.formatTimeslot(code)
       }))
+      const businessStatus = getBusinessStatus(config)
       this.setData({
         rooms: rooms || [],
         timeslots: mappedTimeslots,
@@ -56,8 +57,8 @@ Page({
         lunchHours: config.LUNCH_HOURS || '',
         dinnerHours: config.DINNER_HOURS || '',
         roomDeliveryNotice: config.ROOM_DELIVERY_NOTICE || '',
-        businessStatusTitle: getBusinessStatus(config).title,
-        businessStatusDetail: getBusinessStatus(config).detail
+        businessStatusTitle: businessStatus.title,
+        businessStatusDetail: businessStatus.reserveHint
       })
     } catch (error) {
       wx.showToast({

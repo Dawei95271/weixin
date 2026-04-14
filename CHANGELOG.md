@@ -240,3 +240,8 @@
 
 - Added a shared room-delivery helper to persist, clear, and summarize the current recognized room across mini-program pages.
 - Extended the home, menu, cart, room-recognition, and order-confirmation pages with visible room-delivery status cards and quick actions for re-recognition, cart review, and switching back to normal ordering.
+
+### Mini Program Business Action Guidance
+
+- Extended the business-hour helper with action-level guidance so mini-program pages can distinguish between display-only status and whether online ordering is currently available.
+- Disabled direct order submission outside configured business hours while keeping private-room and banquet reservations available with clearer “营业外也可预约” guidance.

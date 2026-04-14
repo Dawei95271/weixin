@@ -24,6 +24,8 @@ Page({
     merchantPhone: '',
     businessStatusTitle: '',
     businessStatusDetail: '',
+    businessCanOrder: false,
+    orderHint: '',
     submitting: false
   },
 
@@ -34,13 +36,16 @@ Page({
   async loadConfigAndRefresh() {
     try {
       const config = await request('/api/config/public')
+      const businessStatus = getBusinessStatus(config)
       this.setData({
         minOrderAmount: config.MIN_ORDER_AMOUNT || '0.00',
         deliveryFeeConfig: config.DELIVERY_FEE || '0.00',
         roomDeliveryNotice: config.ROOM_DELIVERY_NOTICE || '',
         merchantPhone: config.CONTACT_PHONE || '',
-        businessStatusTitle: getBusinessStatus(config).title,
-        businessStatusDetail: getBusinessStatus(config).detail
+        businessStatusTitle: businessStatus.title,
+        businessStatusDetail: businessStatus.detail,
+        businessCanOrder: businessStatus.canOrder,
+        orderHint: businessStatus.orderHint
       })
     } catch (error) {
       // keep page usable even if config loading fails
@@ -138,6 +143,13 @@ Page({
     if (!/^1\d{10}$/.test(this.data.contactPhone)) {
       wx.showToast({
         title: '请输入正确手机号',
+        icon: 'none'
+      })
+      return false
+    }
+    if (!this.data.businessCanOrder) {
+      wx.showToast({
+        title: '当前非营业时段',
         icon: 'none'
       })
       return false

@@ -13,6 +13,7 @@
     <text class="summary-desc">起送金额：¥{{minOrderAmount || '0.00'}}</text>
     <text class="summary-desc">{{businessStatusTitle}}</text>
     <text class="summary-desc">{{businessStatusDetail}}</text>
+    <text class="summary-desc">{{orderHint}}</text>
     <button class="ghost-btn contact-btn" wx:if="{{merchantPhone}}" bindtap="callMerchant">联系商家</button>
   </view>
 
@@ -78,6 +79,6 @@
       <text class="total-label">应付金额</text>
       <text class="total-price">¥{{totalAmount}}</text>
     </view>
-    <button class="primary-btn submit-btn" loading="{{submitting}}" bindtap="submitOrder">确认提交</button>
+    <button class="primary-btn submit-btn" loading="{{submitting}}" disabled="{{!businessCanOrder}}" bindtap="submitOrder">确认提交</button>
   </view>
 </view>
