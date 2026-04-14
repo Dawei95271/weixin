@@ -8,6 +8,7 @@ Page({
     businessScopes: [],
     homeBanners: [],
     serviceEntries: [],
+    topicCards: [],
     featuredDishes: [],
     contactPhone: '',
     homeNotice: '',
@@ -57,6 +58,15 @@ Page({
           id: `${item.title || 'entry'}-${index}`,
           title: item.title || '服务入口',
           subtitle: item.subtitle || '点击进入对应服务',
+          linkType: item.linkType || 'NONE',
+          linkValue: item.linkValue || '',
+          tone: item.tone || 'amber'
+        })),
+        topicCards: (data.topicCards || []).map((item, index) => ({
+          id: `${item.title || 'topic'}-${index}`,
+          eyebrow: item.eyebrow || 'SPECIAL',
+          title: item.title || '专题活动',
+          subtitle: item.subtitle || '点击查看当前活动专题',
           linkType: item.linkType || 'NONE',
           linkValue: item.linkValue || '',
           tone: item.tone || 'amber'
@@ -118,6 +128,14 @@ Page({
       return
     }
     this.handleLinkAction(entry)
+  },
+
+  onTopicCardTap(event) {
+    const topic = event.currentTarget.dataset.topic
+    if (!topic) {
+      return
+    }
+    this.handleLinkAction(topic)
   },
 
   handleLinkAction(target) {

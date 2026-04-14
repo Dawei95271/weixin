@@ -150,6 +150,12 @@
   gap: 18rpx;
 }
 
+.topic-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
 .info-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -254,6 +260,57 @@
   margin-top: 10rpx;
   font-size: 26rpx;
   color: #6b7280;
+}
+
+.topic-card {
+  padding: 28rpx;
+  border-radius: 26rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+  color: #fff8f0;
+  box-shadow: 0 14rpx 36rpx rgba(101, 67, 33, 0.08);
+}
+
+.topic-tone-amber {
+  background:
+    radial-gradient(circle at top right, rgba(255, 223, 179, 0.24), transparent 36%),
+    linear-gradient(135deg, #5d381d, #b87938);
+}
+
+.topic-tone-tea {
+  background:
+    radial-gradient(circle at top right, rgba(238, 240, 221, 0.24), transparent 36%),
+    linear-gradient(135deg, #284132, #6f8d69);
+}
+
+.topic-tone-copper {
+  background:
+    radial-gradient(circle at top right, rgba(250, 220, 205, 0.24), transparent 36%),
+    linear-gradient(135deg, #4e271f, #b26742);
+}
+
+.topic-eyebrow {
+  font-size: 22rpx;
+  letter-spacing: 0.24em;
+  color: rgba(255, 248, 240, 0.78);
+}
+
+.topic-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.topic-subtitle {
+  font-size: 26rpx;
+  line-height: 1.7;
+  color: rgba(255, 248, 240, 0.9);
+}
+
+.topic-action {
+  font-size: 24rpx;
+  color: #f9ddb1;
 }
 
 .featured-list {

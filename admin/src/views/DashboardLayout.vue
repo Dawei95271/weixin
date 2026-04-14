@@ -164,8 +164,8 @@
         </div>
 
         <div v-if="currentTab === 'configs'" class="result-summary">
-          当前共管理 {{ configSections.length }} 组运营配置、{{ bannerItems.length }} 条首页轮播和 {{ serviceEntryItems.length }} 个首页入口
-          <span class="result-summary-detail">支持修改营业时段、配送费用、公告、客房送餐提示、首页轮播运营位和首页服务入口</span>
+          当前共管理 {{ configSections.length }} 组运营配置、{{ bannerItems.length }} 条首页轮播、{{ serviceEntryItems.length }} 个首页入口和 {{ topicCardItems.length }} 张专题卡片
+          <span class="result-summary-detail">支持修改营业时段、配送费用、公告、客房送餐提示、首页轮播运营位、首页服务入口和活动专题卡片</span>
         </div>
 
         <div v-if="currentTab === 'configs'" class="config-grid">
@@ -345,6 +345,85 @@
               <label class="config-field" v-if="item.linkType === 'PATH'">
                 <span class="config-label">页面路径</span>
                 <el-input v-model="item.linkValue" placeholder="例如 /pages/menu/index" />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="currentTab === 'configs'" class="banner-editor">
+          <div class="panel-head">
+            <div>
+              <h3>首页活动专题卡片</h3>
+              <span class="workspace-caption">用于小程序首页活动专题区，适合做客房送餐、包间宴请、宴席咨询等场景主推</span>
+            </div>
+            <el-button type="primary" @click="addTopicCardItem">新增专题卡片</el-button>
+          </div>
+          <div class="banner-editor-list">
+            <div v-for="(item, index) in topicCardItems" :key="item.id" class="banner-editor-card">
+              <div class="banner-editor-head">
+                <div>
+                  <strong>专题 {{ index + 1 }}</strong>
+                  <p>{{ item.title || '未填写专题标题' }}</p>
+                </div>
+                <div class="action-row">
+                  <el-button size="small" @click="moveTopicCardItem(index, -1)" :disabled="index === 0">上移</el-button>
+                  <el-button
+                    size="small"
+                    @click="moveTopicCardItem(index, 1)"
+                    :disabled="index === topicCardItems.length - 1"
+                  >
+                    下移
+                  </el-button>
+                  <el-button
+                    size="small"
+                    type="danger"
+                    @click="removeTopicCardItem(index)"
+                    :disabled="topicCardItems.length === 1"
+                  >
+                    删除
+                  </el-button>
+                </div>
+              </div>
+              <div class="banner-editor-grid">
+                <label class="config-field">
+                  <span class="config-label">角标文案</span>
+                  <el-input v-model="item.eyebrow" placeholder="例如 ROOM DINING" />
+                </label>
+                <label class="config-field">
+                  <span class="config-label">专题标题</span>
+                  <el-input v-model="item.title" placeholder="例如 客房送餐专场" />
+                </label>
+                <label class="config-field">
+                  <span class="config-label">专题描述</span>
+                  <el-input v-model="item.subtitle" placeholder="例如 扫码识别房间后即可下单，配送费与起送金额自动展示" />
+                </label>
+                <label class="config-field">
+                  <span class="config-label">风格</span>
+                  <el-select v-model="item.tone">
+                    <el-option label="琥珀金" value="amber" />
+                    <el-option label="茶山绿" value="tea" />
+                    <el-option label="铜棕色" value="copper" />
+                  </el-select>
+                </label>
+                <label class="config-field">
+                  <span class="config-label">跳转类型</span>
+                  <el-select v-model="item.linkType">
+                    <el-option label="不跳转" value="NONE" />
+                    <el-option label="在线点餐" value="MENU" />
+                    <el-option label="购物车" value="CART" />
+                    <el-option label="客房点餐" value="ROOM" />
+                    <el-option label="包间预约" value="PRIVATE_ROOM" />
+                    <el-option label="宴席预约" value="BANQUET" />
+                    <el-option label="我的预约" value="RESERVATION" />
+                    <el-option label="我的服务" value="MINE" />
+                    <el-option label="联系电话" value="PHONE" />
+                    <el-option label="自定义页面路径" value="PATH" />
+                  </el-select>
+                </label>
+              </div>
+              <label class="config-field" v-if="item.linkType === 'PATH'">
+                <span class="config-label">页面路径</span>
+                <el-input v-model="item.linkValue" placeholder="例如 /pages/banquet/index" />
               </label>
             </div>
           </div>
@@ -1186,6 +1265,7 @@ const activityFilters = ref({
 })
 type BannerItem = {
   id: string
+  eyebrow?: string
   title: string
   subtitle: string
   linkType: string
@@ -1203,10 +1283,12 @@ const configForm = ref<Record<string, string>>({
   HOME_NOTICE: '',
   ROOM_DELIVERY_NOTICE: '',
   HOME_BANNERS: '',
-  HOME_SERVICE_ENTRIES: ''
+  HOME_SERVICE_ENTRIES: '',
+  HOME_TOPIC_CARDS: ''
 })
 const bannerItems = ref<BannerItem[]>([])
 const serviceEntryItems = ref<BannerItem[]>([])
+const topicCardItems = ref<BannerItem[]>([])
 
 const configSections = [
   {
@@ -1251,6 +1333,18 @@ function createDefaultBannerItem(): BannerItem {
 function createDefaultServiceEntryItem(): BannerItem {
   return {
     id: `entry-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    title: '',
+    subtitle: '',
+    linkType: 'NONE',
+    linkValue: '',
+    tone: 'amber'
+  }
+}
+
+function createDefaultTopicCardItem(): BannerItem {
+  return {
+    id: `topic-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    eyebrow: '',
     title: '',
     subtitle: '',
     linkType: 'NONE',
@@ -1774,6 +1868,7 @@ function syncConfigForm(configs: Array<{ configKey: string; configValue: string 
   configForm.value = nextValue
   bannerItems.value = parseBannerItems(nextValue.HOME_BANNERS)
   serviceEntryItems.value = parseServiceEntryItems(nextValue.HOME_SERVICE_ENTRIES)
+  topicCardItems.value = parseTopicCardItems(nextValue.HOME_TOPIC_CARDS)
 }
 
 function parseBannerItems(rawValue?: string) {
@@ -1836,6 +1931,38 @@ function parseServiceEntryItems(rawValue?: string) {
   }
 }
 
+function parseTopicCardItems(rawValue?: string) {
+  if (!rawValue) {
+    return [
+      {
+        ...createDefaultTopicCardItem(),
+        eyebrow: 'ROOM DINING',
+        title: '客房送餐专场',
+        subtitle: '扫码识别房间后即可下单，配送费与起送金额按后台配置自动展示',
+        linkType: 'ROOM',
+        tone: 'amber'
+      }
+    ]
+  }
+  try {
+    const parsed = JSON.parse(rawValue)
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      return [createDefaultTopicCardItem()]
+    }
+    return parsed.map((item, index) => ({
+      id: `topic-${index}-${Math.random().toString(36).slice(2, 6)}`,
+      eyebrow: String(item.eyebrow || ''),
+      title: String(item.title || ''),
+      subtitle: String(item.subtitle || ''),
+      linkType: String(item.linkType || 'NONE'),
+      linkValue: String(item.linkValue || ''),
+      tone: ['amber', 'tea', 'copper'].includes(String(item.tone)) ? String(item.tone) : 'amber'
+    }))
+  } catch {
+    return [createDefaultTopicCardItem()]
+  }
+}
+
 function normalizeBannerItems(items: BannerItem[]) {
   return items.map((item) => ({
     title: item.title.trim(),
@@ -1856,12 +1983,27 @@ function normalizeServiceEntryItems(items: BannerItem[]) {
   }))
 }
 
+function normalizeTopicCardItems(items: BannerItem[]) {
+  return items.map((item) => ({
+    eyebrow: String(item.eyebrow || '').trim(),
+    title: item.title.trim(),
+    subtitle: item.subtitle.trim(),
+    linkType: item.linkType || 'NONE',
+    linkValue: item.linkType === 'PATH' ? item.linkValue.trim() : '',
+    tone: item.tone || 'amber'
+  }))
+}
+
 function addBannerItem() {
   bannerItems.value = [...bannerItems.value, createDefaultBannerItem()]
 }
 
 function addServiceEntryItem() {
   serviceEntryItems.value = [...serviceEntryItems.value, createDefaultServiceEntryItem()]
+}
+
+function addTopicCardItem() {
+  topicCardItems.value = [...topicCardItems.value, createDefaultTopicCardItem()]
 }
 
 function removeBannerItem(index: number) {
@@ -1878,6 +2020,14 @@ function removeServiceEntryItem(index: number) {
     return
   }
   serviceEntryItems.value = serviceEntryItems.value.filter((_, currentIndex) => currentIndex !== index)
+}
+
+function removeTopicCardItem(index: number) {
+  if (topicCardItems.value.length <= 1) {
+    ElMessage.warning('首页至少保留一张专题卡片')
+    return
+  }
+  topicCardItems.value = topicCardItems.value.filter((_, currentIndex) => currentIndex !== index)
 }
 
 function moveBannerItem(index: number, direction: -1 | 1) {
@@ -1900,6 +2050,17 @@ function moveServiceEntryItem(index: number, direction: -1 | 1) {
   const [currentItem] = nextItems.splice(index, 1)
   nextItems.splice(targetIndex, 0, currentItem)
   serviceEntryItems.value = nextItems
+}
+
+function moveTopicCardItem(index: number, direction: -1 | 1) {
+  const targetIndex = index + direction
+  if (targetIndex < 0 || targetIndex >= topicCardItems.value.length) {
+    return
+  }
+  const nextItems = [...topicCardItems.value]
+  const [currentItem] = nextItems.splice(index, 1)
+  nextItems.splice(targetIndex, 0, currentItem)
+  topicCardItems.value = nextItems
 }
 
 function resetOrderFilters() {
@@ -2221,6 +2382,7 @@ async function submitBusinessConfigs() {
   try {
     const normalizedBanners = normalizeBannerItems(bannerItems.value)
     const normalizedServiceEntries = normalizeServiceEntryItems(serviceEntryItems.value)
+    const normalizedTopicCards = normalizeTopicCardItems(topicCardItems.value)
     if (normalizedBanners.some((item) => !item.title || !item.subtitle)) {
       ElMessage.warning('请完整填写每条首页轮播的标题和副标题')
       return
@@ -2235,6 +2397,14 @@ async function submitBusinessConfigs() {
     }
     if (normalizedServiceEntries.some((item) => item.linkType === 'PATH' && !item.linkValue)) {
       ElMessage.warning('首页服务入口的自定义页面路径不能为空')
+      return
+    }
+    if (normalizedTopicCards.some((item) => !item.title || !item.subtitle)) {
+      ElMessage.warning('请完整填写每张首页专题卡片的标题和描述')
+      return
+    }
+    if (normalizedTopicCards.some((item) => item.linkType === 'PATH' && !item.linkValue)) {
+      ElMessage.warning('首页专题卡片的自定义页面路径不能为空')
       return
     }
     const items = configSections.flatMap((section) =>
@@ -2253,6 +2423,11 @@ async function submitBusinessConfigs() {
       configKey: 'HOME_SERVICE_ENTRIES',
       configName: '首页服务入口',
       configValue: JSON.stringify(normalizedServiceEntries)
+    })
+    items.push({
+      configKey: 'HOME_TOPIC_CARDS',
+      configName: '首页活动专题卡片',
+      configValue: JSON.stringify(normalizedTopicCards)
     })
     const result = await saveBusinessConfigs({ items })
     businessConfigs.value = result

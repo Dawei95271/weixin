@@ -24,7 +24,8 @@ public class BusinessConfigServiceImpl implements BusinessConfigService {
         "HOME_NOTICE",
         "ROOM_DELIVERY_NOTICE",
         "HOME_BANNERS",
-        "HOME_SERVICE_ENTRIES"
+        "HOME_SERVICE_ENTRIES",
+        "HOME_TOPIC_CARDS"
     );
 
     private final BusinessConfigMapper businessConfigMapper;

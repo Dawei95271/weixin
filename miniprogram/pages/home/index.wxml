@@ -91,6 +91,27 @@
     </view>
   </view>
 
+  <view class="section-card" wx:if="{{topicCards.length}}">
+    <view class="section-head">
+      <view class="section-title">活动专题</view>
+      <text class="section-subtitle">适合运营排活动和主推场景</text>
+    </view>
+    <view class="topic-grid">
+      <view
+        class="topic-card topic-tone-{{item.tone}}"
+        wx:for="{{topicCards}}"
+        wx:key="id"
+        data-topic="{{item}}"
+        bindtap="onTopicCardTap"
+      >
+        <text class="topic-eyebrow">{{item.eyebrow}}</text>
+        <text class="topic-title">{{item.title}}</text>
+        <text class="topic-subtitle">{{item.subtitle}}</text>
+        <text class="topic-action">立即查看</text>
+      </view>
+    </view>
+  </view>
+
   <view class="section-card" wx:if="{{featuredDishes.length}}">
     <view class="section-title">今日推荐</view>
     <view class="featured-list">

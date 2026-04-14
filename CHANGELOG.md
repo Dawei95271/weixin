@@ -262,3 +262,9 @@
 - Added configurable home service-entry support to the public home API, with default entry fallbacks for older local databases.
 - Extended the admin business-configuration page with a home-entry editor so operations can manage homepage shortcuts, navigation targets, ordering, and tones.
 - Replaced the mini-program home page’s hard-coded “推荐入口” cards with backend-driven service entries.
+
+### Configurable Home Topic Cards
+
+- Added configurable topic-card support to the public home API, with default topic-card fallbacks for existing databases.
+- Extended the admin business-configuration page with a topic-card editor for homepage campaign blocks, including eyebrow text, descriptions, ordering, tones, and navigation targets.
+- Added a backend-driven “活动专题” section to the mini-program home page for campaign-oriented homepage storytelling.

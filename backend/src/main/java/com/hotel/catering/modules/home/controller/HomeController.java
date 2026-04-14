@@ -41,6 +41,7 @@ public class HomeController {
         result.put("roomDeliveryNotice", configs.getOrDefault("ROOM_DELIVERY_NOTICE", ""));
         result.put("homeBanners", parseBanners(configs.get("HOME_BANNERS")));
         result.put("serviceEntries", parseServiceEntries(configs.get("HOME_SERVICE_ENTRIES")));
+        result.put("topicCards", parseTopicCards(configs.get("HOME_TOPIC_CARDS")));
         return ApiResponse.success(result);
     }
 
@@ -50,6 +51,10 @@ public class HomeController {
 
     private List<Map<String, String>> parseServiceEntries(String rawValue) {
         return parseJsonItems(rawValue, defaultServiceEntries());
+    }
+
+    private List<Map<String, String>> parseTopicCards(String rawValue) {
+        return parseJsonItems(rawValue, defaultTopicCards());
     }
 
     private List<Map<String, String>> parseJsonItems(String rawValue, List<Map<String, String>> fallback) {
@@ -140,6 +145,35 @@ public class HomeController {
                 "linkType", "MINE",
                 "linkValue", "",
                 "tone", "amber"
+            )
+        );
+    }
+
+    private List<Map<String, String>> defaultTopicCards() {
+        return List.of(
+            Map.of(
+                "eyebrow", "ROOM DINING",
+                "title", "客房送餐专场",
+                "subtitle", "扫码识别房间后即可下单，配送费与起送金额按后台配置自动展示",
+                "linkType", "ROOM",
+                "linkValue", "",
+                "tone", "amber"
+            ),
+            Map.of(
+                "eyebrow", "PRIVATE DINING",
+                "title", "包间预订推荐",
+                "subtitle", "十个包间支持早餐、中餐、晚餐预约，可先预点菜再到店",
+                "linkType", "PRIVATE_ROOM",
+                "linkValue", "",
+                "tone", "tea"
+            ),
+            Map.of(
+                "eyebrow", "BANQUET",
+                "title", "婚宴寿宴咨询",
+                "subtitle", "线上留资，营业时间内优先人工电话跟进，适合婚礼和大型宴席",
+                "linkType", "BANQUET",
+                "linkValue", "",
+                "tone", "copper"
             )
         );
     }
