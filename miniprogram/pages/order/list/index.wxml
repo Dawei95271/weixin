@@ -1,8 +1,34 @@
 <view class="order-list-page">
   <view wx:if="{{orders.length === 0}}" class="section-card">
     <view class="section-title">我的订单</view>
-    <text class="empty-text">你还没有订单，先去挑几道菜吧。</text>
+    <view class="filter-panel">
+      <input class="search-input" placeholder="搜索订单号、联系人、手机号、房号" value="{{searchKeyword}}" bindinput="onSearchInput" />
+      <view class="summary-pills">
+        <view
+          wx:for="{{statusSummaries}}"
+          wx:key="key"
+          class="summary-pill {{activeStatus === item.key ? 'summary-pill--active' : ''}}"
+          data-status="{{item.key}}"
+          bindtap="selectStatus"
+        >
+          {{item.label}} {{item.count}}
+        </view>
+      </view>
+      <view class="summary-pills">
+        <view
+          wx:for="{{sceneSummaries}}"
+          wx:key="key"
+          class="summary-pill {{activeScene === item.key ? 'summary-pill--active' : ''}}"
+          data-scene="{{item.key}}"
+          bindtap="selectScene"
+        >
+          {{item.label}} {{item.count}}
+        </view>
+      </view>
+    </view>
+    <text class="empty-text">{{allOrders.length ? '当前筛选条件下没有订单记录。' : '你还没有订单，先去挑几道菜吧。'}}</text>
     <text class="empty-text" wx:if="{{roomDeliveryNotice}}">{{roomDeliveryNotice}}</text>
+    <button class="ghost-btn empty-btn" wx:if="{{allOrders.length}}" bindtap="resetFilters">重置筛选</button>
     <button class="primary-btn empty-btn" bindtap="goMenu">去点餐</button>
     <button class="ghost-btn empty-btn" wx:if="{{contactPhone}}" bindtap="callMerchant">联系商家</button>
   </view>
@@ -10,9 +36,37 @@
   <view wx:else class="order-list">
     <view class="section-card order-summary-card">
       <view class="section-title">我的订单</view>
-      <text class="summary-desc">当前共 {{orders.length}} 笔订单，包含普通点餐、客房送餐和包间预点菜。</text>
+      <text class="summary-desc">当前筛选后共 {{orders.length}} 笔订单，累计历史订单 {{allOrders.length}} 笔。</text>
       <text class="summary-desc" wx:if="{{roomDeliveryNotice}}">{{roomDeliveryNotice}}</text>
-      <button class="ghost-btn summary-btn" wx:if="{{contactPhone}}" bindtap="callMerchant">联系商家</button>
+      <view class="filter-panel">
+        <input class="search-input" placeholder="搜索订单号、联系人、手机号、房号" value="{{searchKeyword}}" bindinput="onSearchInput" />
+        <view class="summary-pills">
+          <view
+            wx:for="{{statusSummaries}}"
+            wx:key="key"
+            class="summary-pill {{activeStatus === item.key ? 'summary-pill--active' : ''}}"
+            data-status="{{item.key}}"
+            bindtap="selectStatus"
+          >
+            {{item.label}} {{item.count}}
+          </view>
+        </view>
+        <view class="summary-pills">
+          <view
+            wx:for="{{sceneSummaries}}"
+            wx:key="key"
+            class="summary-pill {{activeScene === item.key ? 'summary-pill--active' : ''}}"
+            data-scene="{{item.key}}"
+            bindtap="selectScene"
+          >
+            {{item.label}} {{item.count}}
+          </view>
+        </view>
+      </view>
+      <view class="summary-actions">
+        <button class="ghost-btn summary-btn" bindtap="resetFilters">重置筛选</button>
+        <button class="ghost-btn summary-btn" wx:if="{{contactPhone}}" bindtap="callMerchant">联系商家</button>
+      </view>
     </view>
     <view class="order-card section-card" wx:for="{{orders}}" wx:key="id" data-id="{{item.id}}" bindtap="goDetail">
       <view class="order-head">
@@ -21,8 +75,13 @@
       </view>
       <text class="order-meta">场景：{{item.orderSceneLabel}}</text>
       <text class="order-meta">联系人：{{item.contactName || '未填写'}}</text>
+      <text class="order-meta">电话：{{item.contactPhone || '未填写'}}</text>
       <text class="order-meta">金额：¥{{item.payableAmount}}</text>
-      <text class="order-link">查看详情 ></text>
+      <view class="card-actions">
+        <button class="ghost-btn mini-btn" catchtap="copyOrderNo" data-order-no="{{item.orderNo}}">复制订单号</button>
+        <button class="ghost-btn mini-btn" catchtap="copyContactPhone" data-phone="{{item.contactPhone}}">复制电话</button>
+        <text class="order-link">查看详情 ></text>
+      </view>
     </view>
   </view>
 </view>

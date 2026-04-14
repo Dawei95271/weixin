@@ -1,18 +1,47 @@
 <view class="reservation-page">
   <view class="section-card reservation-summary-card">
     <view class="section-title">我的预约</view>
-    <text class="summary-desc">当前共 {{privateRoomReservations.length + banquetReservations.length}} 条预约记录，包间与宴席统一在这里查看。</text>
+    <text class="summary-desc">当前筛选后共 {{privateRoomReservations.length + banquetReservations.length}} 条预约，包间和宴席统一在这里管理。</text>
     <text class="summary-desc" wx:if="{{homeNotice}}">公告：{{homeNotice}}</text>
-    <button class="ghost-btn summary-btn" wx:if="{{contactPhone}}" bindtap="callMerchant">联系商家</button>
+    <view class="filter-panel">
+      <input class="search-input" placeholder="搜索预约号、联系人、手机号、包间名" value="{{searchKeyword}}" bindinput="onSearchInput" />
+      <view class="summary-pills">
+        <view
+          wx:for="{{tabSummaries}}"
+          wx:key="key"
+          class="summary-pill {{activeTab === item.key ? 'summary-pill--active' : ''}}"
+          data-tab="{{item.key}}"
+          bindtap="selectTab"
+        >
+          {{item.label}} {{item.count}}
+        </view>
+      </view>
+      <view class="summary-pills" wx:if="{{statusSummaries.length}}">
+        <view
+          wx:for="{{statusSummaries}}"
+          wx:key="key"
+          class="summary-pill {{activeStatus === item.key ? 'summary-pill--active' : ''}}"
+          data-status="{{item.key}}"
+          bindtap="selectStatus"
+        >
+          {{item.label}} {{item.count}}
+        </view>
+      </view>
+    </view>
+    <view class="summary-actions">
+      <button class="ghost-btn summary-btn" bindtap="resetFilters">重置筛选</button>
+      <button class="ghost-btn summary-btn" wx:if="{{contactPhone}}" bindtap="callMerchant">联系商家</button>
+    </view>
   </view>
 
-  <view class="section-card">
+  <view class="section-card" wx:if="{{activeTab === 'all' || activeTab === 'private-room'}}">
     <view class="section-head">
       <view class="section-title">包间预约</view>
       <button size="mini" bindtap="goPrivateRoom">新建预约</button>
     </view>
     <view wx:if="{{privateRoomReservations.length === 0}}" class="empty-state">
-      <text class="empty-text">暂时还没有包间预约记录。</text>
+      <text class="empty-text">{{allPrivateRoomReservations.length ? '当前筛选条件下没有包间预约。' : '暂时还没有包间预约记录。'}}</text>
+      <button class="ghost-btn empty-btn" wx:if="{{allPrivateRoomReservations.length}}" bindtap="resetFilters">重置筛选</button>
       <button class="primary-btn empty-btn" bindtap="goPrivateRoom">去预约包间</button>
     </view>
     <view wx:else class="reservation-list">
@@ -21,22 +50,28 @@
           <text class="reservation-no">{{item.reservationNo}}</text>
           <text class="reservation-status">{{item.reservationStatusLabel}}</text>
         </view>
+        <text class="reservation-meta">包间：{{item.privateRoomName || '待确认包间'}}</text>
         <text class="reservation-meta">日期：{{item.reserveDate}}</text>
         <text class="reservation-meta">时段：{{item.timeslotLabel}}</text>
         <text class="reservation-meta">人数：{{item.guestCount}} 人</text>
         <text class="reservation-meta">定金：¥{{item.depositAmount}}</text>
-        <text class="reservation-link">查看详情 ></text>
+        <view class="card-actions">
+          <button class="ghost-btn mini-btn" catchtap="copyReservationNo" data-no="{{item.reservationNo}}">复制预约号</button>
+          <button class="ghost-btn mini-btn" catchtap="copyContactPhone" data-phone="{{item.contactPhone}}">复制电话</button>
+          <text class="reservation-link">查看详情 ></text>
+        </view>
       </view>
     </view>
   </view>
 
-  <view class="section-card">
+  <view class="section-card" wx:if="{{activeTab === 'all' || activeTab === 'banquet'}}">
     <view class="section-head">
       <view class="section-title">宴席预约</view>
       <button size="mini" bindtap="goBanquet">新建预约</button>
     </view>
     <view wx:if="{{banquetReservations.length === 0}}" class="empty-state">
-      <text class="empty-text">暂时还没有宴席预约记录。</text>
+      <text class="empty-text">{{allBanquetReservations.length ? '当前筛选条件下没有宴席预约。' : '暂时还没有宴席预约记录。'}}</text>
+      <button class="ghost-btn empty-btn" wx:if="{{allBanquetReservations.length}}" bindtap="resetFilters">重置筛选</button>
       <button class="primary-btn empty-btn" bindtap="goBanquet">去预约宴席</button>
     </view>
     <view wx:else class="reservation-list">
@@ -49,7 +84,11 @@
         <text class="reservation-meta">日期：{{item.reserveDate}}</text>
         <text class="reservation-meta">人数：{{item.guestCount}}</text>
         <text class="reservation-meta">预算：¥{{item.budgetAmount || 0}}</text>
-        <text class="reservation-link">查看详情 ></text>
+        <view class="card-actions">
+          <button class="ghost-btn mini-btn" catchtap="copyReservationNo" data-no="{{item.reservationNo}}">复制预约号</button>
+          <button class="ghost-btn mini-btn" catchtap="copyContactPhone" data-phone="{{item.contactPhone}}">复制电话</button>
+          <text class="reservation-link">查看详情 ></text>
+        </view>
       </view>
     </view>
   </view>

@@ -230,3 +230,8 @@
 - Added a dedicated mini-program dish detail page with business-hour prompts, merchant contact, quantity selection, and quick add-to-cart actions.
 - Extended dish responses with recommendation, room-delivery, and description fields so home, menu, and detail pages share richer dish content.
 - Added “view detail” entry points from the home featured section and menu list, plus a “reorder” action in order detail pages that restores dishes back into the cart.
+
+### Mini Program Record Center Enhancements
+
+- Upgraded the order list into a lightweight record center with keyword search, status and scene summary filters, result feedback, and quick copy actions for order numbers and contact phones.
+- Upgraded the reservation list with unified keyword search, tab switching between private-room and banquet bookings, status summaries for the active reservation type, and quick copy actions for reservation numbers and phones.

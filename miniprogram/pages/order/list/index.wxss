@@ -8,9 +8,50 @@
   margin-bottom: 0;
 }
 
+.filter-panel {
+  margin-top: 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.search-input {
+  height: 80rpx;
+  padding: 0 24rpx;
+  border-radius: 24rpx;
+  background: #fff;
+  font-size: 26rpx;
+}
+
+.summary-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.summary-pill {
+  padding: 10rpx 18rpx;
+  border-radius: 999rpx;
+  background: rgba(141, 85, 36, 0.1);
+  color: #8d5524;
+  font-size: 22rpx;
+}
+
+.summary-pill--active {
+  background: linear-gradient(135deg, #ca8d41, #8d5524);
+  color: #fff;
+}
+
 .summary-desc {
   color: #6b7280;
   line-height: 1.7;
+}
+
+.summary-actions {
+  display: flex;
+  gap: 18rpx;
+  flex-wrap: wrap;
+  margin-top: 20rpx;
 }
 
 .order-head {
@@ -43,10 +84,24 @@
 }
 
 .order-link {
-  display: block;
-  margin-top: 18rpx;
   color: #9a5a1e;
   font-weight: 600;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  flex-wrap: wrap;
+  margin-top: 18rpx;
+}
+
+.mini-btn {
+  margin: 0;
+  padding: 0 22rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 22rpx;
 }
 
 .empty-text {
