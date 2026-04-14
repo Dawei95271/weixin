@@ -80,6 +80,10 @@
   gap: 18rpx;
 }
 
+.contact-btn {
+  width: 100%;
+}
+
 .total-label {
   color: #6b7280;
 }

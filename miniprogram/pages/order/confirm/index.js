@@ -6,6 +6,7 @@ Page({
     cart: [],
     itemTotalAmount: '0.00',
     deliveryFee: '0.00',
+    deliveryFeeConfig: '0.00',
     totalAmount: '0.00',
     orderScene: 'NORMAL',
     orderSceneLabel: '普通点餐',
@@ -14,10 +15,28 @@ Page({
     contactName: '堂食顾客',
     contactPhone: '13800000000',
     remark: '普通点餐',
+    minOrderAmount: '0.00',
+    roomDeliveryNotice: '',
+    merchantPhone: '',
     submitting: false
   },
 
   onShow() {
+    this.loadConfigAndRefresh()
+  },
+
+  async loadConfigAndRefresh() {
+    try {
+      const config = await request('/api/config/public')
+      this.setData({
+        minOrderAmount: config.MIN_ORDER_AMOUNT || '0.00',
+        deliveryFeeConfig: config.DELIVERY_FEE || '0.00',
+        roomDeliveryNotice: config.ROOM_DELIVERY_NOTICE || '',
+        merchantPhone: config.CONTACT_PHONE || ''
+      })
+    } catch (error) {
+      // keep page usable even if config loading fails
+    }
     this.refreshData()
   },
 
@@ -30,7 +49,7 @@ Page({
     const itemTotalAmount = cart
       .reduce((sum, item) => sum + Number(item.price) * item.quantity, 0)
       .toFixed(2)
-    const deliveryFee = currentRoom ? '5.00' : '0.00'
+    const deliveryFee = currentRoom ? this.data.deliveryFeeConfig || '0.00' : '0.00'
     const totalAmount = (Number(itemTotalAmount) + Number(deliveryFee)).toFixed(2)
 
     this.setData({
@@ -41,7 +60,7 @@ Page({
       orderScene: currentRoom ? 'ROOM_DELIVERY' : 'NORMAL',
       orderSceneLabel: currentRoom ? '客房送餐' : '普通点餐',
       sceneHint: currentRoom
-        ? '当前订单会按客房送餐处理，请确认房号与联系电话。'
+        ? this.data.roomDeliveryNotice || '当前订单会按客房送餐处理，请确认房号与联系电话。'
         : '当前订单按普通点餐处理，可直接确认提交。',
       roomNo: currentRoom ? currentRoom.roomNo : '',
       contactName: currentRoom ? `房客-${currentRoom.roomNo}` : '堂食顾客',
@@ -62,6 +81,19 @@ Page({
     this.setData({ remark: event.detail.value })
   },
 
+  callMerchant() {
+    if (!this.data.merchantPhone) {
+      wx.showToast({
+        title: '暂未配置联系电话',
+        icon: 'none'
+      })
+      return
+    }
+    wx.makePhoneCall({
+      phoneNumber: this.data.merchantPhone
+    })
+  },
+
   validateForm() {
     if (!this.data.cart.length) {
       wx.showToast({
@@ -80,6 +112,13 @@ Page({
     if (!/^1\d{10}$/.test(this.data.contactPhone)) {
       wx.showToast({
         title: '请输入正确手机号',
+        icon: 'none'
+      })
+      return false
+    }
+    if (Number(this.data.orderScene === 'ROOM_DELIVERY' ? this.data.totalAmount : this.data.itemTotalAmount) < Number(this.data.minOrderAmount || 0)) {
+      wx.showToast({
+        title: `未达到起送金额 ¥${this.data.minOrderAmount}`,
         icon: 'none'
       })
       return false

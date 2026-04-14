@@ -209,3 +209,8 @@
 
 - Extended public business-config usage into private-room, banquet, and room-delivery pages.
 - Added business contact actions and unified delivery or notice messaging across reservation and room-recognition flows.
+
+### Mini Program Ordering Config Integration
+
+- Extended business-config usage into cart, order-confirmation, and order-result pages.
+- Added unified delivery-fee, minimum-order, room-delivery notice, and merchant-contact displays across the core ordering flow.

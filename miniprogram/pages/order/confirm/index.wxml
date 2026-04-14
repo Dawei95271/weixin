@@ -10,6 +10,8 @@
       <text class="info-value">{{roomNo}}</text>
     </view>
     <text class="summary-desc">{{sceneHint}}</text>
+    <text class="summary-desc">起送金额：¥{{minOrderAmount || '0.00'}}</text>
+    <button class="ghost-btn contact-btn" wx:if="{{merchantPhone}}" bindtap="callMerchant">联系商家</button>
   </view>
 
   <view class="section-card">
@@ -52,6 +54,10 @@
     <view class="amount-row">
       <text class="total-label">配送费</text>
       <text class="amount-value">¥{{deliveryFee}}</text>
+    </view>
+    <view class="amount-row">
+      <text class="total-label">起送门槛</text>
+      <text class="amount-value">¥{{minOrderAmount || '0.00'}}</text>
     </view>
     <view class="amount-row total-row">
       <text class="total-label">应付金额</text>

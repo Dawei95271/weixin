@@ -5,6 +5,7 @@
       <button size="mini" bindtap="clearRoomDelivery">切回普通点餐</button>
     </view>
     <text class="delivery-desc">已识别房间 {{roomInfo.roomNo}}，提交订单后会按客房送餐场景处理。</text>
+    <text class="delivery-desc" wx:if="{{roomDeliveryNotice}}">{{roomDeliveryNotice}}</text>
   </view>
 
   <view class="section-card">
@@ -31,11 +32,13 @@
 
   <view class="section-card total-card">
     <text class="summary-line">共 {{totalCount}} 份菜品，{{summaryText}}</text>
+    <text class="summary-line">起送金额 ¥{{minOrderAmount || '0.00'}}，当前配送费 ¥{{roomInfo ? deliveryFee : '0.00'}}</text>
     <text class="total-label">合计</text>
     <text class="total-price">¥{{totalAmount}}</text>
     <view class="action-group">
       <button bindtap="clearAll">清空购物车</button>
       <button class="primary-btn" bindtap="submitOrder">提交订单</button>
     </view>
+    <button class="ghost-btn contact-btn" wx:if="{{contactPhone}}" bindtap="callMerchant">联系商家</button>
   </view>
 </view>

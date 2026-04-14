@@ -39,3 +39,7 @@
 .result-actions button {
   flex: 1;
 }
+
+.contact-btn {
+  width: 100%;
+}

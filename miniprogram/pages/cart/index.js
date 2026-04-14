@@ -1,4 +1,5 @@
 const { getCart, updateQuantity, clearCart } = require('../../utils/cart')
+const { request } = require('../../utils/request')
 
 Page({
   data: {
@@ -6,10 +7,29 @@ Page({
     totalAmount: '0.00',
     totalCount: 0,
     roomInfo: null,
-    summaryText: '当前为普通点餐场景'
+    summaryText: '当前为普通点餐场景',
+    deliveryFee: '0.00',
+    minOrderAmount: '0.00',
+    contactPhone: '',
+    roomDeliveryNotice: ''
   },
 
   onShow() {
+    this.loadConfigAndCart()
+  },
+
+  async loadConfigAndCart() {
+    try {
+      const config = await request('/api/config/public')
+      this.setData({
+        deliveryFee: config.DELIVERY_FEE || '0.00',
+        minOrderAmount: config.MIN_ORDER_AMOUNT || '0.00',
+        contactPhone: config.CONTACT_PHONE || '',
+        roomDeliveryNotice: config.ROOM_DELIVERY_NOTICE || ''
+      })
+    } catch (error) {
+      // keep page usable even if config loading fails
+    }
     this.refreshCart()
   },
 
@@ -17,9 +37,9 @@ Page({
     const cart = getCart()
     const roomInfo = wx.getStorageSync('currentRoomDelivery') || null
     const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0)
-    const totalAmount = cart
-      .reduce((sum, item) => sum + Number(item.price) * item.quantity, 0)
-      .toFixed(2)
+    const itemAmount = cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0)
+    const deliveryFee = roomInfo ? Number(this.data.deliveryFee || 0) : 0
+    const totalAmount = (itemAmount + deliveryFee).toFixed(2)
     this.setData({
       cart,
       totalAmount,
@@ -51,6 +71,19 @@ Page({
   goMenu() {
     wx.switchTab({
       url: '/pages/menu/index'
+    })
+  },
+
+  callMerchant() {
+    if (!this.data.contactPhone) {
+      wx.showToast({
+        title: '暂未配置联系电话',
+        icon: 'none'
+      })
+      return
+    }
+    wx.makePhoneCall({
+      phoneNumber: this.data.contactPhone
     })
   },
 
