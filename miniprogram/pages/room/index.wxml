@@ -23,6 +23,9 @@
       <text>场景：{{room.scene}}</text>
     </view>
     <text class="helper-text">房间识别成功后，后续提交订单会自动按客房送餐场景处理。</text>
-    <button class="primary-btn room-btn" bindtap="goMenu">去点餐</button>
+    <view class="action-group">
+      <button class="ghost-btn room-btn" bindtap="goCart">查看购物车</button>
+      <button class="primary-btn room-btn" bindtap="goMenu">去点餐</button>
+    </view>
   </view>
 </view>

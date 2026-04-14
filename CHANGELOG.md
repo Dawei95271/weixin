@@ -235,3 +235,8 @@
 
 - Upgraded the order list into a lightweight record center with keyword search, status and scene summary filters, result feedback, and quick copy actions for order numbers and contact phones.
 - Upgraded the reservation list with unified keyword search, tab switching between private-room and banquet bookings, status summaries for the active reservation type, and quick copy actions for reservation numbers and phones.
+
+### Mini Program Room Delivery Persistence
+
+- Added a shared room-delivery helper to persist, clear, and summarize the current recognized room across mini-program pages.
+- Extended the home, menu, cart, room-recognition, and order-confirmation pages with visible room-delivery status cards and quick actions for re-recognition, cart review, and switching back to normal ordering.

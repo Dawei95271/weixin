@@ -16,6 +16,15 @@
       <text class="menu-notice-line">起送金额 ¥{{minOrderAmount || '0'}}</text>
       <text class="menu-notice-line" wx:if="{{roomDeliveryNotice}}">{{roomDeliveryNotice}}</text>
     </view>
+    <view class="menu-status {{roomDeliveryActive ? 'menu-status--open' : 'menu-status--closed'}}">
+      <text class="menu-status-title">{{roomDeliveryTitle}}</text>
+      <text class="menu-status-detail">{{roomDeliveryDetail}}</text>
+      <view class="menu-actions">
+        <button class="ghost-btn detail-btn" bindtap="goRoomDining">重新识别</button>
+        <button class="ghost-btn detail-btn" bindtap="goCart">查看购物车</button>
+        <button class="ghost-btn detail-btn" wx:if="{{roomDeliveryActive}}" bindtap="clearRoomDelivery">切回普通点餐</button>
+      </view>
+    </view>
   </view>
 
   <scroll-view scroll-x class="category-scroll">

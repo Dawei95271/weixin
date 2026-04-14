@@ -37,6 +37,15 @@
   width: 100%;
 }
 
+.action-group {
+  display: flex;
+  gap: 16rpx;
+}
+
+.action-group .room-btn {
+  flex: 1;
+}
+
 .room-result {
   display: flex;
   flex-direction: column;

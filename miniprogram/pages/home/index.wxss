@@ -64,6 +64,17 @@
   flex-wrap: wrap;
 }
 
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.room-delivery-actions {
+  margin-top: 18rpx;
+}
+
 .ghost-btn {
   border-radius: 999rpx;
   border: 2rpx solid rgba(255, 248, 240, 0.4);

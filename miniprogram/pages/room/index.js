@@ -1,4 +1,5 @@
 const { request } = require('../../utils/request')
+const { getCurrentRoom, saveCurrentRoom, clearCurrentRoom } = require('../../utils/room-delivery')
 
 Page({
   data: {
@@ -13,6 +14,12 @@ Page({
 
   onLoad() {
     this.loadConfig()
+  },
+
+  onShow() {
+    this.setData({
+      room: getCurrentRoom()
+    })
   },
 
   async loadConfig() {
@@ -48,10 +55,9 @@ Page({
       this.setData({ loading: true })
       const room = await request(`/api/room/scan/${this.data.code}`)
       this.setData({
-        room,
+        room: saveCurrentRoom(room),
         loading: false
       })
-      wx.setStorageSync('currentRoomDelivery', room)
       wx.showToast({
         title: '已识别房间',
         icon: 'success'
@@ -71,6 +77,12 @@ Page({
     })
   },
 
+  goCart() {
+    wx.switchTab({
+      url: '/pages/cart/index'
+    })
+  },
+
   callMerchant() {
     if (!this.data.contactPhone) {
       wx.showToast({
@@ -85,7 +97,7 @@ Page({
   },
 
   clearRoom() {
-    wx.removeStorageSync('currentRoomDelivery')
+    clearCurrentRoom()
     this.setData({
       room: null
     })

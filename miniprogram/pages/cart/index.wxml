@@ -1,11 +1,16 @@
 <view class="cart-page">
-  <view wx:if="{{roomInfo}}" class="section-card delivery-card">
+  <view class="section-card delivery-card">
     <view class="section-head">
-      <view class="section-title">当前为客房送餐</view>
-      <button size="mini" bindtap="clearRoomDelivery">切回普通点餐</button>
+      <view class="section-title">{{roomInfo ? '当前为客房送餐' : '客房送餐状态'}}</view>
+      <button size="mini" wx:if="{{roomInfo}}" bindtap="clearRoomDelivery">切回普通点餐</button>
     </view>
-    <text class="delivery-desc">已识别房间 {{roomInfo.roomNo}}，提交订单后会按客房送餐场景处理。</text>
+    <text class="delivery-desc">{{roomDeliveryTitle}}</text>
+    <text class="delivery-desc">{{roomDeliveryDetail}}</text>
     <text class="delivery-desc" wx:if="{{roomDeliveryNotice}}">{{roomDeliveryNotice}}</text>
+    <view class="action-group">
+      <button class="ghost-btn" bindtap="goRoomDelivery">{{roomInfo ? '重新识别房间' : '去识别房间'}}</button>
+      <button class="ghost-btn" wx:if="{{roomInfo}}" bindtap="goMenu">继续点餐</button>
+    </view>
   </view>
 
   <view class="section-card">

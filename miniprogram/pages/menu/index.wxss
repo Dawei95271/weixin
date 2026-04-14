@@ -77,6 +77,13 @@
   color: #6b7280;
 }
 
+.menu-actions {
+  margin-top: 14rpx;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
 .category-scroll {
   white-space: nowrap;
   padding: 24rpx 0 0 24rpx;

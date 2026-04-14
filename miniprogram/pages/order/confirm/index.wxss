@@ -2,6 +2,13 @@
   margin-bottom: 0;
 }
 
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
 .form-group {
   margin-bottom: 22rpx;
 }
@@ -97,4 +104,15 @@
 .contact-btn {
   width: 100%;
   margin-top: 20rpx;
+}
+
+.action-group {
+  display: flex;
+  gap: 16rpx;
+  flex-wrap: wrap;
+  margin-top: 20rpx;
+}
+
+.action-group button {
+  flex: 1;
 }

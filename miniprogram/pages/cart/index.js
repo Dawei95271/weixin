@@ -1,5 +1,6 @@
 const { getCart, updateQuantity, clearCart } = require('../../utils/cart')
 const { request } = require('../../utils/request')
+const { getCurrentRoom, clearCurrentRoom, getRoomDeliverySummary } = require('../../utils/room-delivery')
 
 Page({
   data: {
@@ -8,6 +9,8 @@ Page({
     totalCount: 0,
     roomInfo: null,
     summaryText: '当前为普通点餐场景',
+    roomDeliveryTitle: '',
+    roomDeliveryDetail: '',
     deliveryFee: '0.00',
     minOrderAmount: '0.00',
     contactPhone: '',
@@ -35,7 +38,8 @@ Page({
 
   refreshCart() {
     const cart = getCart()
-    const roomInfo = wx.getStorageSync('currentRoomDelivery') || null
+    const roomInfo = getCurrentRoom()
+    const roomSummary = getRoomDeliverySummary(roomInfo)
     const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0)
     const itemAmount = cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0)
     const deliveryFee = roomInfo ? Number(this.data.deliveryFee || 0) : 0
@@ -45,7 +49,9 @@ Page({
       totalAmount,
       totalCount,
       roomInfo,
-      summaryText: roomInfo ? '当前为客房送餐场景' : '当前为普通点餐场景'
+      summaryText: roomInfo ? '当前为客房送餐场景' : '当前为普通点餐场景',
+      roomDeliveryTitle: roomSummary.title,
+      roomDeliveryDetail: roomSummary.detail
     })
   },
 
@@ -88,11 +94,17 @@ Page({
   },
 
   clearRoomDelivery() {
-    wx.removeStorageSync('currentRoomDelivery')
+    clearCurrentRoom()
     this.refreshCart()
     wx.showToast({
       title: '已切换回普通点餐',
       icon: 'success'
+    })
+  },
+
+  goRoomDelivery() {
+    wx.navigateTo({
+      url: '/pages/room/index'
     })
   },
 

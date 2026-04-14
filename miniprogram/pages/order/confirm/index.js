@@ -1,6 +1,7 @@
 const { getCart, buildOrderItems, clearCart } = require('../../../utils/cart')
 const { request } = require('../../../utils/request')
 const { getBusinessStatus } = require('../../../utils/business')
+const { getCurrentRoom, clearCurrentRoom, getRoomDeliverySummary } = require('../../../utils/room-delivery')
 
 Page({
   data: {
@@ -13,6 +14,8 @@ Page({
     orderSceneLabel: '普通点餐',
     sceneHint: '当前订单按普通点餐处理，可直接确认提交。',
     roomNo: '',
+    roomSummaryTitle: '',
+    roomSummaryDetail: '',
     contactName: '堂食顾客',
     contactPhone: '13800000000',
     remark: '普通点餐',
@@ -50,7 +53,8 @@ Page({
       ...item,
       lineTotal: (Number(item.price) * item.quantity).toFixed(2)
     }))
-    const currentRoom = wx.getStorageSync('currentRoomDelivery')
+    const currentRoom = getCurrentRoom()
+    const roomSummary = getRoomDeliverySummary(currentRoom)
     const itemTotalAmount = cart
       .reduce((sum, item) => sum + Number(item.price) * item.quantity, 0)
       .toFixed(2)
@@ -68,6 +72,8 @@ Page({
         ? this.data.roomDeliveryNotice || '当前订单会按客房送餐处理，请确认房号与联系电话。'
         : '当前订单按普通点餐处理，可直接确认提交。',
       roomNo: currentRoom ? currentRoom.roomNo : '',
+      roomSummaryTitle: roomSummary.title,
+      roomSummaryDetail: roomSummary.detail,
       contactName: currentRoom ? `房客-${currentRoom.roomNo}` : '堂食顾客',
       contactPhone: '13800000000',
       remark: currentRoom ? '客房送餐' : '普通点餐'
@@ -96,6 +102,21 @@ Page({
     }
     wx.makePhoneCall({
       phoneNumber: this.data.merchantPhone
+    })
+  },
+
+  goRoomDelivery() {
+    wx.navigateTo({
+      url: '/pages/room/index'
+    })
+  },
+
+  clearRoomDelivery() {
+    clearCurrentRoom()
+    this.refreshData()
+    wx.showToast({
+      title: '已切回普通点餐',
+      icon: 'success'
     })
   },
 
@@ -136,7 +157,7 @@ Page({
       return
     }
 
-    const currentRoom = wx.getStorageSync('currentRoomDelivery')
+    const currentRoom = getCurrentRoom()
 
     try {
       this.setData({ submitting: true })

@@ -1,5 +1,6 @@
 const { request } = require('../../utils/request')
 const { getBusinessStatus } = require('../../utils/business')
+const { getCurrentRoom, clearCurrentRoom, getRoomDeliverySummary } = require('../../utils/room-delivery')
 
 Page({
   data: {
@@ -12,6 +13,10 @@ Page({
     businessStatusTitle: '',
     businessStatusDetail: '',
     businessOpen: false,
+    roomDeliveryActive: false,
+    roomDeliveryTitle: '',
+    roomDeliveryDetail: '',
+    currentRoom: null,
     deliveryFee: '',
     minOrderAmount: '',
     roomDeliveryNotice: '',
@@ -20,6 +25,10 @@ Page({
 
   onLoad() {
     this.loadHome()
+  },
+
+  onShow() {
+    this.refreshRoomDeliveryState()
   },
 
   async loadHome() {
@@ -71,6 +80,21 @@ Page({
     })
   },
 
+  goCart() {
+    wx.switchTab({
+      url: '/pages/cart/index'
+    })
+  },
+
+  clearRoomDelivery() {
+    clearCurrentRoom()
+    this.refreshRoomDeliveryState()
+    wx.showToast({
+      title: '已切回普通点餐',
+      icon: 'success'
+    })
+  },
+
   callMerchant() {
     const phoneNumber = this.data.contactPhone
     if (!phoneNumber) {
@@ -99,6 +123,17 @@ Page({
     const { id } = event.currentTarget.dataset
     wx.navigateTo({
       url: `/pages/dish/detail/index?id=${id}`
+    })
+  },
+
+  refreshRoomDeliveryState() {
+    const currentRoom = getCurrentRoom()
+    const summary = getRoomDeliverySummary(currentRoom)
+    this.setData({
+      currentRoom,
+      roomDeliveryActive: summary.active,
+      roomDeliveryTitle: summary.title,
+      roomDeliveryDetail: summary.detail
     })
   }
 })

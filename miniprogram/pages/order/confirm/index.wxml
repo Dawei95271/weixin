@@ -16,6 +16,19 @@
     <button class="ghost-btn contact-btn" wx:if="{{merchantPhone}}" bindtap="callMerchant">联系商家</button>
   </view>
 
+  <view class="section-card" wx:if="{{orderScene === 'ROOM_DELIVERY'}}">
+    <view class="section-head">
+      <view class="section-title">客房送餐状态</view>
+      <button size="mini" bindtap="clearRoomDelivery">切回普通点餐</button>
+    </view>
+    <text class="summary-desc">{{roomSummaryTitle}}</text>
+    <text class="summary-desc">{{roomSummaryDetail}}</text>
+    <view class="action-group">
+      <button class="ghost-btn" bindtap="goRoomDelivery">重新识别房间</button>
+      <button class="ghost-btn" wx:if="{{merchantPhone}}" bindtap="callMerchant">联系商家</button>
+    </view>
+  </view>
+
   <view class="section-card">
     <view class="section-title">联系人信息</view>
     <view class="form-group">
