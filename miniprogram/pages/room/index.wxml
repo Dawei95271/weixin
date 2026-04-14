@@ -2,8 +2,14 @@
   <view class="section-card">
     <view class="section-title">客房送餐识别</view>
     <text class="helper-text">正式环境这里会来自扫码参数。当前先用房间码模拟，例如 `ROOM-801`。</text>
+    <view class="service-meta">
+      <text class="service-meta-line">客房配送费：¥{{deliveryFee || '0'}}</text>
+      <text class="service-meta-line">起送金额：¥{{minOrderAmount || '0'}}</text>
+      <text class="service-meta-line" wx:if="{{roomDeliveryNotice}}">{{roomDeliveryNotice}}</text>
+    </view>
     <input class="room-input" placeholder="请输入房间码" value="{{code}}" bindinput="onInput" />
     <button class="primary-btn room-btn" loading="{{loading}}" bindtap="parseRoom">识别房间</button>
+    <button class="ghost-btn room-btn" wx:if="{{contactPhone}}" bindtap="callMerchant">联系商家</button>
   </view>
 
   <view wx:if="{{room}}" class="section-card">

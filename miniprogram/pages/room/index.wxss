@@ -12,6 +12,19 @@
   margin-bottom: 20rpx;
 }
 
+.service-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+  margin-bottom: 20rpx;
+}
+
+.service-meta-line {
+  font-size: 24rpx;
+  color: #8d5524;
+  line-height: 1.6;
+}
+
 .room-input {
   width: 100%;
   padding: 24rpx;

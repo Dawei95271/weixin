@@ -204,3 +204,8 @@
 
 - Added public business-configuration APIs for the mini program and wired the home page to show notices, phone contact, delivery fees, and opening hours.
 - Added menu-page business information blocks so ordering pages reflect the latest configured delivery and operating details.
+
+### Mini Program Reservation Config Integration
+
+- Extended public business-config usage into private-room, banquet, and room-delivery pages.
+- Added business contact actions and unified delivery or notice messaging across reservation and room-recognition flows.

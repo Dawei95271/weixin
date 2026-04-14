@@ -14,6 +14,11 @@ Page({
     contactName: '张先生',
     contactPhone: '13800000000',
     remark: '',
+    contactPhoneConfig: '',
+    breakfastHours: '',
+    lunchHours: '',
+    dinnerHours: '',
+    roomDeliveryNotice: '',
     submitting: false
   },
 
@@ -26,9 +31,10 @@ Page({
 
   async loadInitialData(reserveDate) {
     try {
-      const [rooms, timeslots] = await Promise.all([
+      const [rooms, timeslots, config] = await Promise.all([
         request('/api/private-room/list'),
-        request('/api/private-room/available-timeslots', 'GET', { reserveDate })
+        request('/api/private-room/available-timeslots', 'GET', { reserveDate }),
+        request('/api/config/public')
       ])
       const mappedTimeslots = (timeslots || []).map((code) => ({
         code,
@@ -41,7 +47,12 @@ Page({
         timeslotIndex: 0,
         selectedRoomName: rooms && rooms.length ? rooms[0].name : '待选择',
         selectedTimeslotLabel: mappedTimeslots.length ? mappedTimeslots[0].label : '待选择',
-        selectedDepositAmount: rooms && rooms.length ? rooms[0].depositAmount || 0 : 0
+        selectedDepositAmount: rooms && rooms.length ? rooms[0].depositAmount || 0 : 0,
+        contactPhoneConfig: config.CONTACT_PHONE || '',
+        breakfastHours: config.BREAKFAST_HOURS || '',
+        lunchHours: config.LUNCH_HOURS || '',
+        dinnerHours: config.DINNER_HOURS || '',
+        roomDeliveryNotice: config.ROOM_DELIVERY_NOTICE || ''
       })
     } catch (error) {
       wx.showToast({
@@ -90,6 +101,19 @@ Page({
 
   onRemarkInput(event) {
     this.setData({ remark: event.detail.value })
+  },
+
+  callMerchant() {
+    if (!this.data.contactPhoneConfig) {
+      wx.showToast({
+        title: '暂未配置联系电话',
+        icon: 'none'
+      })
+      return
+    }
+    wx.makePhoneCall({
+      phoneNumber: this.data.contactPhoneConfig
+    })
   },
 
   validateForm() {

@@ -2,6 +2,10 @@
   margin-bottom: 0;
 }
 
+.call-btn {
+  margin-top: 20rpx;
+}
+
 .summary-desc,
 .label,
 .tip-line {

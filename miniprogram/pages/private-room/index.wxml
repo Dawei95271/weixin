@@ -2,6 +2,12 @@
   <view class="section-card summary-card">
     <view class="section-title">包间预约</view>
     <text class="summary-desc">提前锁定日期、时段和包间，提交后可在“我的预约”里继续查看进度。</text>
+    <view class="meta-pills">
+      <text class="meta-pill">早餐 {{breakfastHours || '待配置'}}</text>
+      <text class="meta-pill">中餐 {{lunchHours || '待配置'}}</text>
+      <text class="meta-pill">晚餐 {{dinnerHours || '待配置'}}</text>
+    </view>
+    <button class="ghost-btn call-btn" wx:if="{{contactPhoneConfig}}" bindtap="callMerchant">联系商家</button>
   </view>
 
   <view class="section-card">
@@ -80,6 +86,7 @@
     <text class="tip-line">1. 包间同一日期和时段只能预约一次。</text>
     <text class="tip-line">2. 建议留下准确联系电话，方便商家确认到店信息。</text>
     <text class="tip-line">3. 提交后可到“我的预约”里查看状态变化。</text>
+    <text class="tip-line" wx:if="{{roomDeliveryNotice}}">4. {{roomDeliveryNotice}}</text>
   </view>
 
   <button class="primary-btn reserve-btn" loading="{{submitting}}" bindtap="submitReservation">提交预约</button>

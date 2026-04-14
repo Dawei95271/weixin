@@ -4,7 +4,29 @@ Page({
   data: {
     code: 'ROOM-801',
     room: null,
+    contactPhone: '',
+    deliveryFee: '',
+    minOrderAmount: '',
+    roomDeliveryNotice: '',
     loading: false
+  },
+
+  onLoad() {
+    this.loadConfig()
+  },
+
+  async loadConfig() {
+    try {
+      const config = await request('/api/config/public')
+      this.setData({
+        contactPhone: config.CONTACT_PHONE || '',
+        deliveryFee: config.DELIVERY_FEE || '',
+        minOrderAmount: config.MIN_ORDER_AMOUNT || '',
+        roomDeliveryNotice: config.ROOM_DELIVERY_NOTICE || ''
+      })
+    } catch (error) {
+      // keep page usable even if config loading fails
+    }
   },
 
   onInput(event) {
@@ -46,6 +68,19 @@ Page({
   goMenu() {
     wx.switchTab({
       url: '/pages/menu/index'
+    })
+  },
+
+  callMerchant() {
+    if (!this.data.contactPhone) {
+      wx.showToast({
+        title: '暂未配置联系电话',
+        icon: 'none'
+      })
+      return
+    }
+    wx.makePhoneCall({
+      phoneNumber: this.data.contactPhone
     })
   },
 

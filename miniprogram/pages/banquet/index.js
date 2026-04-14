@@ -10,6 +10,8 @@ Page({
     contactName: '张先生',
     contactPhone: '13800000000',
     requirementDesc: '',
+    contactPhoneConfig: '',
+    homeNotice: '',
     submitting: false
   },
 
@@ -17,6 +19,19 @@ Page({
     const today = new Date()
     const reserveDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
     this.setData({ reserveDate })
+    this.loadConfig()
+  },
+
+  async loadConfig() {
+    try {
+      const config = await request('/api/config/public')
+      this.setData({
+        contactPhoneConfig: config.CONTACT_PHONE || '',
+        homeNotice: config.HOME_NOTICE || ''
+      })
+    } catch (error) {
+      // keep page usable even if config loading fails
+    }
   },
 
   onBanquetTypeChange(event) {
@@ -58,6 +73,19 @@ Page({
   onRequirementInput(event) {
     this.setData({
       requirementDesc: event.detail.value
+    })
+  },
+
+  callMerchant() {
+    if (!this.data.contactPhoneConfig) {
+      wx.showToast({
+        title: '暂未配置联系电话',
+        icon: 'none'
+      })
+      return
+    }
+    wx.makePhoneCall({
+      phoneNumber: this.data.contactPhoneConfig
     })
   },
 
