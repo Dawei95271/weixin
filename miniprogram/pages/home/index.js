@@ -5,6 +5,12 @@ Page({
     projectName: '',
     businessScopes: [],
     featuredDishes: [],
+    contactPhone: '',
+    homeNotice: '',
+    businessHours: [],
+    deliveryFee: '',
+    minOrderAmount: '',
+    roomDeliveryNotice: '',
     loading: true
   },
 
@@ -19,6 +25,16 @@ Page({
       this.setData({
         projectName: data.projectName,
         businessScopes: data.businessScopes,
+        contactPhone: data.contactPhone || '',
+        homeNotice: data.homeNotice || '',
+        deliveryFee: data.deliveryFee || '',
+        minOrderAmount: data.minOrderAmount || '',
+        roomDeliveryNotice: data.roomDeliveryNotice || '',
+        businessHours: [
+          { label: '早餐', value: data.breakfastHours || '待配置' },
+          { label: '中餐', value: data.lunchHours || '待配置' },
+          { label: '晚餐', value: data.dinnerHours || '待配置' }
+        ],
         featuredDishes: dishes.slice(0, 3),
         loading: false
       })
@@ -40,6 +56,20 @@ Page({
   goRoomDining() {
     wx.navigateTo({
       url: '/pages/room/index'
+    })
+  },
+
+  callMerchant() {
+    const phoneNumber = this.data.contactPhone
+    if (!phoneNumber) {
+      wx.showToast({
+        title: '暂未配置联系电话',
+        icon: 'none'
+      })
+      return
+    }
+    wx.makePhoneCall({
+      phoneNumber
     })
   },
 

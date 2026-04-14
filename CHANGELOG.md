@@ -199,3 +199,8 @@
 
 - Added admin business configuration APIs backed by the `business_config` table for contact info, delivery fees, opening hours, and notice text.
 - Added a dedicated admin operations-configuration page for editing and saving business settings in grouped sections.
+
+### Mini Program Business Config Integration
+
+- Added public business-configuration APIs for the mini program and wired the home page to show notices, phone contact, delivery fees, and opening hours.
+- Added menu-page business information blocks so ordering pages reflect the latest configured delivery and operating details.

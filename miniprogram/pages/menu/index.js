@@ -6,6 +6,12 @@ Page({
     categories: [],
     dishes: [],
     currentCategoryId: null,
+    deliveryFee: '',
+    minOrderAmount: '',
+    breakfastHours: '',
+    lunchHours: '',
+    dinnerHours: '',
+    roomDeliveryNotice: '',
     loading: true
   },
 
@@ -16,11 +22,18 @@ Page({
   async loadData() {
     try {
       const categories = await request('/api/dish/category/list')
+      const config = await request('/api/config/public')
       const currentCategoryId = categories.length ? categories[0].id : null
       const dishes = await request('/api/dish/list', 'GET', currentCategoryId ? { categoryId: currentCategoryId } : {})
       this.setData({
         categories,
         currentCategoryId,
+        deliveryFee: config.DELIVERY_FEE || '',
+        minOrderAmount: config.MIN_ORDER_AMOUNT || '',
+        breakfastHours: config.BREAKFAST_HOURS || '',
+        lunchHours: config.LUNCH_HOURS || '',
+        dinnerHours: config.DINNER_HOURS || '',
+        roomDeliveryNotice: config.ROOM_DELIVERY_NOTICE || '',
         dishes,
         loading: false
       })
