@@ -2,6 +2,10 @@
   <view class="menu-hero">
     <text class="menu-title">在线点餐</text>
     <text class="menu-desc">支持堂食、包间预点菜与客房扫码送餐，先选分类，再快速下单。</text>
+    <view class="menu-status {{businessOpen ? 'menu-status--open' : 'menu-status--closed'}}">
+      <text class="menu-status-title">{{businessStatusTitle}}</text>
+      <text class="menu-status-detail">{{businessStatusDetail}}</text>
+    </view>
     <view class="menu-meta">
       <text class="menu-meta-item">早餐 {{breakfastHours || '待配置'}}</text>
       <text class="menu-meta-item">中餐 {{lunchHours || '待配置'}}</text>

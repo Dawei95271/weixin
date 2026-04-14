@@ -219,3 +219,8 @@
 
 - Extended business-config usage into the service center, order list, and reservation list pages.
 - Added merchant-contact actions and unified notice messaging across user-side service entry and record pages.
+
+### Mini Program Business Hour Guidance
+
+- Added a shared business-hour helper for mini-program pages to derive current open or upcoming service guidance from configured breakfast, lunch, and dinner periods.
+- Added current business-status prompts to the home page, menu page, order confirmation page, private-room reservation page, and banquet reservation page.

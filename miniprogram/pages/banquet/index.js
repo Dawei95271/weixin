@@ -1,4 +1,5 @@
 const { request } = require('../../utils/request')
+const { getBusinessStatus } = require('../../utils/business')
 
 Page({
   data: {
@@ -12,6 +13,8 @@ Page({
     requirementDesc: '',
     contactPhoneConfig: '',
     homeNotice: '',
+    businessStatusTitle: '',
+    businessStatusDetail: '',
     submitting: false
   },
 
@@ -25,9 +28,12 @@ Page({
   async loadConfig() {
     try {
       const config = await request('/api/config/public')
+      const businessStatus = getBusinessStatus(config)
       this.setData({
         contactPhoneConfig: config.CONTACT_PHONE || '',
-        homeNotice: config.HOME_NOTICE || ''
+        homeNotice: config.HOME_NOTICE || '',
+        businessStatusTitle: businessStatus.title,
+        businessStatusDetail: businessStatus.detail
       })
     } catch (error) {
       // keep page usable even if config loading fails

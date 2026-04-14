@@ -11,6 +11,8 @@
     </view>
     <text class="summary-desc">{{sceneHint}}</text>
     <text class="summary-desc">起送金额：¥{{minOrderAmount || '0.00'}}</text>
+    <text class="summary-desc">{{businessStatusTitle}}</text>
+    <text class="summary-desc">{{businessStatusDetail}}</text>
     <button class="ghost-btn contact-btn" wx:if="{{merchantPhone}}" bindtap="callMerchant">联系商家</button>
   </view>
 

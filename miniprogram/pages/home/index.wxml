@@ -18,6 +18,10 @@
 
   <view class="section-card">
     <view class="section-title">营业信息</view>
+    <view class="business-status {{businessOpen ? 'business-status--open' : 'business-status--closed'}}">
+      <text class="business-status-title">{{businessStatusTitle}}</text>
+      <text class="business-status-detail">{{businessStatusDetail}}</text>
+    </view>
     <view class="info-grid">
       <view class="info-card" wx:for="{{businessHours}}" wx:key="label">
         <text class="info-label">{{item.label}}</text>

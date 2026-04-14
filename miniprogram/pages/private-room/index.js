@@ -1,4 +1,5 @@
 const { request } = require('../../utils/request')
+const { getBusinessStatus } = require('../../utils/business')
 
 Page({
   data: {
@@ -19,6 +20,8 @@ Page({
     lunchHours: '',
     dinnerHours: '',
     roomDeliveryNotice: '',
+    businessStatusTitle: '',
+    businessStatusDetail: '',
     submitting: false
   },
 
@@ -52,7 +55,9 @@ Page({
         breakfastHours: config.BREAKFAST_HOURS || '',
         lunchHours: config.LUNCH_HOURS || '',
         dinnerHours: config.DINNER_HOURS || '',
-        roomDeliveryNotice: config.ROOM_DELIVERY_NOTICE || ''
+        roomDeliveryNotice: config.ROOM_DELIVERY_NOTICE || '',
+        businessStatusTitle: getBusinessStatus(config).title,
+        businessStatusDetail: getBusinessStatus(config).detail
       })
     } catch (error) {
       wx.showToast({

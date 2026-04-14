@@ -1,4 +1,5 @@
 const { request } = require('../../utils/request')
+const { getBusinessStatus } = require('../../utils/business')
 
 Page({
   data: {
@@ -8,6 +9,9 @@ Page({
     contactPhone: '',
     homeNotice: '',
     businessHours: [],
+    businessStatusTitle: '',
+    businessStatusDetail: '',
+    businessOpen: false,
     deliveryFee: '',
     minOrderAmount: '',
     roomDeliveryNotice: '',
@@ -22,6 +26,11 @@ Page({
     try {
       const data = await request('/api/home/index')
       const dishes = await request('/api/dish/list')
+      const businessStatus = getBusinessStatus({
+        BREAKFAST_HOURS: data.breakfastHours,
+        LUNCH_HOURS: data.lunchHours,
+        DINNER_HOURS: data.dinnerHours
+      })
       this.setData({
         projectName: data.projectName,
         businessScopes: data.businessScopes,
@@ -35,6 +44,9 @@ Page({
           { label: '中餐', value: data.lunchHours || '待配置' },
           { label: '晚餐', value: data.dinnerHours || '待配置' }
         ],
+        businessStatusTitle: businessStatus.title,
+        businessStatusDetail: businessStatus.detail,
+        businessOpen: businessStatus.open,
         featuredDishes: dishes.slice(0, 3),
         loading: false
       })

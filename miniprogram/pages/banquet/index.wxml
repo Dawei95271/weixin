@@ -3,6 +3,8 @@
     <view class="section-title">宴席预约</view>
     <text class="summary-desc">婚宴、寿宴、商务宴等需求可先线上留资，提交后后台会尽快联系你确认方案。</text>
     <text class="tip-line" wx:if="{{homeNotice}}">公告：{{homeNotice}}</text>
+    <text class="tip-line">{{businessStatusTitle}}</text>
+    <text class="tip-line">{{businessStatusDetail}}</text>
     <button class="ghost-btn call-btn" wx:if="{{contactPhoneConfig}}" bindtap="callMerchant">电话咨询</button>
   </view>
 

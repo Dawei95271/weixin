@@ -1,5 +1,6 @@
 const { request } = require('../../utils/request')
 const { addToCart } = require('../../utils/cart')
+const { getBusinessStatus } = require('../../utils/business')
 
 Page({
   data: {
@@ -12,6 +13,9 @@ Page({
     lunchHours: '',
     dinnerHours: '',
     roomDeliveryNotice: '',
+    businessStatusTitle: '',
+    businessStatusDetail: '',
+    businessOpen: false,
     loading: true
   },
 
@@ -25,6 +29,7 @@ Page({
       const config = await request('/api/config/public')
       const currentCategoryId = categories.length ? categories[0].id : null
       const dishes = await request('/api/dish/list', 'GET', currentCategoryId ? { categoryId: currentCategoryId } : {})
+      const businessStatus = getBusinessStatus(config)
       this.setData({
         categories,
         currentCategoryId,
@@ -34,6 +39,9 @@ Page({
         lunchHours: config.LUNCH_HOURS || '',
         dinnerHours: config.DINNER_HOURS || '',
         roomDeliveryNotice: config.ROOM_DELIVERY_NOTICE || '',
+        businessStatusTitle: businessStatus.title,
+        businessStatusDetail: businessStatus.detail,
+        businessOpen: businessStatus.open,
         dishes,
         loading: false
       })

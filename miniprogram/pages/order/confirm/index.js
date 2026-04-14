@@ -1,5 +1,6 @@
 const { getCart, buildOrderItems, clearCart } = require('../../../utils/cart')
 const { request } = require('../../../utils/request')
+const { getBusinessStatus } = require('../../../utils/business')
 
 Page({
   data: {
@@ -18,6 +19,8 @@ Page({
     minOrderAmount: '0.00',
     roomDeliveryNotice: '',
     merchantPhone: '',
+    businessStatusTitle: '',
+    businessStatusDetail: '',
     submitting: false
   },
 
@@ -32,7 +35,9 @@ Page({
         minOrderAmount: config.MIN_ORDER_AMOUNT || '0.00',
         deliveryFeeConfig: config.DELIVERY_FEE || '0.00',
         roomDeliveryNotice: config.ROOM_DELIVERY_NOTICE || '',
-        merchantPhone: config.CONTACT_PHONE || ''
+        merchantPhone: config.CONTACT_PHONE || '',
+        businessStatusTitle: getBusinessStatus(config).title,
+        businessStatusDetail: getBusinessStatus(config).detail
       })
     } catch (error) {
       // keep page usable even if config loading fails

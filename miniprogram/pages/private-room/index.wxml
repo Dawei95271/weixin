@@ -7,6 +7,8 @@
       <text class="meta-pill">中餐 {{lunchHours || '待配置'}}</text>
       <text class="meta-pill">晚餐 {{dinnerHours || '待配置'}}</text>
     </view>
+    <text class="summary-desc">{{businessStatusTitle}}</text>
+    <text class="summary-desc">{{businessStatusDetail}}</text>
     <button class="ghost-btn call-btn" wx:if="{{contactPhoneConfig}}" bindtap="callMerchant">联系商家</button>
   </view>
 
