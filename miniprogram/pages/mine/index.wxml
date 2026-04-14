@@ -4,9 +4,24 @@
     <text class="profile-title">餐饮服务中心</text>
     <text class="profile-desc">在这里统一查看订单、预约和客房送餐入口，把点餐、预约和跟进都放在一个页面里。</text>
     <text class="profile-desc" wx:if="{{homeNotice}}">公告：{{homeNotice}}</text>
+    <text class="profile-desc">{{businessStatusTitle}}</text>
+    <text class="profile-desc">{{businessStatusDetail}}</text>
     <view class="profile-actions">
       <button class="primary-btn profile-btn" bindtap="goMenu">继续点餐</button>
       <button class="ghost-btn profile-btn" wx:if="{{contactPhone}}" bindtap="callMerchant">联系商家</button>
+    </view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-head">
+      <view class="section-title">当前客房送餐状态</view>
+      <button size="mini" wx:if="{{roomDeliveryActive}}" bindtap="clearRoomDelivery">切回普通点餐</button>
+    </view>
+    <text class="profile-desc">{{currentRoomTitle}}</text>
+    <text class="profile-desc">{{currentRoomDetail}}</text>
+    <view class="profile-actions">
+      <button class="ghost-btn profile-btn" bindtap="goRoomDining">{{roomDeliveryActive ? '重新识别房间' : '去识别房间'}}</button>
+      <button class="ghost-btn profile-btn" wx:if="{{roomDeliveryActive}}" bindtap="goMenu">继续点餐</button>
     </view>
   </view>
 
@@ -25,6 +40,21 @@
         <text class="summary-value">晚餐</text>
         <text class="summary-label">{{dinnerHours || '待配置'}}</text>
       </view>
+    </view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">服务看板</view>
+    <view class="summary-grid">
+      <view class="summary-item" wx:for="{{dashboardCards}}" wx:key="title">
+        <text class="summary-value">{{item.value}}</text>
+        <text class="summary-label">{{item.title}}</text>
+        <text class="summary-tip">{{item.desc}}</text>
+      </view>
+    </view>
+    <view class="profile-actions">
+      <button class="ghost-btn profile-btn" bindtap="goOrders">查看订单</button>
+      <button class="ghost-btn profile-btn" bindtap="goReservations">查看预约</button>
     </view>
   </view>
 
@@ -51,7 +81,10 @@
     <view class="service-list">
       <view class="service-item" wx:for="{{quickActions}}" wx:key="title" data-url="{{item.url}}" bindtap="goFeature">
         <view class="service-head">
-          <text class="service-badge">{{item.badge}}</text>
+          <view class="service-badge-group">
+            <text class="service-badge">{{item.badge}}</text>
+            <text class="service-count" wx:if="{{item.count}}">{{item.count}}</text>
+          </view>
           <text class="service-arrow">进入 ></text>
         </view>
         <text class="service-title">{{item.title}}</text>

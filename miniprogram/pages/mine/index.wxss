@@ -26,10 +26,20 @@
 
 .profile-actions {
   margin-top: 8rpx;
+  display: flex;
+  gap: 18rpx;
+  flex-wrap: wrap;
 }
 
 .profile-btn {
   width: 220rpx;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
 }
 
 .summary-grid,
@@ -60,11 +70,24 @@
   margin-top: 8rpx;
 }
 
+.summary-tip {
+  display: block;
+  margin-top: 10rpx;
+  color: #6b7280;
+  line-height: 1.7;
+}
+
 .service-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16rpx;
+}
+
+.service-badge-group {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
 }
 
 .service-badge {
@@ -73,6 +96,16 @@
   background: rgba(213, 140, 53, 0.16);
   color: #a35d1f;
   font-size: 22rpx;
+}
+
+.service-count {
+  min-width: 42rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 999rpx;
+  background: rgba(63, 140, 92, 0.14);
+  color: #2f7d4e;
+  font-size: 22rpx;
+  text-align: center;
 }
 
 .service-title {

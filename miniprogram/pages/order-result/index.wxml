@@ -6,12 +6,22 @@
     <text class="result-desc" wx:if="{{roomDeliveryNotice}}">{{roomDeliveryNotice}}</text>
     <view class="result-info">
       <text>订单号：{{orderNo}}</text>
-      <text>场景：{{orderScene}}</text>
+      <text>场景：{{orderSceneLabel}}</text>
       <text>金额：¥{{payableAmount}}</text>
+    </view>
+    <view class="result-tips">
+      <text class="result-desc">建议下一步：</text>
+      <text class="result-desc" wx:if="{{orderScene === 'ROOM_DELIVERY'}}">1. 保持当前房间识别状态，后续仍可继续添加客房送餐订单。</text>
+      <text class="result-desc" wx:else>1. 可继续浏览菜单补充点餐，也可以先去查看订单状态。</text>
+      <text class="result-desc">2. 如需协助，可直接联系商家或前往服务中心查看其他服务。</text>
     </view>
     <view class="result-actions">
       <button bindtap="goOrders">查看我的订单</button>
       <button class="primary-btn" bindtap="backToMenu">继续点餐</button>
+    </view>
+    <view class="result-actions">
+      <button bindtap="goServiceCenter">进入服务中心</button>
+      <button wx:if="{{orderScene === 'ROOM_DELIVERY'}}" bindtap="goRoomDining">房间送餐设置</button>
     </view>
     <button class="ghost-btn contact-btn" wx:if="{{contactPhone}}" bindtap="callMerchant">联系商家</button>
   </view>

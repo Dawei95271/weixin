@@ -245,3 +245,8 @@
 
 - Extended the business-hour helper with action-level guidance so mini-program pages can distinguish between display-only status and whether online ordering is currently available.
 - Disabled direct order submission outside configured business hours while keeping private-room and banquet reservations available with clearer “营业外也可预约” guidance.
+
+### Mini Program Personal Dashboard
+
+- Upgraded the service-center page into a personal dashboard with live counts for orders, reservations, business-hour status, and room-delivery state.
+- Added clearer order-result follow-up guidance so users can jump straight to their orders, the service center, or room-delivery settings based on the order scene.
