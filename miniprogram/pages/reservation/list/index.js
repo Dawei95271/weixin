@@ -4,18 +4,21 @@ Page({
   data: {
     privateRoomReservations: [],
     banquetReservations: [],
+    contactPhone: '',
+    homeNotice: '',
     loading: true
   },
 
   onShow() {
-    this.loadReservations()
+    this.loadPageData()
   },
 
-  async loadReservations() {
+  async loadPageData() {
     try {
-      const [privateRoomReservations, banquetReservations] = await Promise.all([
+      const [privateRoomReservations, banquetReservations, config] = await Promise.all([
         request('/api/private-room/reservation/list'),
-        request('/api/banquet/reservation/list')
+        request('/api/banquet/reservation/list'),
+        request('/api/config/public')
       ])
       this.setData({
         privateRoomReservations: (privateRoomReservations || []).map((item) => ({
@@ -27,6 +30,8 @@ Page({
           ...item,
           statusLabel: this.formatBanquetStatus(item.status)
         })),
+        contactPhone: config.CONTACT_PHONE || '',
+        homeNotice: config.HOME_NOTICE || '',
         loading: false
       })
     } catch (error) {
@@ -54,6 +59,19 @@ Page({
     const { id, type } = event.currentTarget.dataset
     wx.navigateTo({
       url: `/pages/reservation/detail/index?id=${id}&type=${type}`
+    })
+  },
+
+  callMerchant() {
+    if (!this.data.contactPhone) {
+      wx.showToast({
+        title: '暂未配置联系电话',
+        icon: 'none'
+      })
+      return
+    }
+    wx.makePhoneCall({
+      phoneNumber: this.data.contactPhone
     })
   },
 

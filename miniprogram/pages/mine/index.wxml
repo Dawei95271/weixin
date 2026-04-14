@@ -3,8 +3,28 @@
     <text class="profile-tag">DINING SERVICE CENTER</text>
     <text class="profile-title">餐饮服务中心</text>
     <text class="profile-desc">在这里统一查看订单、预约和客房送餐入口，把点餐、预约和跟进都放在一个页面里。</text>
+    <text class="profile-desc" wx:if="{{homeNotice}}">公告：{{homeNotice}}</text>
     <view class="profile-actions">
       <button class="primary-btn profile-btn" bindtap="goMenu">继续点餐</button>
+      <button class="ghost-btn profile-btn" wx:if="{{contactPhone}}" bindtap="callMerchant">联系商家</button>
+    </view>
+  </view>
+
+  <view class="section-card summary-card">
+    <view class="section-title">营业时段</view>
+    <view class="summary-grid">
+      <view class="summary-item">
+        <text class="summary-value">早餐</text>
+        <text class="summary-label">{{breakfastHours || '待配置'}}</text>
+      </view>
+      <view class="summary-item">
+        <text class="summary-value">中餐</text>
+        <text class="summary-label">{{lunchHours || '待配置'}}</text>
+      </view>
+      <view class="summary-item">
+        <text class="summary-value">晚餐</text>
+        <text class="summary-label">{{dinnerHours || '待配置'}}</text>
+      </view>
     </view>
   </view>
 

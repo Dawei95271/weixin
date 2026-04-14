@@ -3,22 +3,29 @@ const { request } = require('../../../utils/request')
 Page({
   data: {
     orders: [],
+    contactPhone: '',
+    roomDeliveryNotice: '',
     loading: true
   },
 
   onShow() {
-    this.loadOrders()
+    this.loadPageData()
   },
 
-  async loadOrders() {
+  async loadPageData() {
     try {
-      const orders = await request('/api/order/list')
+      const [orders, config] = await Promise.all([
+        request('/api/order/list'),
+        request('/api/config/public')
+      ])
       this.setData({
         orders: (orders || []).map((item) => ({
           ...item,
           orderSceneLabel: this.formatOrderScene(item.orderScene),
           orderStatusLabel: this.formatOrderStatus(item.orderStatus)
         })),
+        contactPhone: config.CONTACT_PHONE || '',
+        roomDeliveryNotice: config.ROOM_DELIVERY_NOTICE || '',
         loading: false
       })
     } catch (error) {
@@ -40,6 +47,19 @@ Page({
   goMenu() {
     wx.switchTab({
       url: '/pages/menu/index'
+    })
+  },
+
+  callMerchant() {
+    if (!this.data.contactPhone) {
+      wx.showToast({
+        title: '暂未配置联系电话',
+        icon: 'none'
+      })
+      return
+    }
+    wx.makePhoneCall({
+      phoneNumber: this.data.contactPhone
     })
   },
 

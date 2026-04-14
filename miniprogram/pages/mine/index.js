@@ -1,3 +1,5 @@
+const { request } = require('../../utils/request')
+
 Page({
   data: {
     quickActions: [
@@ -36,7 +38,31 @@ Page({
       '客房住客建议先扫码识别房间，再提交送餐订单。',
       '包间预约支持先预约时段，再补充预点菜信息。',
       '宴席预约提交后，后台会尽快联系你确认档期和需求。'
-    ]
+    ],
+    contactPhone: '',
+    homeNotice: '',
+    breakfastHours: '',
+    lunchHours: '',
+    dinnerHours: ''
+  },
+
+  onShow() {
+    this.loadConfig()
+  },
+
+  async loadConfig() {
+    try {
+      const config = await request('/api/config/public')
+      this.setData({
+        contactPhone: config.CONTACT_PHONE || '',
+        homeNotice: config.HOME_NOTICE || '',
+        breakfastHours: config.BREAKFAST_HOURS || '',
+        lunchHours: config.LUNCH_HOURS || '',
+        dinnerHours: config.DINNER_HOURS || ''
+      })
+    } catch (error) {
+      // keep page usable even if config loading fails
+    }
   },
 
   goFeature(event) {
@@ -56,6 +82,19 @@ Page({
   goMenu() {
     wx.switchTab({
       url: '/pages/menu/index'
+    })
+  },
+
+  callMerchant() {
+    if (!this.data.contactPhone) {
+      wx.showToast({
+        title: '暂未配置联系电话',
+        icon: 'none'
+      })
+      return
+    }
+    wx.makePhoneCall({
+      phoneNumber: this.data.contactPhone
     })
   }
 })

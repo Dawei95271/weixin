@@ -214,3 +214,8 @@
 
 - Extended business-config usage into cart, order-confirmation, and order-result pages.
 - Added unified delivery-fee, minimum-order, room-delivery notice, and merchant-contact displays across the core ordering flow.
+
+### Mini Program Service Hub Config Integration
+
+- Extended business-config usage into the service center, order list, and reservation list pages.
+- Added merchant-contact actions and unified notice messaging across user-side service entry and record pages.

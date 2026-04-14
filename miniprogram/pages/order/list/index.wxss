@@ -57,3 +57,8 @@
   width: 220rpx;
   margin-top: 24rpx;
 }
+
+.summary-btn {
+  width: 220rpx;
+  margin-top: 24rpx;
+}

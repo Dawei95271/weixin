@@ -2,6 +2,8 @@
   <view class="section-card reservation-summary-card">
     <view class="section-title">我的预约</view>
     <text class="summary-desc">当前共 {{privateRoomReservations.length + banquetReservations.length}} 条预约记录，包间与宴席统一在这里查看。</text>
+    <text class="summary-desc" wx:if="{{homeNotice}}">公告：{{homeNotice}}</text>
+    <button class="ghost-btn summary-btn" wx:if="{{contactPhone}}" bindtap="callMerchant">联系商家</button>
   </view>
 
   <view class="section-card">

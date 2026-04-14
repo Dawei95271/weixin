@@ -1,6 +1,6 @@
 App({
   globalData: {
-    apiBaseUrl: 'http://localhost:8080',
+    apiBaseUrl: 'http://192.168.0.100:8080',
     cart: []
   }
 })
