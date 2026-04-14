@@ -7,6 +7,7 @@ Page({
     projectName: '',
     businessScopes: [],
     homeBanners: [],
+    serviceEntries: [],
     featuredDishes: [],
     contactPhone: '',
     homeNotice: '',
@@ -48,6 +49,14 @@ Page({
           id: `${item.title || 'banner'}-${index}`,
           title: item.title || '酒店二楼餐饮服务',
           subtitle: item.subtitle || '欢迎进入首页运营位',
+          linkType: item.linkType || 'NONE',
+          linkValue: item.linkValue || '',
+          tone: item.tone || 'amber'
+        })),
+        serviceEntries: (data.serviceEntries || []).map((item, index) => ({
+          id: `${item.title || 'entry'}-${index}`,
+          title: item.title || '服务入口',
+          subtitle: item.subtitle || '点击进入对应服务',
           linkType: item.linkType || 'NONE',
           linkValue: item.linkValue || '',
           tone: item.tone || 'amber'
@@ -100,14 +109,30 @@ Page({
     if (!banner) {
       return
     }
-    const linkType = banner.linkType || 'NONE'
-    const linkValue = banner.linkValue || ''
+    this.handleLinkAction(banner)
+  },
+
+  onServiceEntryTap(event) {
+    const entry = event.currentTarget.dataset.entry
+    if (!entry) {
+      return
+    }
+    this.handleLinkAction(entry)
+  },
+
+  handleLinkAction(target) {
+    const linkType = target.linkType || 'NONE'
+    const linkValue = target.linkValue || ''
     if (linkType === 'ROOM') {
       this.goRoomDining()
       return
     }
     if (linkType === 'MENU') {
       this.goMenu()
+      return
+    }
+    if (linkType === 'CART') {
+      this.goCart()
       return
     }
     if (linkType === 'PRIVATE_ROOM') {

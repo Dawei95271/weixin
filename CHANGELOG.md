@@ -256,3 +256,9 @@
 - Added configurable home-banner support to the public home API and default banner fallbacks for existing databases.
 - Extended the admin business-configuration page with an editable home-banner manager, including ordering, tone selection, preview, and navigation targets.
 - Added a swiper-based “本周主推” section to the mini-program home page so banner items can be managed in the admin console and shown immediately on the user side.
+
+### Configurable Home Service Entries
+
+- Added configurable home service-entry support to the public home API, with default entry fallbacks for older local databases.
+- Extended the admin business-configuration page with a home-entry editor so operations can manage homepage shortcuts, navigation targets, ordering, and tones.
+- Replaced the mini-program home page’s hard-coded “推荐入口” cards with backend-driven service entries.

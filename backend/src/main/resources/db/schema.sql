@@ -364,7 +364,8 @@ VALUES
   ('DINNER_HOURS', '17:00-21:00', '晚餐营业时段'),
   ('HOME_NOTICE', '欢迎使用酒店二楼餐饮服务，客房扫码即可点餐。', '首页公告'),
   ('ROOM_DELIVERY_NOTICE', '客房送餐默认送至房门，请保持电话畅通。', '客房送餐提示'),
-  ('HOME_BANNERS', '[{"title":"客房扫码点餐","subtitle":"扫码识别房间后即可享受二楼送餐服务","linkType":"ROOM","linkValue":"","tone":"amber"},{"title":"包间提前预约","subtitle":"十个包间可选，早餐中餐晚餐均可预约","linkType":"PRIVATE_ROOM","linkValue":"","tone":"tea"},{"title":"婚宴寿宴预约","subtitle":"线上留资，营业时间内优先电话跟进","linkType":"BANQUET","linkValue":"","tone":"copper"}]', '首页轮播运营位')
+  ('HOME_BANNERS', '[{"title":"客房扫码点餐","subtitle":"扫码识别房间后即可享受二楼送餐服务","linkType":"ROOM","linkValue":"","tone":"amber"},{"title":"包间提前预约","subtitle":"十个包间可选，早餐中餐晚餐均可预约","linkType":"PRIVATE_ROOM","linkValue":"","tone":"tea"},{"title":"婚宴寿宴预约","subtitle":"线上留资，营业时间内优先电话跟进","linkType":"BANQUET","linkValue":"","tone":"copper"}]', '首页轮播运营位'),
+  ('HOME_SERVICE_ENTRIES', '[{"title":"在线点餐","subtitle":"浏览菜品，加入购物车，快速下单","linkType":"MENU","linkValue":"","tone":"amber"},{"title":"购物车","subtitle":"查看已选菜品，准备提交订单","linkType":"CART","linkValue":"","tone":"tea"},{"title":"客房扫码点餐","subtitle":"先识别房间，再进入送餐场景下单","linkType":"ROOM","linkValue":"","tone":"copper"},{"title":"包间预约","subtitle":"选择日期、时段和包间，提前预约到店","linkType":"PRIVATE_ROOM","linkValue":"","tone":"amber"},{"title":"宴席预约","subtitle":"婚宴、寿宴、商务宴先线上留资，后续人工跟进","linkType":"BANQUET","linkValue":"","tone":"tea"},{"title":"我的预约","subtitle":"查看包间预约和宴席预约记录","linkType":"RESERVATION","linkValue":"","tone":"copper"},{"title":"我的服务","subtitle":"查看订单、预约和客房点餐状态","linkType":"MINE","linkValue":"","tone":"amber"}]', '首页服务入口')
 ON DUPLICATE KEY UPDATE
   config_value = VALUES(config_value),
   config_name = VALUES(config_name);

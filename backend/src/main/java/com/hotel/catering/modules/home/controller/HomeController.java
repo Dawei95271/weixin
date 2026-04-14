@@ -4,7 +4,6 @@ import com.hotel.catering.common.api.ApiResponse;
 import com.hotel.catering.modules.system.service.BusinessConfigService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,18 +40,27 @@ public class HomeController {
         result.put("homeNotice", configs.getOrDefault("HOME_NOTICE", ""));
         result.put("roomDeliveryNotice", configs.getOrDefault("ROOM_DELIVERY_NOTICE", ""));
         result.put("homeBanners", parseBanners(configs.get("HOME_BANNERS")));
+        result.put("serviceEntries", parseServiceEntries(configs.get("HOME_SERVICE_ENTRIES")));
         return ApiResponse.success(result);
     }
 
     private List<Map<String, String>> parseBanners(String rawValue) {
+        return parseJsonItems(rawValue, defaultBanners());
+    }
+
+    private List<Map<String, String>> parseServiceEntries(String rawValue) {
+        return parseJsonItems(rawValue, defaultServiceEntries());
+    }
+
+    private List<Map<String, String>> parseJsonItems(String rawValue, List<Map<String, String>> fallback) {
         if (rawValue == null || rawValue.isBlank()) {
-            return defaultBanners();
+            return fallback;
         }
         try {
             return objectMapper.readValue(rawValue, new TypeReference<List<Map<String, String>>>() {
             });
         } catch (Exception ignored) {
-            return defaultBanners();
+            return fallback;
         }
     }
 
@@ -78,6 +86,60 @@ public class HomeController {
                 "linkType", "BANQUET",
                 "linkValue", "",
                 "tone", "copper"
+            )
+        );
+    }
+
+    private List<Map<String, String>> defaultServiceEntries() {
+        return List.of(
+            Map.of(
+                "title", "在线点餐",
+                "subtitle", "浏览菜品，加入购物车，快速下单",
+                "linkType", "MENU",
+                "linkValue", "",
+                "tone", "amber"
+            ),
+            Map.of(
+                "title", "购物车",
+                "subtitle", "查看已选菜品，准备提交订单",
+                "linkType", "CART",
+                "linkValue", "",
+                "tone", "tea"
+            ),
+            Map.of(
+                "title", "客房扫码点餐",
+                "subtitle", "先识别房间，再进入送餐场景下单",
+                "linkType", "ROOM",
+                "linkValue", "",
+                "tone", "copper"
+            ),
+            Map.of(
+                "title", "包间预约",
+                "subtitle", "选择日期、时段和包间，提前预约到店",
+                "linkType", "PRIVATE_ROOM",
+                "linkValue", "",
+                "tone", "amber"
+            ),
+            Map.of(
+                "title", "宴席预约",
+                "subtitle", "婚宴、寿宴、商务宴先线上留资，后续人工跟进",
+                "linkType", "BANQUET",
+                "linkValue", "",
+                "tone", "tea"
+            ),
+            Map.of(
+                "title", "我的预约",
+                "subtitle", "查看包间预约和宴席预约记录",
+                "linkType", "RESERVATION",
+                "linkValue", "",
+                "tone", "copper"
+            ),
+            Map.of(
+                "title", "我的服务",
+                "subtitle", "查看订单、预约和客房点餐状态",
+                "linkType", "MINE",
+                "linkValue", "",
+                "tone", "amber"
             )
         );
     }

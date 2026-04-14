@@ -226,6 +226,23 @@
   background: #fff;
 }
 
+.entry-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.entry-tone-amber {
+  background: linear-gradient(180deg, #fff8ef, #fff1e0);
+}
+
+.entry-tone-tea {
+  background: linear-gradient(180deg, #f2f6ef, #e8f0e2);
+}
+
+.entry-tone-copper {
+  background: linear-gradient(180deg, #fff4ef, #f6e5dc);
+}
+
 .entry-title {
   display: block;
   font-size: 32rpx;

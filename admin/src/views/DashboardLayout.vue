@@ -164,8 +164,8 @@
         </div>
 
         <div v-if="currentTab === 'configs'" class="result-summary">
-          当前共管理 {{ configSections.length }} 组运营配置与 {{ bannerItems.length }} 条首页轮播
-          <span class="result-summary-detail">支持修改营业时段、配送费用、公告、客房送餐提示和首页轮播运营位</span>
+          当前共管理 {{ configSections.length }} 组运营配置、{{ bannerItems.length }} 条首页轮播和 {{ serviceEntryItems.length }} 个首页入口
+          <span class="result-summary-detail">支持修改营业时段、配送费用、公告、客房送餐提示、首页轮播运营位和首页服务入口</span>
         </div>
 
         <div v-if="currentTab === 'configs'" class="config-grid">
@@ -271,6 +271,81 @@
                 <strong>{{ item.title || '轮播标题' }}</strong>
                 <span>{{ item.subtitle || '这里会展示轮播副标题和活动说明。' }}</span>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="currentTab === 'configs'" class="banner-editor">
+          <div class="panel-head">
+            <div>
+              <h3>首页服务入口</h3>
+              <span class="workspace-caption">用于小程序首页推荐入口区，支持配置标题、副标题、跳转目标和配色</span>
+            </div>
+            <el-button type="primary" @click="addServiceEntryItem">新增入口</el-button>
+          </div>
+          <div class="banner-editor-list">
+            <div v-for="(item, index) in serviceEntryItems" :key="item.id" class="banner-editor-card">
+              <div class="banner-editor-head">
+                <div>
+                  <strong>入口 {{ index + 1 }}</strong>
+                  <p>{{ item.title || '未填写入口标题' }}</p>
+                </div>
+                <div class="action-row">
+                  <el-button size="small" @click="moveServiceEntryItem(index, -1)" :disabled="index === 0">上移</el-button>
+                  <el-button
+                    size="small"
+                    @click="moveServiceEntryItem(index, 1)"
+                    :disabled="index === serviceEntryItems.length - 1"
+                  >
+                    下移
+                  </el-button>
+                  <el-button
+                    size="small"
+                    type="danger"
+                    @click="removeServiceEntryItem(index)"
+                    :disabled="serviceEntryItems.length === 1"
+                  >
+                    删除
+                  </el-button>
+                </div>
+              </div>
+              <div class="banner-editor-grid">
+                <label class="config-field">
+                  <span class="config-label">标题</span>
+                  <el-input v-model="item.title" placeholder="例如 在线点餐" />
+                </label>
+                <label class="config-field">
+                  <span class="config-label">副标题</span>
+                  <el-input v-model="item.subtitle" placeholder="例如 浏览菜品，加入购物车，快速下单" />
+                </label>
+                <label class="config-field">
+                  <span class="config-label">跳转类型</span>
+                  <el-select v-model="item.linkType">
+                    <el-option label="不跳转" value="NONE" />
+                    <el-option label="在线点餐" value="MENU" />
+                    <el-option label="购物车" value="CART" />
+                    <el-option label="客房点餐" value="ROOM" />
+                    <el-option label="包间预约" value="PRIVATE_ROOM" />
+                    <el-option label="宴席预约" value="BANQUET" />
+                    <el-option label="我的预约" value="RESERVATION" />
+                    <el-option label="我的服务" value="MINE" />
+                    <el-option label="联系电话" value="PHONE" />
+                    <el-option label="自定义页面路径" value="PATH" />
+                  </el-select>
+                </label>
+                <label class="config-field">
+                  <span class="config-label">风格</span>
+                  <el-select v-model="item.tone">
+                    <el-option label="琥珀金" value="amber" />
+                    <el-option label="茶山绿" value="tea" />
+                    <el-option label="铜棕色" value="copper" />
+                  </el-select>
+                </label>
+              </div>
+              <label class="config-field" v-if="item.linkType === 'PATH'">
+                <span class="config-label">页面路径</span>
+                <el-input v-model="item.linkValue" placeholder="例如 /pages/menu/index" />
+              </label>
             </div>
           </div>
         </div>
@@ -1127,9 +1202,11 @@ const configForm = ref<Record<string, string>>({
   DINNER_HOURS: '',
   HOME_NOTICE: '',
   ROOM_DELIVERY_NOTICE: '',
-  HOME_BANNERS: ''
+  HOME_BANNERS: '',
+  HOME_SERVICE_ENTRIES: ''
 })
 const bannerItems = ref<BannerItem[]>([])
+const serviceEntryItems = ref<BannerItem[]>([])
 
 const configSections = [
   {
@@ -1163,6 +1240,17 @@ const configSections = [
 function createDefaultBannerItem(): BannerItem {
   return {
     id: `banner-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    title: '',
+    subtitle: '',
+    linkType: 'NONE',
+    linkValue: '',
+    tone: 'amber'
+  }
+}
+
+function createDefaultServiceEntryItem(): BannerItem {
+  return {
+    id: `entry-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     title: '',
     subtitle: '',
     linkType: 'NONE',
@@ -1685,6 +1773,7 @@ function syncConfigForm(configs: Array<{ configKey: string; configValue: string 
   })
   configForm.value = nextValue
   bannerItems.value = parseBannerItems(nextValue.HOME_BANNERS)
+  serviceEntryItems.value = parseServiceEntryItems(nextValue.HOME_SERVICE_ENTRIES)
 }
 
 function parseBannerItems(rawValue?: string) {
@@ -1717,7 +1806,47 @@ function parseBannerItems(rawValue?: string) {
   }
 }
 
+function parseServiceEntryItems(rawValue?: string) {
+  if (!rawValue) {
+    return [
+      {
+        ...createDefaultServiceEntryItem(),
+        title: '在线点餐',
+        subtitle: '浏览菜品，加入购物车，快速下单',
+        linkType: 'MENU',
+        tone: 'amber'
+      }
+    ]
+  }
+  try {
+    const parsed = JSON.parse(rawValue)
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      return [createDefaultServiceEntryItem()]
+    }
+    return parsed.map((item, index) => ({
+      id: `entry-${index}-${Math.random().toString(36).slice(2, 6)}`,
+      title: String(item.title || ''),
+      subtitle: String(item.subtitle || ''),
+      linkType: String(item.linkType || 'NONE'),
+      linkValue: String(item.linkValue || ''),
+      tone: ['amber', 'tea', 'copper'].includes(String(item.tone)) ? String(item.tone) : 'amber'
+    }))
+  } catch {
+    return [createDefaultServiceEntryItem()]
+  }
+}
+
 function normalizeBannerItems(items: BannerItem[]) {
+  return items.map((item) => ({
+    title: item.title.trim(),
+    subtitle: item.subtitle.trim(),
+    linkType: item.linkType || 'NONE',
+    linkValue: item.linkType === 'PATH' ? item.linkValue.trim() : '',
+    tone: item.tone || 'amber'
+  }))
+}
+
+function normalizeServiceEntryItems(items: BannerItem[]) {
   return items.map((item) => ({
     title: item.title.trim(),
     subtitle: item.subtitle.trim(),
@@ -1731,12 +1860,24 @@ function addBannerItem() {
   bannerItems.value = [...bannerItems.value, createDefaultBannerItem()]
 }
 
+function addServiceEntryItem() {
+  serviceEntryItems.value = [...serviceEntryItems.value, createDefaultServiceEntryItem()]
+}
+
 function removeBannerItem(index: number) {
   if (bannerItems.value.length <= 1) {
     ElMessage.warning('首页至少保留一条轮播')
     return
   }
   bannerItems.value = bannerItems.value.filter((_, currentIndex) => currentIndex !== index)
+}
+
+function removeServiceEntryItem(index: number) {
+  if (serviceEntryItems.value.length <= 1) {
+    ElMessage.warning('首页至少保留一个服务入口')
+    return
+  }
+  serviceEntryItems.value = serviceEntryItems.value.filter((_, currentIndex) => currentIndex !== index)
 }
 
 function moveBannerItem(index: number, direction: -1 | 1) {
@@ -1748,6 +1889,17 @@ function moveBannerItem(index: number, direction: -1 | 1) {
   const [currentItem] = nextItems.splice(index, 1)
   nextItems.splice(targetIndex, 0, currentItem)
   bannerItems.value = nextItems
+}
+
+function moveServiceEntryItem(index: number, direction: -1 | 1) {
+  const targetIndex = index + direction
+  if (targetIndex < 0 || targetIndex >= serviceEntryItems.value.length) {
+    return
+  }
+  const nextItems = [...serviceEntryItems.value]
+  const [currentItem] = nextItems.splice(index, 1)
+  nextItems.splice(targetIndex, 0, currentItem)
+  serviceEntryItems.value = nextItems
 }
 
 function resetOrderFilters() {
@@ -2068,12 +2220,21 @@ async function submitDish() {
 async function submitBusinessConfigs() {
   try {
     const normalizedBanners = normalizeBannerItems(bannerItems.value)
+    const normalizedServiceEntries = normalizeServiceEntryItems(serviceEntryItems.value)
     if (normalizedBanners.some((item) => !item.title || !item.subtitle)) {
       ElMessage.warning('请完整填写每条首页轮播的标题和副标题')
       return
     }
     if (normalizedBanners.some((item) => item.linkType === 'PATH' && !item.linkValue)) {
       ElMessage.warning('自定义页面路径类型需要填写页面路径')
+      return
+    }
+    if (normalizedServiceEntries.some((item) => !item.title || !item.subtitle)) {
+      ElMessage.warning('请完整填写每个首页服务入口的标题和副标题')
+      return
+    }
+    if (normalizedServiceEntries.some((item) => item.linkType === 'PATH' && !item.linkValue)) {
+      ElMessage.warning('首页服务入口的自定义页面路径不能为空')
       return
     }
     const items = configSections.flatMap((section) =>
@@ -2087,6 +2248,11 @@ async function submitBusinessConfigs() {
       configKey: 'HOME_BANNERS',
       configName: '首页轮播运营位',
       configValue: JSON.stringify(normalizedBanners)
+    })
+    items.push({
+      configKey: 'HOME_SERVICE_ENTRIES',
+      configName: '首页服务入口',
+      configValue: JSON.stringify(normalizedServiceEntries)
     })
     const result = await saveBusinessConfigs({ items })
     businessConfigs.value = result
