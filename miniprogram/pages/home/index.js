@@ -6,6 +6,7 @@ Page({
   data: {
     projectName: '',
     businessScopes: [],
+    homeBanners: [],
     featuredDishes: [],
     contactPhone: '',
     homeNotice: '',
@@ -43,6 +44,14 @@ Page({
       this.setData({
         projectName: data.projectName,
         businessScopes: data.businessScopes,
+        homeBanners: (data.homeBanners || []).map((item, index) => ({
+          id: `${item.title || 'banner'}-${index}`,
+          title: item.title || '酒店二楼餐饮服务',
+          subtitle: item.subtitle || '欢迎进入首页运营位',
+          linkType: item.linkType || 'NONE',
+          linkValue: item.linkValue || '',
+          tone: item.tone || 'amber'
+        })),
         contactPhone: data.contactPhone || '',
         homeNotice: data.homeNotice || '',
         deliveryFee: data.deliveryFee || '',
@@ -84,6 +93,51 @@ Page({
     wx.switchTab({
       url: '/pages/cart/index'
     })
+  },
+
+  onBannerTap(event) {
+    const banner = event.currentTarget.dataset.banner
+    if (!banner) {
+      return
+    }
+    const linkType = banner.linkType || 'NONE'
+    const linkValue = banner.linkValue || ''
+    if (linkType === 'ROOM') {
+      this.goRoomDining()
+      return
+    }
+    if (linkType === 'MENU') {
+      this.goMenu()
+      return
+    }
+    if (linkType === 'PRIVATE_ROOM') {
+      wx.navigateTo({ url: '/pages/private-room/index' })
+      return
+    }
+    if (linkType === 'BANQUET') {
+      wx.navigateTo({ url: '/pages/banquet/index' })
+      return
+    }
+    if (linkType === 'RESERVATION') {
+      wx.navigateTo({ url: '/pages/reservation/list/index' })
+      return
+    }
+    if (linkType === 'MINE') {
+      wx.switchTab({ url: '/pages/mine/index' })
+      return
+    }
+    if (linkType === 'PHONE') {
+      this.callMerchant()
+      return
+    }
+    if (linkType === 'PATH' && linkValue) {
+      const isTab = ['/pages/home/index', '/pages/menu/index', '/pages/cart/index', '/pages/mine/index'].includes(linkValue)
+      if (isTab) {
+        wx.switchTab({ url: linkValue })
+        return
+      }
+      wx.navigateTo({ url: linkValue })
+    }
   },
 
   clearRoomDelivery() {

@@ -164,8 +164,8 @@
         </div>
 
         <div v-if="currentTab === 'configs'" class="result-summary">
-          当前共管理 {{ configSections.length }} 组运营配置
-          <span class="result-summary-detail">支持修改营业时段、配送费用、公告和客房送餐提示</span>
+          当前共管理 {{ configSections.length }} 组运营配置与 {{ bannerItems.length }} 条首页轮播
+          <span class="result-summary-detail">支持修改营业时段、配送费用、公告、客房送餐提示和首页轮播运营位</span>
         </div>
 
         <div v-if="currentTab === 'configs'" class="config-grid">
@@ -193,6 +193,86 @@
               </label>
             </div>
           </section>
+        </div>
+
+        <div v-if="currentTab === 'configs'" class="banner-editor">
+          <div class="panel-head">
+            <div>
+              <h3>首页轮播运营位</h3>
+              <span class="workspace-caption">用于小程序首页轮播，支持配置标题、副标题、跳转目标和风格</span>
+            </div>
+            <el-button type="primary" @click="addBannerItem">新增轮播</el-button>
+          </div>
+          <div class="banner-editor-list">
+            <div v-for="(item, index) in bannerItems" :key="item.id" class="banner-editor-card">
+              <div class="banner-editor-head">
+                <div>
+                  <strong>轮播 {{ index + 1 }}</strong>
+                  <p>{{ item.title || '未填写标题' }}</p>
+                </div>
+                <div class="action-row">
+                  <el-button size="small" @click="moveBannerItem(index, -1)" :disabled="index === 0">上移</el-button>
+                  <el-button
+                    size="small"
+                    @click="moveBannerItem(index, 1)"
+                    :disabled="index === bannerItems.length - 1"
+                  >
+                    下移
+                  </el-button>
+                  <el-button
+                    size="small"
+                    type="danger"
+                    @click="removeBannerItem(index)"
+                    :disabled="bannerItems.length === 1"
+                  >
+                    删除
+                  </el-button>
+                </div>
+              </div>
+              <div class="banner-editor-grid">
+                <label class="config-field">
+                  <span class="config-label">标题</span>
+                  <el-input v-model="item.title" placeholder="例如 客房扫码点餐" />
+                </label>
+                <label class="config-field">
+                  <span class="config-label">副标题</span>
+                  <el-input v-model="item.subtitle" placeholder="例如 扫码识别房间后即可享受二楼送餐服务" />
+                </label>
+                <label class="config-field">
+                  <span class="config-label">跳转类型</span>
+                  <el-select v-model="item.linkType">
+                    <el-option label="不跳转" value="NONE" />
+                    <el-option label="在线点餐" value="MENU" />
+                    <el-option label="客房点餐" value="ROOM" />
+                    <el-option label="包间预约" value="PRIVATE_ROOM" />
+                    <el-option label="宴席预约" value="BANQUET" />
+                    <el-option label="我的预约" value="RESERVATION" />
+                    <el-option label="我的服务" value="MINE" />
+                    <el-option label="联系电话" value="PHONE" />
+                    <el-option label="自定义页面路径" value="PATH" />
+                  </el-select>
+                </label>
+                <label class="config-field">
+                  <span class="config-label">风格</span>
+                  <el-select v-model="item.tone">
+                    <el-option label="琥珀金" value="amber" />
+                    <el-option label="茶山绿" value="tea" />
+                    <el-option label="铜棕色" value="copper" />
+                  </el-select>
+                </label>
+              </div>
+              <label class="config-field" v-if="item.linkType === 'PATH'">
+                <span class="config-label">页面路径</span>
+                <el-input v-model="item.linkValue" placeholder="例如 /pages/private-room/index" />
+                <small class="config-hint">可填写小程序内部页面路径，Tab 页面会自动按 switchTab 处理。</small>
+              </label>
+              <div class="banner-preview" :class="`banner-preview--${item.tone}`">
+                <span class="banner-preview-tag">HOT PICKS</span>
+                <strong>{{ item.title || '轮播标题' }}</strong>
+                <span>{{ item.subtitle || '这里会展示轮播副标题和活动说明。' }}</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div v-if="currentTab === 'categories'" class="result-summary">
@@ -1029,6 +1109,15 @@ const activityFilters = ref({
   keyword: '',
   type: 'ALL'
 })
+type BannerItem = {
+  id: string
+  title: string
+  subtitle: string
+  linkType: string
+  linkValue: string
+  tone: string
+}
+
 const configForm = ref<Record<string, string>>({
   CONTACT_PHONE: '',
   DELIVERY_FEE: '',
@@ -1037,8 +1126,10 @@ const configForm = ref<Record<string, string>>({
   LUNCH_HOURS: '',
   DINNER_HOURS: '',
   HOME_NOTICE: '',
-  ROOM_DELIVERY_NOTICE: ''
+  ROOM_DELIVERY_NOTICE: '',
+  HOME_BANNERS: ''
 })
+const bannerItems = ref<BannerItem[]>([])
 
 const configSections = [
   {
@@ -1068,6 +1159,17 @@ const configSections = [
     ]
   }
 ] as const
+
+function createDefaultBannerItem(): BannerItem {
+  return {
+    id: `banner-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    title: '',
+    subtitle: '',
+    linkType: 'NONE',
+    linkValue: '',
+    tone: 'amber'
+  }
+}
 
 const realName = computed(() => localStorage.getItem('admin_real_name') || '管理员')
 const title = computed(() => {
@@ -1582,6 +1684,70 @@ function syncConfigForm(configs: Array<{ configKey: string; configValue: string 
     nextValue[item.configKey] = item.configValue || ''
   })
   configForm.value = nextValue
+  bannerItems.value = parseBannerItems(nextValue.HOME_BANNERS)
+}
+
+function parseBannerItems(rawValue?: string) {
+  if (!rawValue) {
+    return [
+      {
+        ...createDefaultBannerItem(),
+        title: '客房扫码点餐',
+        subtitle: '扫码识别房间后即可享受二楼送餐服务',
+        linkType: 'ROOM',
+        tone: 'amber'
+      }
+    ]
+  }
+  try {
+    const parsed = JSON.parse(rawValue)
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      return [createDefaultBannerItem()]
+    }
+    return parsed.map((item, index) => ({
+      id: `banner-${index}-${Math.random().toString(36).slice(2, 6)}`,
+      title: String(item.title || ''),
+      subtitle: String(item.subtitle || ''),
+      linkType: String(item.linkType || 'NONE'),
+      linkValue: String(item.linkValue || ''),
+      tone: ['amber', 'tea', 'copper'].includes(String(item.tone)) ? String(item.tone) : 'amber'
+    }))
+  } catch {
+    return [createDefaultBannerItem()]
+  }
+}
+
+function normalizeBannerItems(items: BannerItem[]) {
+  return items.map((item) => ({
+    title: item.title.trim(),
+    subtitle: item.subtitle.trim(),
+    linkType: item.linkType || 'NONE',
+    linkValue: item.linkType === 'PATH' ? item.linkValue.trim() : '',
+    tone: item.tone || 'amber'
+  }))
+}
+
+function addBannerItem() {
+  bannerItems.value = [...bannerItems.value, createDefaultBannerItem()]
+}
+
+function removeBannerItem(index: number) {
+  if (bannerItems.value.length <= 1) {
+    ElMessage.warning('首页至少保留一条轮播')
+    return
+  }
+  bannerItems.value = bannerItems.value.filter((_, currentIndex) => currentIndex !== index)
+}
+
+function moveBannerItem(index: number, direction: -1 | 1) {
+  const targetIndex = index + direction
+  if (targetIndex < 0 || targetIndex >= bannerItems.value.length) {
+    return
+  }
+  const nextItems = [...bannerItems.value]
+  const [currentItem] = nextItems.splice(index, 1)
+  nextItems.splice(targetIndex, 0, currentItem)
+  bannerItems.value = nextItems
 }
 
 function resetOrderFilters() {
@@ -1901,6 +2067,15 @@ async function submitDish() {
 
 async function submitBusinessConfigs() {
   try {
+    const normalizedBanners = normalizeBannerItems(bannerItems.value)
+    if (normalizedBanners.some((item) => !item.title || !item.subtitle)) {
+      ElMessage.warning('请完整填写每条首页轮播的标题和副标题')
+      return
+    }
+    if (normalizedBanners.some((item) => item.linkType === 'PATH' && !item.linkValue)) {
+      ElMessage.warning('自定义页面路径类型需要填写页面路径')
+      return
+    }
     const items = configSections.flatMap((section) =>
       section.fields.map((field) => ({
         configKey: field.key,
@@ -1908,6 +2083,11 @@ async function submitBusinessConfigs() {
         configValue: configForm.value[field.key] || ''
       }))
     )
+    items.push({
+      configKey: 'HOME_BANNERS',
+      configName: '首页轮播运营位',
+      configValue: JSON.stringify(normalizedBanners)
+    })
     const result = await saveBusinessConfigs({ items })
     businessConfigs.value = result
     syncConfigForm(result)
@@ -2247,6 +2427,78 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
+}
+
+.banner-editor {
+  margin-top: 18px;
+  padding: 22px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.banner-editor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.banner-editor-card {
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.banner-editor-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.banner-editor-head strong {
+  color: #2b2118;
+}
+
+.banner-editor-head p {
+  margin: 8px 0 0;
+  color: #8b5e34;
+  font-size: 13px;
+}
+
+.banner-editor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.banner-preview {
+  border-radius: 18px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #fff8f0;
+}
+
+.banner-preview--amber {
+  background: linear-gradient(135deg, #5d381d, #b87938);
+}
+
+.banner-preview--tea {
+  background: linear-gradient(135deg, #284132, #6f8d69);
+}
+
+.banner-preview--copper {
+  background: linear-gradient(135deg, #4e271f, #b26742);
+}
+
+.banner-preview-tag {
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  color: rgba(255, 248, 240, 0.8);
 }
 
 .config-card {

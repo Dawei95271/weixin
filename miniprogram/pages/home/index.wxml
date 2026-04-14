@@ -35,6 +35,23 @@
     </view>
   </view>
 
+  <view class="section-card" wx:if="{{homeBanners.length}}">
+    <view class="section-head">
+      <view class="section-title">本周主推</view>
+      <text class="section-subtitle">后台可维护的首页轮播运营位</text>
+    </view>
+    <swiper class="banner-swiper" indicator-dots circular autoplay interval="4200" duration="500">
+      <swiper-item wx:for="{{homeBanners}}" wx:key="id">
+        <view class="banner-card banner-tone-{{item.tone}}" data-banner="{{item}}" bindtap="onBannerTap">
+          <text class="banner-label">HOT PICKS</text>
+          <text class="banner-title">{{item.title}}</text>
+          <text class="banner-subtitle">{{item.subtitle}}</text>
+          <text class="banner-action">点击进入</text>
+        </view>
+      </swiper-item>
+    </swiper>
+  </view>
+
   <view class="section-card" wx:if="{{roomDeliveryActive}}">
     <view class="section-head">
       <view class="section-title">当前送餐房间</view>

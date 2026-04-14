@@ -250,3 +250,9 @@
 
 - Upgraded the service-center page into a personal dashboard with live counts for orders, reservations, business-hour status, and room-delivery state.
 - Added clearer order-result follow-up guidance so users can jump straight to their orders, the service center, or room-delivery settings based on the order scene.
+
+### Banner Management Across Admin and Mini Program
+
+- Added configurable home-banner support to the public home API and default banner fallbacks for existing databases.
+- Extended the admin business-configuration page with an editable home-banner manager, including ordering, tone selection, preview, and navigation targets.
+- Added a swiper-based “本周主推” section to the mini-program home page so banner items can be managed in the admin console and shown immediately on the user side.

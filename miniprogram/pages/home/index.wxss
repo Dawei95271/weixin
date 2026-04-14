@@ -71,6 +71,67 @@
   gap: 16rpx;
 }
 
+.section-subtitle {
+  font-size: 22rpx;
+  color: #a58a72;
+}
+
+.banner-swiper {
+  height: 280rpx;
+}
+
+.banner-card {
+  height: 100%;
+  border-radius: 28rpx;
+  padding: 30rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 14rpx;
+  color: #fff8f0;
+}
+
+.banner-tone-amber {
+  background:
+    radial-gradient(circle at top right, rgba(255, 223, 179, 0.35), transparent 36%),
+    linear-gradient(135deg, #5d381d, #b87938);
+}
+
+.banner-tone-tea {
+  background:
+    radial-gradient(circle at top right, rgba(238, 240, 221, 0.35), transparent 34%),
+    linear-gradient(135deg, #284132, #6f8d69);
+}
+
+.banner-tone-copper {
+  background:
+    radial-gradient(circle at top right, rgba(250, 220, 205, 0.32), transparent 34%),
+    linear-gradient(135deg, #4e271f, #b26742);
+}
+
+.banner-label {
+  font-size: 22rpx;
+  letter-spacing: 0.28em;
+  color: rgba(255, 248, 240, 0.78);
+}
+
+.banner-title {
+  font-size: 42rpx;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.banner-subtitle {
+  font-size: 26rpx;
+  line-height: 1.6;
+  color: rgba(255, 248, 240, 0.9);
+}
+
+.banner-action {
+  font-size: 24rpx;
+  color: #f9ddb1;
+}
+
 .room-delivery-actions {
   margin-top: 18rpx;
 }

@@ -363,7 +363,8 @@ VALUES
   ('LUNCH_HOURS', '11:00-14:00', '中餐营业时段'),
   ('DINNER_HOURS', '17:00-21:00', '晚餐营业时段'),
   ('HOME_NOTICE', '欢迎使用酒店二楼餐饮服务，客房扫码即可点餐。', '首页公告'),
-  ('ROOM_DELIVERY_NOTICE', '客房送餐默认送至房门，请保持电话畅通。', '客房送餐提示')
+  ('ROOM_DELIVERY_NOTICE', '客房送餐默认送至房门，请保持电话畅通。', '客房送餐提示'),
+  ('HOME_BANNERS', '[{"title":"客房扫码点餐","subtitle":"扫码识别房间后即可享受二楼送餐服务","linkType":"ROOM","linkValue":"","tone":"amber"},{"title":"包间提前预约","subtitle":"十个包间可选，早餐中餐晚餐均可预约","linkType":"PRIVATE_ROOM","linkValue":"","tone":"tea"},{"title":"婚宴寿宴预约","subtitle":"线上留资，营业时间内优先电话跟进","linkType":"BANQUET","linkValue":"","tone":"copper"}]', '首页轮播运营位')
 ON DUPLICATE KEY UPDATE
   config_value = VALUES(config_value),
   config_name = VALUES(config_name);
