@@ -164,8 +164,8 @@
         </div>
 
         <div v-if="currentTab === 'configs'" class="result-summary">
-          当前共管理 {{ configSections.length }} 组运营配置、{{ bannerItems.length }} 条首页轮播、{{ serviceEntryItems.length }} 个首页入口和 {{ topicCardItems.length }} 张专题卡片
-          <span class="result-summary-detail">支持修改营业时段、配送费用、公告、客房送餐提示、首页轮播运营位、首页服务入口和活动专题卡片</span>
+          当前共管理 {{ configSections.length }} 组运营配置、{{ bannerItems.length }} 条首页轮播、{{ serviceEntryItems.length }} 个首页入口、{{ topicCardItems.length }} 张专题卡片和 {{ featuredDishIds.length }} 道推荐菜
+          <span class="result-summary-detail">支持修改营业时段、配送费用、公告、客房送餐提示、首页轮播运营位、首页服务入口、活动专题卡片和推荐菜编排</span>
         </div>
 
         <div v-if="currentTab === 'configs'" class="config-grid">
@@ -425,6 +425,46 @@
                 <span class="config-label">页面路径</span>
                 <el-input v-model="item.linkValue" placeholder="例如 /pages/banquet/index" />
               </label>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="currentTab === 'configs'" class="banner-editor">
+          <div class="panel-head">
+            <div>
+              <h3>首页推荐菜编排</h3>
+              <span class="workspace-caption">用于控制小程序首页“今日推荐”展示哪些菜，并按选择顺序输出</span>
+            </div>
+          </div>
+          <div class="featured-dish-editor">
+            <label class="config-field">
+              <span class="config-label">推荐菜选择</span>
+              <el-select
+                v-model="featuredDishIds"
+                multiple
+                filterable
+                clearable
+                placeholder="选择最多 6 道首页推荐菜"
+              >
+                <el-option
+                  v-for="item in dishes"
+                  :key="item.id"
+                  :label="`${item.name} / ${item.categoryName || '未分类'}`"
+                  :value="item.id"
+                />
+              </el-select>
+              <small class="config-hint">按选中顺序展示；未配置时会回退到系统推荐菜。</small>
+            </label>
+            <div class="featured-dish-preview">
+              <div v-if="selectedFeaturedDishes.length" class="featured-dish-list">
+                <div v-for="item in selectedFeaturedDishes" :key="item.id" class="featured-dish-chip">
+                  <strong>{{ item.name }}</strong>
+                  <span>{{ item.subtitle || '首页推荐菜' }}</span>
+                </div>
+              </div>
+              <div v-else class="task-empty">
+                当前未手动配置首页推荐菜，系统将优先使用已标记为推荐的菜品。
+              </div>
             </div>
           </div>
         </div>
@@ -1284,11 +1324,13 @@ const configForm = ref<Record<string, string>>({
   ROOM_DELIVERY_NOTICE: '',
   HOME_BANNERS: '',
   HOME_SERVICE_ENTRIES: '',
-  HOME_TOPIC_CARDS: ''
+  HOME_TOPIC_CARDS: '',
+  HOME_FEATURED_DISH_IDS: ''
 })
 const bannerItems = ref<BannerItem[]>([])
 const serviceEntryItems = ref<BannerItem[]>([])
 const topicCardItems = ref<BannerItem[]>([])
+const featuredDishIds = ref<number[]>([])
 
 const configSections = [
   {
@@ -1404,6 +1446,16 @@ const statCards = computed(() => {
     { label: '分类总数', value: categories.value.length },
     { label: '筛选后宴席预约', value: filteredBanquets.value.length }
   ]
+})
+
+const selectedFeaturedDishes = computed(() => {
+  if (!featuredDishIds.value.length) {
+    return []
+  }
+  const dishMap = new Map(dishes.value.map((item) => [item.id, item]))
+  return featuredDishIds.value
+    .map((id) => dishMap.get(id))
+    .filter(Boolean)
 })
 
 const workspaceHighlights = computed(() => [
@@ -1869,6 +1921,7 @@ function syncConfigForm(configs: Array<{ configKey: string; configValue: string 
   bannerItems.value = parseBannerItems(nextValue.HOME_BANNERS)
   serviceEntryItems.value = parseServiceEntryItems(nextValue.HOME_SERVICE_ENTRIES)
   topicCardItems.value = parseTopicCardItems(nextValue.HOME_TOPIC_CARDS)
+  featuredDishIds.value = parseFeaturedDishIds(nextValue.HOME_FEATURED_DISH_IDS)
 }
 
 function parseBannerItems(rawValue?: string) {
@@ -1960,6 +2013,23 @@ function parseTopicCardItems(rawValue?: string) {
     }))
   } catch {
     return [createDefaultTopicCardItem()]
+  }
+}
+
+function parseFeaturedDishIds(rawValue?: string) {
+  if (!rawValue) {
+    return []
+  }
+  try {
+    const parsed = JSON.parse(rawValue)
+    if (!Array.isArray(parsed)) {
+      return []
+    }
+    return parsed
+      .map((item) => Number(item))
+      .filter((item) => Number.isInteger(item) && item > 0)
+  } catch {
+    return []
   }
 }
 
@@ -2407,6 +2477,10 @@ async function submitBusinessConfigs() {
       ElMessage.warning('首页专题卡片的自定义页面路径不能为空')
       return
     }
+    if (featuredDishIds.value.length > 6) {
+      ElMessage.warning('首页推荐菜最多选择 6 道')
+      return
+    }
     const items = configSections.flatMap((section) =>
       section.fields.map((field) => ({
         configKey: field.key,
@@ -2428,6 +2502,11 @@ async function submitBusinessConfigs() {
       configKey: 'HOME_TOPIC_CARDS',
       configName: '首页活动专题卡片',
       configValue: JSON.stringify(normalizedTopicCards)
+    })
+    items.push({
+      configKey: 'HOME_FEATURED_DISH_IDS',
+      configName: '首页推荐菜品',
+      configValue: JSON.stringify(featuredDishIds.value)
     })
     const result = await saveBusinessConfigs({ items })
     businessConfigs.value = result
@@ -2781,6 +2860,43 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 18px;
+}
+
+.featured-dish-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.featured-dish-preview {
+  border-radius: 18px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.featured-dish-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.featured-dish-chip {
+  border-radius: 16px;
+  padding: 14px 16px;
+  background: linear-gradient(180deg, #fffdf8, #fff6eb);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.featured-dish-chip strong {
+  color: #2b2118;
+}
+
+.featured-dish-chip span {
+  color: #8b5e34;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 .banner-editor-card {

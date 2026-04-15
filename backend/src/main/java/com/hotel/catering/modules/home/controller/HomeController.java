@@ -4,9 +4,15 @@ import com.hotel.catering.common.api.ApiResponse;
 import com.hotel.catering.modules.system.service.BusinessConfigService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hotel.catering.modules.dish.entity.Dish;
+import com.hotel.catering.modules.dish.mapper.DishMapper;
+import com.hotel.catering.modules.dish.vo.DishVO;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +25,7 @@ public class HomeController {
 
     private final BusinessConfigService businessConfigService;
     private final ObjectMapper objectMapper;
+    private final DishMapper dishMapper;
 
     @GetMapping("/health")
     public ApiResponse<String> health() {
@@ -42,6 +49,7 @@ public class HomeController {
         result.put("homeBanners", parseBanners(configs.get("HOME_BANNERS")));
         result.put("serviceEntries", parseServiceEntries(configs.get("HOME_SERVICE_ENTRIES")));
         result.put("topicCards", parseTopicCards(configs.get("HOME_TOPIC_CARDS")));
+        result.put("featuredDishes", loadFeaturedDishes(configs.get("HOME_FEATURED_DISH_IDS")));
         return ApiResponse.success(result);
     }
 
@@ -67,6 +75,61 @@ public class HomeController {
         } catch (Exception ignored) {
             return fallback;
         }
+    }
+
+    private List<DishVO> loadFeaturedDishes(String rawValue) {
+        List<Long> featuredIds = parseFeaturedDishIds(rawValue);
+        if (!featuredIds.isEmpty()) {
+            List<Dish> dishes = dishMapper.selectList(new LambdaQueryWrapper<Dish>()
+                .in(Dish::getId, featuredIds)
+                .eq(Dish::getStatus, 1));
+            Map<Long, Dish> dishMap = new HashMap<>();
+            dishes.forEach(item -> dishMap.put(item.getId(), item));
+            List<DishVO> ordered = new ArrayList<>();
+            for (Long id : featuredIds) {
+                Dish dish = dishMap.get(id);
+                if (dish != null) {
+                    ordered.add(toDishVO(dish));
+                }
+            }
+            if (!ordered.isEmpty()) {
+                return ordered;
+            }
+        }
+        return dishMapper.selectList(new LambdaQueryWrapper<Dish>()
+                .eq(Dish::getStatus, 1)
+                .eq(Dish::getIsRecommend, 1)
+                .orderByAsc(Dish::getSort, Dish::getId)
+                .last("limit 6"))
+            .stream()
+            .map(this::toDishVO)
+            .toList();
+    }
+
+    private List<Long> parseFeaturedDishIds(String rawValue) {
+        if (rawValue == null || rawValue.isBlank()) {
+            return List.of();
+        }
+        try {
+            return objectMapper.readValue(rawValue, new TypeReference<List<Long>>() {
+            });
+        } catch (Exception ignored) {
+            return List.of();
+        }
+    }
+
+    private DishVO toDishVO(Dish dish) {
+        return new DishVO(
+            dish.getId(),
+            dish.getCategoryId(),
+            dish.getName(),
+            dish.getSubtitle(),
+            dish.getDescription(),
+            dish.getCoverImage(),
+            dish.getBasePrice(),
+            dish.getIsRecommend(),
+            dish.getSupportsRoomDelivery()
+        );
     }
 
     private List<Map<String, String>> defaultBanners() {

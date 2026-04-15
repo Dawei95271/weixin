@@ -268,3 +268,9 @@
 - Added configurable topic-card support to the public home API, with default topic-card fallbacks for existing databases.
 - Extended the admin business-configuration page with a topic-card editor for homepage campaign blocks, including eyebrow text, descriptions, ordering, tones, and navigation targets.
 - Added a backend-driven “活动专题” section to the mini-program home page for campaign-oriented homepage storytelling.
+
+### Configurable Home Featured Dishes
+
+- Added configurable featured-dish support to the public home API and seeded default homepage featured-dish ids.
+- Extended the admin business-configuration page with a featured-dish selector so operations can curate the homepage recommendation list by dish id and order.
+- Switched the mini-program home page to consume featured dishes directly from the home API instead of slicing the dish list locally.

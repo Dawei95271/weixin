@@ -37,7 +37,6 @@ Page({
   async loadHome() {
     try {
       const data = await request('/api/home/index')
-      const dishes = await request('/api/dish/list')
       const businessStatus = getBusinessStatus({
         BREAKFAST_HOURS: data.breakfastHours,
         LUNCH_HOURS: data.lunchHours,
@@ -71,6 +70,7 @@ Page({
           linkValue: item.linkValue || '',
           tone: item.tone || 'amber'
         })),
+        featuredDishes: data.featuredDishes || [],
         contactPhone: data.contactPhone || '',
         homeNotice: data.homeNotice || '',
         deliveryFee: data.deliveryFee || '',
@@ -84,7 +84,6 @@ Page({
         businessStatusTitle: businessStatus.title,
         businessStatusDetail: businessStatus.detail,
         businessOpen: businessStatus.open,
-        featuredDishes: dishes.slice(0, 3),
         loading: false
       })
     } catch (error) {
