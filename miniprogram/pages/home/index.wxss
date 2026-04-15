@@ -257,6 +257,24 @@
   color: #2f1f14;
 }
 
+.scope-badge,
+.entry-badge,
+.topic-badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.scope-badge,
+.entry-badge {
+  color: #8d5524;
+  background: rgba(255, 248, 240, 0.7);
+}
+
 .scope-desc {
   display: block;
   font-size: 24rpx;
@@ -300,6 +318,11 @@
   font-size: 22rpx;
   color: #8d5524;
   font-weight: 600;
+}
+
+.topic-badge {
+  color: rgba(255, 248, 240, 0.92);
+  background: rgba(255, 248, 240, 0.14);
 }
 
 .topic-card {

@@ -218,6 +218,10 @@
               </div>
               <div class="banner-editor-grid">
                 <label class="config-field">
+                  <span class="config-label">徽标文案</span>
+                  <el-input v-model="item.badgeText" placeholder="例如 HOT / ROOM / EVENT" />
+                </label>
+                <label class="config-field">
                   <span class="config-label">服务标题</span>
                   <el-input v-model="item.title" placeholder="例如 在线点餐" />
                 </label>
@@ -235,6 +239,7 @@
                 </label>
               </div>
               <div class="inline-preview-chip">
+                <span v-if="item.badgeText" class="preview-badge">{{ item.badgeText }}</span>
                 <strong>{{ item.title || '服务范围标题' }}</strong>
                 <span>{{ item.subtitle || '这里会展示服务范围说明。' }}</span>
               </div>
@@ -278,6 +283,10 @@
               </div>
               <div class="banner-editor-grid">
                 <label class="config-field">
+                  <span class="config-label">徽标文案</span>
+                  <el-input v-model="item.badgeText" placeholder="例如 ROOM / DINING / BANQUET" />
+                </label>
+                <label class="config-field">
                   <span class="config-label">标题</span>
                   <el-input v-model="item.title" placeholder="例如 客房扫码点餐" />
                 </label>
@@ -318,10 +327,10 @@
                 <small class="config-hint">可填写小程序内部页面路径，Tab 页面会自动按 switchTab 处理。</small>
               </label>
               <div class="banner-preview" :class="`banner-preview--${item.tone}`">
-                <span class="banner-preview-tag">HOT PICKS</span>
+                <span class="banner-preview-tag">{{ item.badgeText || 'HOT PICKS' }}</span>
                 <strong>{{ item.title || '轮播标题' }}</strong>
                 <span>{{ item.subtitle || '这里会展示轮播副标题和活动说明。' }}</span>
-                <em>{{ item.actionText || '立即进入' }}</em>
+                <span class="preview-action">{{ item.actionText || '立即进入' }}</span>
               </div>
             </div>
           </div>
@@ -363,6 +372,10 @@
               </div>
               <div class="banner-editor-grid">
                 <label class="config-field">
+                  <span class="config-label">徽标文案</span>
+                  <el-input v-model="item.badgeText" placeholder="例如 HOT / ROOM / CENTER" />
+                </label>
+                <label class="config-field">
                   <span class="config-label">标题</span>
                   <el-input v-model="item.title" placeholder="例如 在线点餐" />
                 </label>
@@ -403,9 +416,10 @@
                 <el-input v-model="item.linkValue" placeholder="例如 /pages/menu/index" />
               </label>
               <div class="inline-preview-chip">
+                <span v-if="item.badgeText" class="preview-badge">{{ item.badgeText }}</span>
                 <strong>{{ item.title || '服务入口' }}</strong>
                 <span>{{ item.subtitle || '首页常用服务快捷入口' }}</span>
-                <em>{{ item.actionText || '立即进入' }}</em>
+                <span class="preview-action preview-action--inline">{{ item.actionText || '立即进入' }}</span>
               </div>
             </div>
           </div>
@@ -451,6 +465,10 @@
                   <el-input v-model="item.eyebrow" placeholder="例如 ROOM DINING" />
                 </label>
                 <label class="config-field">
+                  <span class="config-label">徽标文案</span>
+                  <el-input v-model="item.badgeText" placeholder="例如 送房主推 / 包间热推" />
+                </label>
+                <label class="config-field">
                   <span class="config-label">专题标题</span>
                   <el-input v-model="item.title" placeholder="例如 客房送餐专场" />
                 </label>
@@ -492,9 +510,10 @@
               </label>
               <div class="banner-preview" :class="`banner-preview--${item.tone}`">
                 <span class="banner-preview-tag">{{ item.eyebrow || 'SPECIAL' }}</span>
+                <span v-if="item.badgeText" class="preview-badge preview-badge--light">{{ item.badgeText }}</span>
                 <strong>{{ item.title || '专题标题' }}</strong>
                 <span>{{ item.subtitle || '这里会展示专题卡片描述。' }}</span>
-                <em>{{ item.actionText || '立即查看' }}</em>
+                <span class="preview-action">{{ item.actionText || '立即查看' }}</span>
               </div>
             </div>
           </div>
@@ -673,6 +692,7 @@
 
               <div v-if="section.key === 'businessScopes'" class="home-preview-chip-list">
                 <article v-for="item in previewBusinessScopeItems" :key="item.title + item.subtitle" class="inline-preview-chip">
+                  <span v-if="item.badgeText" class="preview-badge">{{ item.badgeText }}</span>
                   <strong>{{ item.title || '服务范围标题' }}</strong>
                   <span>{{ item.subtitle || '这里会展示服务范围说明。' }}</span>
                 </article>
@@ -689,18 +709,20 @@
 
               <div v-else-if="section.key === 'serviceEntries'" class="home-preview-entry-list">
                 <article v-for="item in previewServiceEntryItems" :key="item.title + item.subtitle" class="inline-preview-chip">
+                  <span v-if="item.badgeText" class="preview-badge">{{ item.badgeText }}</span>
                   <strong>{{ item.title || '服务入口' }}</strong>
                   <span>{{ item.subtitle || '首页常用服务快捷入口' }}</span>
-                  <em>{{ item.actionText || '立即进入' }}</em>
+                  <span class="preview-action preview-action--inline">{{ item.actionText || '立即进入' }}</span>
                 </article>
               </div>
 
               <div v-else-if="section.key === 'topicCards'" class="home-preview-topic-list">
                 <article v-for="item in previewTopicCardItems" :key="item.title + item.subtitle" class="banner-preview" :class="`banner-preview--${item.tone}`">
                   <span class="banner-preview-tag">{{ item.eyebrow || 'SPECIAL' }}</span>
+                  <span v-if="item.badgeText" class="preview-badge preview-badge--light">{{ item.badgeText }}</span>
                   <strong>{{ item.title || '专题标题' }}</strong>
                   <span>{{ item.subtitle || '这里会展示专题卡片描述。' }}</span>
-                  <em>{{ item.actionText || '立即查看' }}</em>
+                  <span class="preview-action">{{ item.actionText || '立即查看' }}</span>
                 </article>
               </div>
 
@@ -1564,6 +1586,7 @@ type BannerItem = {
 
 type BusinessScopeItem = {
   id: string
+  badgeText?: string
   title: string
   subtitle: string
   tone: string
@@ -1678,6 +1701,7 @@ function createDefaultTopicCardItem(): BannerItem {
 function createDefaultBusinessScopeItem(): BusinessScopeItem {
   return {
     id: `scope-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    badgeText: '',
     title: '',
     subtitle: '',
     tone: 'amber'
@@ -2274,6 +2298,7 @@ function parseBannerItems(rawValue?: string) {
     }
     return parsed.map((item, index) => ({
       id: `banner-${index}-${Math.random().toString(36).slice(2, 6)}`,
+      badgeText: String(item.badgeText || ''),
       title: String(item.title || ''),
       subtitle: String(item.subtitle || ''),
       actionText: String(item.actionText || '立即进入'),
@@ -2291,12 +2316,14 @@ function parseBusinessScopeItems(rawValue?: string) {
     return [
       {
         ...createDefaultBusinessScopeItem(),
+        badgeText: 'HOT',
         title: '在线点餐',
         subtitle: '浏览菜单、加入购物车、快速提交订单',
         tone: 'amber'
       },
       {
         ...createDefaultBusinessScopeItem(),
+        badgeText: 'ROOM',
         title: '客房送餐',
         subtitle: '扫码识别房间后，二楼餐饮可直接送餐到房门',
         tone: 'tea'
@@ -2310,6 +2337,7 @@ function parseBusinessScopeItems(rawValue?: string) {
     }
     return parsed.map((item, index) => ({
       id: `scope-${index}-${Math.random().toString(36).slice(2, 6)}`,
+      badgeText: String(item.badgeText || ''),
       title: String(item.title || ''),
       subtitle: String(item.subtitle || ''),
       tone: ['amber', 'tea', 'copper'].includes(String(item.tone)) ? String(item.tone) : 'amber'
@@ -2324,6 +2352,7 @@ function parseServiceEntryItems(rawValue?: string) {
     return [
       {
         ...createDefaultServiceEntryItem(),
+        badgeText: 'HOT',
         title: '在线点餐',
         subtitle: '浏览菜品，加入购物车，快速下单',
         actionText: '去点餐',
@@ -2339,6 +2368,7 @@ function parseServiceEntryItems(rawValue?: string) {
     }
     return parsed.map((item, index) => ({
       id: `entry-${index}-${Math.random().toString(36).slice(2, 6)}`,
+      badgeText: String(item.badgeText || ''),
       title: String(item.title || ''),
       subtitle: String(item.subtitle || ''),
       actionText: String(item.actionText || '立即进入'),
@@ -2357,6 +2387,7 @@ function parseTopicCardItems(rawValue?: string) {
       {
         ...createDefaultTopicCardItem(),
         eyebrow: 'ROOM DINING',
+        badgeText: '送房主推',
         title: '客房送餐专场',
         subtitle: '扫码识别房间后即可下单，配送费与起送金额按后台配置自动展示',
         actionText: '马上点餐',
@@ -2373,6 +2404,7 @@ function parseTopicCardItems(rawValue?: string) {
     return parsed.map((item, index) => ({
       id: `topic-${index}-${Math.random().toString(36).slice(2, 6)}`,
       eyebrow: String(item.eyebrow || ''),
+      badgeText: String(item.badgeText || ''),
       title: String(item.title || ''),
       subtitle: String(item.subtitle || ''),
       actionText: String(item.actionText || '立即查看'),
@@ -2474,6 +2506,7 @@ function moveHomeSectionItem(index: number, direction: -1 | 1) {
 function normalizeBannerItems(items: BannerItem[]) {
   return items.map((item) => ({
     title: item.title.trim(),
+    badgeText: String(item.badgeText || '').trim(),
     subtitle: item.subtitle.trim(),
     actionText: String(item.actionText || '').trim(),
     linkType: item.linkType || 'NONE',
@@ -2485,6 +2518,7 @@ function normalizeBannerItems(items: BannerItem[]) {
 function normalizeBusinessScopeItems(items: BusinessScopeItem[]) {
   return items.map((item) => ({
     title: item.title.trim(),
+    badgeText: String(item.badgeText || '').trim(),
     subtitle: item.subtitle.trim(),
     tone: item.tone || 'amber'
   }))
@@ -2493,6 +2527,7 @@ function normalizeBusinessScopeItems(items: BusinessScopeItem[]) {
 function normalizeServiceEntryItems(items: BannerItem[]) {
   return items.map((item) => ({
     title: item.title.trim(),
+    badgeText: String(item.badgeText || '').trim(),
     subtitle: item.subtitle.trim(),
     actionText: String(item.actionText || '').trim(),
     linkType: item.linkType || 'NONE',
@@ -2504,6 +2539,7 @@ function normalizeServiceEntryItems(items: BannerItem[]) {
 function normalizeTopicCardItems(items: BannerItem[]) {
   return items.map((item) => ({
     eyebrow: String(item.eyebrow || '').trim(),
+    badgeText: String(item.badgeText || '').trim(),
     title: item.title.trim(),
     subtitle: item.subtitle.trim(),
     actionText: String(item.actionText || '').trim(),
@@ -3545,15 +3581,32 @@ onMounted(() => {
   line-height: 1.6;
 }
 
-.inline-preview-chip em,
-.banner-preview em {
-  color: rgba(255, 248, 240, 0.88);
+.preview-badge,
+.preview-action {
   font-style: normal;
   font-size: 13px;
   font-weight: 600;
 }
 
-.inline-preview-chip em {
+.preview-badge {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #8d5524;
+  background: rgba(255, 248, 240, 0.8);
+}
+
+.preview-badge--light {
+  color: rgba(255, 248, 240, 0.92);
+  background: rgba(255, 248, 240, 0.14);
+}
+
+.preview-action {
+  color: rgba(255, 248, 240, 0.88);
+}
+
+.preview-action--inline {
   color: #8d5524;
 }
 

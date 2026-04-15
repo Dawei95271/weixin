@@ -49,12 +49,14 @@ Page({
         projectName: data.projectName,
         businessScopes: (data.businessScopes || []).map((item, index) => ({
           id: `${item.title || 'scope'}-${index}`,
+          badgeText: item.badgeText || '',
           title: item.title || '服务范围',
           subtitle: item.subtitle || '',
           tone: item.tone || 'amber'
         })),
         homeBanners: (data.homeBanners || []).map((item, index) => ({
           id: `${item.title || 'banner'}-${index}`,
+          badgeText: item.badgeText || '',
           title: item.title || '酒店二楼餐饮服务',
           subtitle: item.subtitle || '欢迎进入首页运营位',
           actionText: item.actionText || '点击进入',
@@ -64,6 +66,7 @@ Page({
         })),
         serviceEntries: (data.serviceEntries || []).map((item, index) => ({
           id: `${item.title || 'entry'}-${index}`,
+          badgeText: item.badgeText || '',
           title: item.title || '服务入口',
           subtitle: item.subtitle || '点击进入对应服务',
           actionText: item.actionText || '立即进入',
@@ -74,6 +77,7 @@ Page({
         topicCards: (data.topicCards || []).map((item, index) => ({
           id: `${item.title || 'topic'}-${index}`,
           eyebrow: item.eyebrow || 'SPECIAL',
+          badgeText: item.badgeText || '',
           title: item.title || '专题活动',
           subtitle: item.subtitle || '点击查看当前活动专题',
           actionText: item.actionText || '立即查看',

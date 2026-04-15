@@ -43,7 +43,7 @@
     <swiper class="banner-swiper" indicator-dots circular autoplay interval="4200" duration="500">
       <swiper-item wx:for="{{homeBanners}}" wx:key="id">
         <view class="banner-card banner-tone-{{item.tone}}" data-banner="{{item}}" bindtap="onBannerTap">
-          <text class="banner-label">HOT PICKS</text>
+          <text class="banner-label">{{item.badgeText || 'HOT PICKS'}}</text>
           <text class="banner-title">{{item.title}}</text>
           <text class="banner-subtitle">{{item.subtitle}}</text>
           <text class="banner-action">{{item.actionText || '点击进入'}}</text>
@@ -74,6 +74,7 @@
       </view>
       <view class="scope-list">
         <view class="scope-item scope-tone-{{item.tone}}" wx:for="{{businessScopes}}" wx:key="id">
+          <text class="scope-badge" wx:if="{{item.badgeText}}">{{item.badgeText}}</text>
           <text class="scope-title">{{item.title}}</text>
           <text class="scope-desc">{{item.subtitle}}</text>
         </view>
@@ -94,6 +95,7 @@
           data-entry="{{entry}}"
           bindtap="onServiceEntryTap"
         >
+          <text class="entry-badge" wx:if="{{entry.badgeText}}">{{entry.badgeText}}</text>
           <text class="entry-title">{{entry.title}}</text>
           <text class="entry-desc">{{entry.subtitle}}</text>
           <text class="entry-action">{{entry.actionText || '立即进入'}}</text>
@@ -116,6 +118,7 @@
           bindtap="onTopicCardTap"
         >
           <text class="topic-eyebrow">{{topic.eyebrow}}</text>
+          <text class="topic-badge" wx:if="{{topic.badgeText}}">{{topic.badgeText}}</text>
           <text class="topic-title">{{topic.title}}</text>
           <text class="topic-subtitle">{{topic.subtitle}}</text>
           <text class="topic-action">{{topic.actionText || '立即查看'}}</text>

@@ -181,6 +181,7 @@ public class HomeController {
         return List.of(
             Map.of(
                 "title", "客房扫码点餐",
+                "badgeText", "ROOM",
                 "subtitle", "扫码识别房间后即可享受二楼送餐服务",
                 "actionText", "立即进入",
                 "linkType", "ROOM",
@@ -189,6 +190,7 @@ public class HomeController {
             ),
             Map.of(
                 "title", "包间提前预约",
+                "badgeText", "DINING",
                 "subtitle", "十个包间可选，早餐中餐晚餐均可预约",
                 "actionText", "去预约",
                 "linkType", "PRIVATE_ROOM",
@@ -197,6 +199,7 @@ public class HomeController {
             ),
             Map.of(
                 "title", "婚宴寿宴预约",
+                "badgeText", "BANQUET",
                 "subtitle", "线上留资，营业时间内优先电话跟进",
                 "actionText", "立即咨询",
                 "linkType", "BANQUET",
@@ -210,21 +213,25 @@ public class HomeController {
         return List.of(
             Map.of(
                 "title", "在线点餐",
+                "badgeText", "HOT",
                 "subtitle", "浏览菜单、加入购物车、快速提交订单",
                 "tone", "amber"
             ),
             Map.of(
                 "title", "客房送餐",
+                "badgeText", "ROOM",
                 "subtitle", "扫码识别房间后，二楼餐饮可直接送餐到房门",
                 "tone", "tea"
             ),
             Map.of(
                 "title", "包间预约",
+                "badgeText", "PRIVATE",
                 "subtitle", "十个包间支持早餐、中餐、晚餐预约和提前点菜",
                 "tone", "copper"
             ),
             Map.of(
                 "title", "宴席咨询",
+                "badgeText", "EVENT",
                 "subtitle", "婚宴、寿宴、商务宴先线上留资，再由商家人工跟进",
                 "tone", "amber"
             )
@@ -235,6 +242,7 @@ public class HomeController {
         return List.of(
             Map.of(
                 "title", "在线点餐",
+                "badgeText", "HOT",
                 "subtitle", "浏览菜品，加入购物车，快速下单",
                 "actionText", "去点餐",
                 "linkType", "MENU",
@@ -243,6 +251,7 @@ public class HomeController {
             ),
             Map.of(
                 "title", "购物车",
+                "badgeText", "CART",
                 "subtitle", "查看已选菜品，准备提交订单",
                 "actionText", "查看购物车",
                 "linkType", "CART",
@@ -251,6 +260,7 @@ public class HomeController {
             ),
             Map.of(
                 "title", "客房扫码点餐",
+                "badgeText", "ROOM",
                 "subtitle", "先识别房间，再进入送餐场景下单",
                 "actionText", "识别房间",
                 "linkType", "ROOM",
@@ -259,6 +269,7 @@ public class HomeController {
             ),
             Map.of(
                 "title", "包间预约",
+                "badgeText", "PRIVATE",
                 "subtitle", "选择日期、时段和包间，提前预约到店",
                 "actionText", "查看包间",
                 "linkType", "PRIVATE_ROOM",
@@ -267,6 +278,7 @@ public class HomeController {
             ),
             Map.of(
                 "title", "宴席预约",
+                "badgeText", "BANQUET",
                 "subtitle", "婚宴、寿宴、商务宴先线上留资，后续人工跟进",
                 "actionText", "提交需求",
                 "linkType", "BANQUET",
@@ -275,6 +287,7 @@ public class HomeController {
             ),
             Map.of(
                 "title", "我的预约",
+                "badgeText", "BOOKING",
                 "subtitle", "查看包间预约和宴席预约记录",
                 "actionText", "查看记录",
                 "linkType", "RESERVATION",
@@ -283,6 +296,7 @@ public class HomeController {
             ),
             Map.of(
                 "title", "我的服务",
+                "badgeText", "CENTER",
                 "subtitle", "查看订单、预约和客房点餐状态",
                 "actionText", "进入中心",
                 "linkType", "MINE",
@@ -296,6 +310,7 @@ public class HomeController {
         return List.of(
             Map.of(
                 "eyebrow", "ROOM DINING",
+                "badgeText", "送房主推",
                 "title", "客房送餐专场",
                 "subtitle", "扫码识别房间后即可下单，配送费与起送金额按后台配置自动展示",
                 "actionText", "马上点餐",
@@ -305,6 +320,7 @@ public class HomeController {
             ),
             Map.of(
                 "eyebrow", "PRIVATE DINING",
+                "badgeText", "包间热推",
                 "title", "包间预订推荐",
                 "subtitle", "十个包间支持早餐、中餐、晚餐预约，可先预点菜再到店",
                 "actionText", "查看包间",
@@ -314,6 +330,7 @@ public class HomeController {
             ),
             Map.of(
                 "eyebrow", "BANQUET",
+                "badgeText", "大型宴席",
                 "title", "婚宴寿宴咨询",
                 "subtitle", "线上留资，营业时间内优先人工电话跟进，适合婚礼和大型宴席",
                 "actionText", "提交咨询",

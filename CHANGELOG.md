@@ -303,3 +303,9 @@
 - Added configurable business-scope card support to the public home API and seeded default homepage scope-card data.
 - Extended the admin business-configuration page with a business-scope editor so operations can manage homepage service-range cards and preview them before saving.
 - Updated the mini-program home page to render structured service-range cards instead of a fixed hard-coded text list.
+
+### Home Card Badges
+
+- Extended homepage business-scope cards, banners, service entries, and topic cards with configurable badge text.
+- Updated the admin homepage orchestration UI and live preview so operations can edit and review badge copy together with CTA text.
+- Updated the mini-program home page to render badge labels across service-range cards, service entries, banners, and topic cards.
