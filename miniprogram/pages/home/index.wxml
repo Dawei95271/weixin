@@ -1,17 +1,17 @@
 <view class="home-page">
   <view class="hero">
     <view class="hero-copy">
-      <text class="hero-tag">HOTEL FLOOR 2 DINING</text>
-      <text class="hero-title">{{projectName || '酒店二楼餐饮服务'}}</text>
-      <text class="hero-desc">早餐、中餐、晚餐、包间预约、客房扫码送餐，一次放进一个小程序里。</text>
+      <text class="hero-tag">{{heroSettings.tag}}</text>
+      <text class="hero-title">{{heroSettings.title || projectName || '酒店二楼餐饮服务'}}</text>
+      <text class="hero-desc">{{heroSettings.description}}</text>
       <view class="hero-notice" wx:if="{{homeNotice}}">
-        <text class="hero-notice-label">今日公告</text>
+        <text class="hero-notice-label">{{heroSettings.noticeLabel}}</text>
         <text class="hero-notice-text">{{homeNotice}}</text>
       </view>
       <view class="hero-actions">
-        <button class="primary-btn hero-btn" bindtap="goMenu">立即点餐</button>
-        <button class="ghost-btn hero-btn" bindtap="goRoomDining">客房点餐</button>
-        <button class="ghost-btn hero-btn" wx:if="{{contactPhone}}" bindtap="callMerchant">联系商家</button>
+        <button class="primary-btn hero-btn" bindtap="goMenu">{{heroSettings.primaryButtonText}}</button>
+        <button class="ghost-btn hero-btn" bindtap="goRoomDining">{{heroSettings.secondaryButtonText}}</button>
+        <button class="ghost-btn hero-btn" wx:if="{{contactPhone}}" bindtap="callMerchant">{{heroSettings.contactButtonText}}</button>
       </view>
     </view>
   </view>

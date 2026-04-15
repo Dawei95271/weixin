@@ -285,3 +285,9 @@
 
 - Extended homepage section settings with admin-side ordering controls so operations can move sections up and down.
 - Updated the mini-program home page to render homepage sections according to backend-configured section order instead of a fixed hard-coded sequence.
+
+### Configurable Home Hero Copy
+
+- Added configurable hero-copy support to the public home API so homepage first-screen tag, title, description, notice label, and CTA texts can be managed centrally.
+- Extended the admin business-configuration page with a dedicated hero-copy editor.
+- Updated the mini-program home page hero block to consume backend-driven copy instead of fixed literals.

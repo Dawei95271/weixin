@@ -164,8 +164,8 @@
         </div>
 
         <div v-if="currentTab === 'configs'" class="result-summary">
-          当前共管理 {{ configSections.length }} 组运营配置、{{ bannerItems.length }} 条首页轮播、{{ serviceEntryItems.length }} 个首页入口、{{ topicCardItems.length }} 张专题卡片、{{ featuredDishIds.length }} 道推荐菜和 {{ homeSectionItems.length }} 个首页模块
-          <span class="result-summary-detail">支持修改营业时段、配送费用、公告、客房送餐提示、首页轮播运营位、首页服务入口、活动专题卡片、推荐菜编排和首页模块显隐文案</span>
+          当前共管理 {{ configSections.length }} 组运营配置、{{ bannerItems.length }} 条首页轮播、{{ serviceEntryItems.length }} 个首页入口、{{ topicCardItems.length }} 张专题卡片、{{ featuredDishIds.length }} 道推荐菜、{{ homeSectionItems.length }} 个首页模块和 1 组头图文案
+          <span class="result-summary-detail">支持修改营业时段、配送费用、公告、客房送餐提示、首页轮播运营位、首页服务入口、活动专题卡片、推荐菜编排、首页模块显隐文案和头图 CTA 文案</span>
         </div>
 
         <div v-if="currentTab === 'configs'" class="config-grid">
@@ -512,6 +512,45 @@
                 </label>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div v-if="currentTab === 'configs'" class="banner-editor">
+          <div class="panel-head">
+            <div>
+              <h3>首页头图文案</h3>
+              <span class="workspace-caption">统一维护首页第一屏的标签、标题、描述、公告标签和 CTA 按钮文案</span>
+            </div>
+          </div>
+          <div class="banner-editor-grid">
+            <label class="config-field">
+              <span class="config-label">顶部标签</span>
+              <el-input v-model="heroSettings.tag" placeholder="例如 HOTEL FLOOR 2 DINING" />
+            </label>
+            <label class="config-field">
+              <span class="config-label">主标题</span>
+              <el-input v-model="heroSettings.title" placeholder="例如 酒店二楼餐饮服务" />
+            </label>
+            <label class="config-field">
+              <span class="config-label">公告标签</span>
+              <el-input v-model="heroSettings.noticeLabel" placeholder="例如 今日公告" />
+            </label>
+            <label class="config-field">
+              <span class="config-label">主按钮文案</span>
+              <el-input v-model="heroSettings.primaryButtonText" placeholder="例如 立即点餐" />
+            </label>
+            <label class="config-field">
+              <span class="config-label">次按钮文案</span>
+              <el-input v-model="heroSettings.secondaryButtonText" placeholder="例如 客房点餐" />
+            </label>
+            <label class="config-field">
+              <span class="config-label">联系按钮文案</span>
+              <el-input v-model="heroSettings.contactButtonText" placeholder="例如 联系商家" />
+            </label>
+            <label class="config-field banner-editor-grid-full">
+              <span class="config-label">描述文案</span>
+              <el-input v-model="heroSettings.description" type="textarea" :rows="3" placeholder="输入首页第一屏描述文案" />
+            </label>
           </div>
         </div>
 
@@ -1379,13 +1418,23 @@ const configForm = ref<Record<string, string>>({
   HOME_SERVICE_ENTRIES: '',
   HOME_TOPIC_CARDS: '',
   HOME_FEATURED_DISH_IDS: '',
-  HOME_SECTION_SETTINGS: ''
+  HOME_SECTION_SETTINGS: '',
+  HOME_HERO_SETTINGS: ''
 })
 const bannerItems = ref<BannerItem[]>([])
 const serviceEntryItems = ref<BannerItem[]>([])
 const topicCardItems = ref<BannerItem[]>([])
 const featuredDishIds = ref<number[]>([])
 const homeSectionItems = ref<HomeSectionItem[]>([])
+const heroSettings = ref({
+  tag: 'HOTEL FLOOR 2 DINING',
+  title: '酒店二楼餐饮服务',
+  description: '早餐、中餐、晚餐、包间预约、客房扫码送餐，一次放进一个小程序里。',
+  noticeLabel: '今日公告',
+  primaryButtonText: '立即点餐',
+  secondaryButtonText: '客房点餐',
+  contactButtonText: '联系商家'
+})
 
 const configSections = [
   {
@@ -1988,6 +2037,7 @@ function syncConfigForm(configs: Array<{ configKey: string; configValue: string 
   topicCardItems.value = parseTopicCardItems(nextValue.HOME_TOPIC_CARDS)
   featuredDishIds.value = parseFeaturedDishIds(nextValue.HOME_FEATURED_DISH_IDS)
   homeSectionItems.value = parseHomeSectionItems(nextValue.HOME_SECTION_SETTINGS)
+  heroSettings.value = parseHeroSettings(nextValue.HOME_HERO_SETTINGS)
 }
 
 function parseBannerItems(rawValue?: string) {
@@ -2125,6 +2175,35 @@ function parseHomeSectionItems(rawValue?: string) {
       .filter(Boolean)
   } catch {
     return defaultHomeSections()
+  }
+}
+
+function parseHeroSettings(rawValue?: string) {
+  const defaults = {
+    tag: 'HOTEL FLOOR 2 DINING',
+    title: '酒店二楼餐饮服务',
+    description: '早餐、中餐、晚餐、包间预约、客房扫码送餐，一次放进一个小程序里。',
+    noticeLabel: '今日公告',
+    primaryButtonText: '立即点餐',
+    secondaryButtonText: '客房点餐',
+    contactButtonText: '联系商家'
+  }
+  if (!rawValue) {
+    return defaults
+  }
+  try {
+    const parsed = JSON.parse(rawValue)
+    return {
+      tag: String(parsed.tag || defaults.tag),
+      title: String(parsed.title || defaults.title),
+      description: String(parsed.description || defaults.description),
+      noticeLabel: String(parsed.noticeLabel || defaults.noticeLabel),
+      primaryButtonText: String(parsed.primaryButtonText || defaults.primaryButtonText),
+      secondaryButtonText: String(parsed.secondaryButtonText || defaults.secondaryButtonText),
+      contactButtonText: String(parsed.contactButtonText || defaults.contactButtonText)
+    }
+  } catch {
+    return defaults
   }
 }
 
@@ -2591,6 +2670,10 @@ async function submitBusinessConfigs() {
       ElMessage.warning('首页模块标题不能为空')
       return
     }
+    if (!heroSettings.value.title.trim() || !heroSettings.value.primaryButtonText.trim()) {
+      ElMessage.warning('首页头图标题和主按钮文案不能为空')
+      return
+    }
     const items = configSections.flatMap((section) =>
       section.fields.map((field) => ({
         configKey: field.key,
@@ -2627,6 +2710,19 @@ async function submitBusinessConfigs() {
         subtitle: item.subtitle.trim(),
         enabled: item.enabled
       })))
+    })
+    items.push({
+      configKey: 'HOME_HERO_SETTINGS',
+      configName: '首页头图文案',
+      configValue: JSON.stringify({
+        tag: heroSettings.value.tag.trim(),
+        title: heroSettings.value.title.trim(),
+        description: heroSettings.value.description.trim(),
+        noticeLabel: heroSettings.value.noticeLabel.trim(),
+        primaryButtonText: heroSettings.value.primaryButtonText.trim(),
+        secondaryButtonText: heroSettings.value.secondaryButtonText.trim(),
+        contactButtonText: heroSettings.value.contactButtonText.trim()
+      })
     })
     const result = await saveBusinessConfigs({ items })
     businessConfigs.value = result

@@ -12,6 +12,7 @@ Page({
     featuredDishes: [],
     sectionSettings: {},
     homeSections: [],
+    heroSettings: {},
     contactPhone: '',
     homeNotice: '',
     businessHours: [],
@@ -75,6 +76,7 @@ Page({
         featuredDishes: data.featuredDishes || [],
         sectionSettings: this.buildSectionSettings(data.sectionSettings || []),
         homeSections: this.buildHomeSections(data.sectionSettings || []),
+        heroSettings: this.buildHeroSettings(data.heroSettings || {}),
         contactPhone: data.contactPhone || '',
         homeNotice: data.homeNotice || '',
         deliveryFee: data.deliveryFee || '',
@@ -148,6 +150,18 @@ Page({
         }
       })
       .filter(Boolean)
+  },
+
+  buildHeroSettings(settings) {
+    return {
+      tag: settings.tag || 'HOTEL FLOOR 2 DINING',
+      title: settings.title || '酒店二楼餐饮服务',
+      description: settings.description || '早餐、中餐、晚餐、包间预约、客房扫码送餐，一次放进一个小程序里。',
+      noticeLabel: settings.noticeLabel || '今日公告',
+      primaryButtonText: settings.primaryButtonText || '立即点餐',
+      secondaryButtonText: settings.secondaryButtonText || '客房点餐',
+      contactButtonText: settings.contactButtonText || '联系商家'
+    }
   },
 
   goMenu() {

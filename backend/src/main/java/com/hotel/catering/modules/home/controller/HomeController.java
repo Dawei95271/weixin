@@ -51,6 +51,7 @@ public class HomeController {
         result.put("topicCards", parseTopicCards(configs.get("HOME_TOPIC_CARDS")));
         result.put("featuredDishes", loadFeaturedDishes(configs.get("HOME_FEATURED_DISH_IDS")));
         result.put("sectionSettings", parseSectionSettings(configs.get("HOME_SECTION_SETTINGS")));
+        result.put("heroSettings", parseHeroSettings(configs.get("HOME_HERO_SETTINGS")));
         return ApiResponse.success(result);
     }
 
@@ -75,6 +76,18 @@ public class HomeController {
             });
         } catch (Exception ignored) {
             return defaultSectionSettings();
+        }
+    }
+
+    private Map<String, String> parseHeroSettings(String rawValue) {
+        if (rawValue == null || rawValue.isBlank()) {
+            return defaultHeroSettings();
+        }
+        try {
+            return objectMapper.readValue(rawValue, new TypeReference<Map<String, String>>() {
+            });
+        } catch (Exception ignored) {
+            return defaultHeroSettings();
         }
     }
 
@@ -261,6 +274,18 @@ public class HomeController {
             Map.of("key", "serviceEntries", "title", "推荐入口", "subtitle", "首页常用服务快捷入口", "enabled", true),
             Map.of("key", "topicCards", "title", "活动专题", "subtitle", "适合运营排活动和主推场景", "enabled", true),
             Map.of("key", "featuredDishes", "title", "今日推荐", "subtitle", "当前首页重点推荐菜品", "enabled", true)
+        );
+    }
+
+    private Map<String, String> defaultHeroSettings() {
+        return Map.of(
+            "tag", "HOTEL FLOOR 2 DINING",
+            "title", "酒店二楼餐饮服务",
+            "description", "早餐、中餐、晚餐、包间预约、客房扫码送餐，一次放进一个小程序里。",
+            "noticeLabel", "今日公告",
+            "primaryButtonText", "立即点餐",
+            "secondaryButtonText", "客房点餐",
+            "contactButtonText", "联系商家"
         );
     }
 }

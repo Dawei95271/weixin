@@ -27,7 +27,8 @@ public class BusinessConfigServiceImpl implements BusinessConfigService {
         "HOME_SERVICE_ENTRIES",
         "HOME_TOPIC_CARDS",
         "HOME_FEATURED_DISH_IDS",
-        "HOME_SECTION_SETTINGS"
+        "HOME_SECTION_SETTINGS",
+        "HOME_HERO_SETTINGS"
     );
 
     private final BusinessConfigMapper businessConfigMapper;
