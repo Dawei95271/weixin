@@ -11,6 +11,7 @@ Page({
     topicCards: [],
     featuredDishes: [],
     sectionSettings: {},
+    homeSections: [],
     contactPhone: '',
     homeNotice: '',
     businessHours: [],
@@ -73,6 +74,7 @@ Page({
         })),
         featuredDishes: data.featuredDishes || [],
         sectionSettings: this.buildSectionSettings(data.sectionSettings || []),
+        homeSections: this.buildHomeSections(data.sectionSettings || []),
         contactPhone: data.contactPhone || '',
         homeNotice: data.homeNotice || '',
         deliveryFee: data.deliveryFee || '',
@@ -116,6 +118,36 @@ Page({
       }
       return acc
     }, { ...defaults })
+  },
+
+  buildHomeSections(items) {
+    const defaults = [
+      { key: 'businessScopes', title: '服务范围', subtitle: '当前小程序覆盖的餐饮与预约服务', enabled: true },
+      { key: 'homeBanners', title: '本周主推', subtitle: '后台可维护的首页轮播运营位', enabled: true },
+      { key: 'serviceEntries', title: '推荐入口', subtitle: '首页常用服务快捷入口', enabled: true },
+      { key: 'topicCards', title: '活动专题', subtitle: '适合运营排活动和主推场景', enabled: true },
+      { key: 'featuredDishes', title: '今日推荐', subtitle: '当前首页重点推荐菜品', enabled: true }
+    ]
+    if (!items || !items.length) {
+      return defaults
+    }
+    const fallbackMap = defaults.reduce((acc, item) => {
+      acc[item.key] = item
+      return acc
+    }, {})
+    return items
+      .map((item) => {
+        if (!item || !item.key || !fallbackMap[item.key]) {
+          return null
+        }
+        return {
+          key: item.key,
+          title: item.title || fallbackMap[item.key].title,
+          subtitle: item.subtitle || fallbackMap[item.key].subtitle,
+          enabled: item.enabled !== false
+        }
+      })
+      .filter(Boolean)
   },
 
   goMenu() {

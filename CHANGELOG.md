@@ -280,3 +280,8 @@
 - Added configurable home-section settings to the public home API so homepage module titles, subtitles, and visibility can be controlled centrally.
 - Extended the admin business-configuration page with a homepage section editor for module-level content orchestration.
 - Updated the mini-program home page to honor backend-driven section settings for banners, service entries, topic cards, featured dishes, and service scope blocks.
+
+### Reorderable Home Section Layout
+
+- Extended homepage section settings with admin-side ordering controls so operations can move sections up and down.
+- Updated the mini-program home page to render homepage sections according to backend-configured section order instead of a fixed hard-coded sequence.

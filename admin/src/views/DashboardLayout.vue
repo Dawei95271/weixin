@@ -483,7 +483,23 @@
                   <strong>{{ item.title || item.key }}</strong>
                   <p>{{ item.key }}</p>
                 </div>
-                <el-switch v-model="item.enabled" active-text="显示" inactive-text="隐藏" />
+                <div class="action-row">
+                  <el-button
+                    size="small"
+                    @click="moveHomeSectionItem(homeSectionItems.findIndex((section) => section.key === item.key), -1)"
+                    :disabled="homeSectionItems[0]?.key === item.key"
+                  >
+                    上移
+                  </el-button>
+                  <el-button
+                    size="small"
+                    @click="moveHomeSectionItem(homeSectionItems.findIndex((section) => section.key === item.key), 1)"
+                    :disabled="homeSectionItems[homeSectionItems.length - 1]?.key === item.key"
+                  >
+                    下移
+                  </el-button>
+                  <el-switch v-model="item.enabled" active-text="显示" inactive-text="隐藏" />
+                </div>
               </div>
               <div class="banner-editor-grid">
                 <label class="config-field">
@@ -2110,6 +2126,17 @@ function parseHomeSectionItems(rawValue?: string) {
   } catch {
     return defaultHomeSections()
   }
+}
+
+function moveHomeSectionItem(index: number, direction: -1 | 1) {
+  const targetIndex = index + direction
+  if (index < 0 || targetIndex < 0 || targetIndex >= homeSectionItems.value.length) {
+    return
+  }
+  const nextItems = [...homeSectionItems.value]
+  const [currentItem] = nextItems.splice(index, 1)
+  nextItems.splice(targetIndex, 0, currentItem)
+  homeSectionItems.value = nextItems
 }
 
 function normalizeBannerItems(items: BannerItem[]) {
