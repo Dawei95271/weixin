@@ -297,3 +297,9 @@
 - Extended homepage banner, service-entry, and topic-card payloads with configurable CTA copy defaults.
 - Updated the admin business-configuration page so operations can edit CTA texts and see a real-time homepage preview before saving.
 - Updated the mini-program home page to render backend-driven CTA labels across banners, service entries, and topic cards.
+
+### Configurable Home Business Scope Cards
+
+- Added configurable business-scope card support to the public home API and seeded default homepage scope-card data.
+- Extended the admin business-configuration page with a business-scope editor so operations can manage homepage service-range cards and preview them before saving.
+- Updated the mini-program home page to render structured service-range cards instead of a fixed hard-coded text list.

@@ -37,7 +37,7 @@ public class HomeController {
         Map<String, String> configs = businessConfigService.getPublicConfigs();
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("projectName", "酒店二楼餐饮服务小程序");
-        result.put("businessScopes", List.of("点餐", "客房送餐", "包间预约", "宴席预约"));
+        result.put("businessScopes", parseBusinessScopes(configs.get("HOME_BUSINESS_SCOPES")));
         result.put("contactPhone", configs.getOrDefault("CONTACT_PHONE", ""));
         result.put("deliveryFee", configs.getOrDefault("DELIVERY_FEE", "0"));
         result.put("minOrderAmount", configs.getOrDefault("MIN_ORDER_AMOUNT", "0"));
@@ -57,6 +57,10 @@ public class HomeController {
 
     private List<Map<String, String>> parseBanners(String rawValue) {
         return parseJsonItems(rawValue, defaultBanners(), "title");
+    }
+
+    private List<Map<String, String>> parseBusinessScopes(String rawValue) {
+        return parseJsonItems(rawValue, defaultBusinessScopes(), "title");
     }
 
     private List<Map<String, String>> parseServiceEntries(String rawValue) {
@@ -198,6 +202,31 @@ public class HomeController {
                 "linkType", "BANQUET",
                 "linkValue", "",
                 "tone", "copper"
+            )
+        );
+    }
+
+    private List<Map<String, String>> defaultBusinessScopes() {
+        return List.of(
+            Map.of(
+                "title", "在线点餐",
+                "subtitle", "浏览菜单、加入购物车、快速提交订单",
+                "tone", "amber"
+            ),
+            Map.of(
+                "title", "客房送餐",
+                "subtitle", "扫码识别房间后，二楼餐饮可直接送餐到房门",
+                "tone", "tea"
+            ),
+            Map.of(
+                "title", "包间预约",
+                "subtitle", "十个包间支持早餐、中餐、晚餐预约和提前点菜",
+                "tone", "copper"
+            ),
+            Map.of(
+                "title", "宴席咨询",
+                "subtitle", "婚宴、寿宴、商务宴先线上留资，再由商家人工跟进",
+                "tone", "amber"
             )
         );
     }

@@ -73,8 +73,9 @@
         <text class="section-subtitle">{{item.subtitle}}</text>
       </view>
       <view class="scope-list">
-        <view class="scope-item" wx:for="{{businessScopes}}" wx:key="*this">
-          <text>{{item}}</text>
+        <view class="scope-item scope-tone-{{item.tone}}" wx:for="{{businessScopes}}" wx:key="id">
+          <text class="scope-title">{{item.title}}</text>
+          <text class="scope-desc">{{item.subtitle}}</text>
         </view>
       </view>
     </view>

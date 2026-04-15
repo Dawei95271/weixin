@@ -164,8 +164,8 @@
         </div>
 
         <div v-if="currentTab === 'configs'" class="result-summary">
-          当前共管理 {{ configSections.length }} 组运营配置、{{ bannerItems.length }} 条首页轮播、{{ serviceEntryItems.length }} 个首页入口、{{ topicCardItems.length }} 张专题卡片、{{ featuredDishIds.length }} 道推荐菜、{{ homeSectionItems.length }} 个首页模块和 1 组头图文案
-          <span class="result-summary-detail">支持修改营业时段、配送费用、公告、客房送餐提示、首页轮播运营位、首页服务入口、活动专题卡片、推荐菜编排、首页模块显隐文案、CTA 文案，并提供首页实时预览。</span>
+          当前共管理 {{ configSections.length }} 组运营配置、{{ businessScopeItems.length }} 张服务范围卡片、{{ bannerItems.length }} 条首页轮播、{{ serviceEntryItems.length }} 个首页入口、{{ topicCardItems.length }} 张专题卡片、{{ featuredDishIds.length }} 道推荐菜、{{ homeSectionItems.length }} 个首页模块和 1 组头图文案
+          <span class="result-summary-detail">支持修改营业时段、配送费用、公告、客房送餐提示、服务范围卡片、首页轮播运营位、首页服务入口、活动专题卡片、推荐菜编排、首页模块显隐文案、CTA 文案，并提供首页实时预览。</span>
         </div>
 
         <div v-if="currentTab === 'configs'" class="config-grid">
@@ -193,6 +193,53 @@
               </label>
             </div>
           </section>
+        </div>
+
+        <div v-if="currentTab === 'configs'" class="banner-editor">
+          <div class="panel-head">
+            <div>
+              <h3>首页服务范围卡片</h3>
+              <span class="workspace-caption">用于首页“服务范围”区，可编排每块服务的标题、说明和风格。</span>
+            </div>
+            <el-button type="primary" @click="addBusinessScopeItem">新增卡片</el-button>
+          </div>
+          <div class="banner-editor-list">
+            <div v-for="(item, index) in businessScopeItems" :key="item.id" class="banner-editor-card">
+              <div class="banner-editor-head">
+                <div>
+                  <strong>服务范围 {{ index + 1 }}</strong>
+                  <p>{{ item.title || '未填写服务标题' }}</p>
+                </div>
+                <div class="action-row">
+                  <el-button size="small" @click="moveBusinessScopeItem(index, -1)" :disabled="index === 0">上移</el-button>
+                  <el-button size="small" @click="moveBusinessScopeItem(index, 1)" :disabled="index === businessScopeItems.length - 1">下移</el-button>
+                  <el-button size="small" type="danger" @click="removeBusinessScopeItem(index)" :disabled="businessScopeItems.length === 1">删除</el-button>
+                </div>
+              </div>
+              <div class="banner-editor-grid">
+                <label class="config-field">
+                  <span class="config-label">服务标题</span>
+                  <el-input v-model="item.title" placeholder="例如 在线点餐" />
+                </label>
+                <label class="config-field">
+                  <span class="config-label">服务说明</span>
+                  <el-input v-model="item.subtitle" placeholder="例如 浏览菜单、加入购物车、快速提交订单" />
+                </label>
+                <label class="config-field">
+                  <span class="config-label">风格</span>
+                  <el-select v-model="item.tone">
+                    <el-option label="琥珀金" value="amber" />
+                    <el-option label="茶山绿" value="tea" />
+                    <el-option label="铜棕色" value="copper" />
+                  </el-select>
+                </label>
+              </div>
+              <div class="inline-preview-chip">
+                <strong>{{ item.title || '服务范围标题' }}</strong>
+                <span>{{ item.subtitle || '这里会展示服务范围说明。' }}</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div v-if="currentTab === 'configs'" class="banner-editor">
@@ -625,10 +672,10 @@
               </div>
 
               <div v-if="section.key === 'businessScopes'" class="home-preview-chip-list">
-                <span class="home-preview-chip">点餐</span>
-                <span class="home-preview-chip">客房送餐</span>
-                <span class="home-preview-chip">包间预约</span>
-                <span class="home-preview-chip">宴席预约</span>
+                <article v-for="item in previewBusinessScopeItems" :key="item.title + item.subtitle" class="inline-preview-chip">
+                  <strong>{{ item.title || '服务范围标题' }}</strong>
+                  <span>{{ item.subtitle || '这里会展示服务范围说明。' }}</span>
+                </article>
               </div>
 
               <div v-else-if="section.key === 'homeBanners'" class="home-preview-banner-list">
@@ -1515,6 +1562,13 @@ type BannerItem = {
   tone: string
 }
 
+type BusinessScopeItem = {
+  id: string
+  title: string
+  subtitle: string
+  tone: string
+}
+
 type HomeSectionItem = {
   key: string
   title: string
@@ -1531,6 +1585,7 @@ const configForm = ref<Record<string, string>>({
   DINNER_HOURS: '',
   HOME_NOTICE: '',
   ROOM_DELIVERY_NOTICE: '',
+  HOME_BUSINESS_SCOPES: '',
   HOME_BANNERS: '',
   HOME_SERVICE_ENTRIES: '',
   HOME_TOPIC_CARDS: '',
@@ -1541,6 +1596,7 @@ const configForm = ref<Record<string, string>>({
 const bannerItems = ref<BannerItem[]>([])
 const serviceEntryItems = ref<BannerItem[]>([])
 const topicCardItems = ref<BannerItem[]>([])
+const businessScopeItems = ref<BusinessScopeItem[]>([])
 const featuredDishIds = ref<number[]>([])
 const homeSectionItems = ref<HomeSectionItem[]>([])
 const heroSettings = ref({
@@ -1619,6 +1675,15 @@ function createDefaultTopicCardItem(): BannerItem {
   }
 }
 
+function createDefaultBusinessScopeItem(): BusinessScopeItem {
+  return {
+    id: `scope-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    title: '',
+    subtitle: '',
+    tone: 'amber'
+  }
+}
+
 function defaultHomeSections(): HomeSectionItem[] {
   return [
     { key: 'businessScopes', title: '服务范围', subtitle: '当前小程序覆盖的餐饮与预约服务', enabled: true },
@@ -1691,6 +1756,8 @@ const selectedFeaturedDishes = computed(() => {
     .map((id) => dishMap.get(id))
     .filter(Boolean)
 })
+
+const previewBusinessScopeItems = computed(() => normalizeBusinessScopeItems(businessScopeItems.value).slice(0, 6))
 
 const homePreviewSections = computed(() =>
   homeSectionItems.value.filter((item) => item.enabled && ['businessScopes', 'homeBanners', 'serviceEntries', 'topicCards', 'featuredDishes'].includes(item.key))
@@ -2178,6 +2245,7 @@ function syncConfigForm(configs: Array<{ configKey: string; configValue: string 
     nextValue[item.configKey] = item.configValue || ''
   })
   configForm.value = nextValue
+  businessScopeItems.value = parseBusinessScopeItems(nextValue.HOME_BUSINESS_SCOPES)
   bannerItems.value = parseBannerItems(nextValue.HOME_BANNERS)
   serviceEntryItems.value = parseServiceEntryItems(nextValue.HOME_SERVICE_ENTRIES)
   topicCardItems.value = parseTopicCardItems(nextValue.HOME_TOPIC_CARDS)
@@ -2215,6 +2283,39 @@ function parseBannerItems(rawValue?: string) {
     }))
   } catch {
     return [createDefaultBannerItem()]
+  }
+}
+
+function parseBusinessScopeItems(rawValue?: string) {
+  if (!rawValue) {
+    return [
+      {
+        ...createDefaultBusinessScopeItem(),
+        title: '在线点餐',
+        subtitle: '浏览菜单、加入购物车、快速提交订单',
+        tone: 'amber'
+      },
+      {
+        ...createDefaultBusinessScopeItem(),
+        title: '客房送餐',
+        subtitle: '扫码识别房间后，二楼餐饮可直接送餐到房门',
+        tone: 'tea'
+      }
+    ]
+  }
+  try {
+    const parsed = JSON.parse(rawValue)
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      return [createDefaultBusinessScopeItem()]
+    }
+    return parsed.map((item, index) => ({
+      id: `scope-${index}-${Math.random().toString(36).slice(2, 6)}`,
+      title: String(item.title || ''),
+      subtitle: String(item.subtitle || ''),
+      tone: ['amber', 'tea', 'copper'].includes(String(item.tone)) ? String(item.tone) : 'amber'
+    }))
+  } catch {
+    return [createDefaultBusinessScopeItem()]
   }
 }
 
@@ -2381,6 +2482,14 @@ function normalizeBannerItems(items: BannerItem[]) {
   }))
 }
 
+function normalizeBusinessScopeItems(items: BusinessScopeItem[]) {
+  return items.map((item) => ({
+    title: item.title.trim(),
+    subtitle: item.subtitle.trim(),
+    tone: item.tone || 'amber'
+  }))
+}
+
 function normalizeServiceEntryItems(items: BannerItem[]) {
   return items.map((item) => ({
     title: item.title.trim(),
@@ -2408,6 +2517,10 @@ function addBannerItem() {
   bannerItems.value = [...bannerItems.value, createDefaultBannerItem()]
 }
 
+function addBusinessScopeItem() {
+  businessScopeItems.value = [...businessScopeItems.value, createDefaultBusinessScopeItem()]
+}
+
 function addServiceEntryItem() {
   serviceEntryItems.value = [...serviceEntryItems.value, createDefaultServiceEntryItem()]
 }
@@ -2422,6 +2535,14 @@ function removeBannerItem(index: number) {
     return
   }
   bannerItems.value = bannerItems.value.filter((_, currentIndex) => currentIndex !== index)
+}
+
+function removeBusinessScopeItem(index: number) {
+  if (businessScopeItems.value.length <= 1) {
+    ElMessage.warning('首页至少保留一个服务范围卡片')
+    return
+  }
+  businessScopeItems.value = businessScopeItems.value.filter((_, currentIndex) => currentIndex !== index)
 }
 
 function removeServiceEntryItem(index: number) {
@@ -2449,6 +2570,17 @@ function moveBannerItem(index: number, direction: -1 | 1) {
   const [currentItem] = nextItems.splice(index, 1)
   nextItems.splice(targetIndex, 0, currentItem)
   bannerItems.value = nextItems
+}
+
+function moveBusinessScopeItem(index: number, direction: -1 | 1) {
+  const targetIndex = index + direction
+  if (targetIndex < 0 || targetIndex >= businessScopeItems.value.length) {
+    return
+  }
+  const nextItems = [...businessScopeItems.value]
+  const [currentItem] = nextItems.splice(index, 1)
+  nextItems.splice(targetIndex, 0, currentItem)
+  businessScopeItems.value = nextItems
 }
 
 function moveServiceEntryItem(index: number, direction: -1 | 1) {
@@ -2791,8 +2923,13 @@ async function submitDish() {
 async function submitBusinessConfigs() {
   try {
     const normalizedBanners = normalizeBannerItems(bannerItems.value)
+    const normalizedBusinessScopes = normalizeBusinessScopeItems(businessScopeItems.value)
     const normalizedServiceEntries = normalizeServiceEntryItems(serviceEntryItems.value)
     const normalizedTopicCards = normalizeTopicCardItems(topicCardItems.value)
+    if (normalizedBusinessScopes.some((item) => !item.title || !item.subtitle)) {
+      ElMessage.warning('请完整填写每张首页服务范围卡片的标题和说明')
+      return
+    }
     if (normalizedBanners.some((item) => !item.title || !item.subtitle)) {
       ElMessage.warning('请完整填写每条首页轮播的标题和副标题')
       return
@@ -2836,6 +2973,11 @@ async function submitBusinessConfigs() {
         configValue: configForm.value[field.key] || ''
       }))
     )
+    items.push({
+      configKey: 'HOME_BUSINESS_SCOPES',
+      configName: '首页服务范围',
+      configValue: JSON.stringify(normalizedBusinessScopes)
+    })
     items.push({
       configKey: 'HOME_BANNERS',
       configName: '首页轮播运营位',

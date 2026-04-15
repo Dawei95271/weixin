@@ -23,6 +23,7 @@ public class BusinessConfigServiceImpl implements BusinessConfigService {
         "DINNER_HOURS",
         "HOME_NOTICE",
         "ROOM_DELIVERY_NOTICE",
+        "HOME_BUSINESS_SCOPES",
         "HOME_BANNERS",
         "HOME_SERVICE_ENTRIES",
         "HOME_TOPIC_CARDS",

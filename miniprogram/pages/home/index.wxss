@@ -232,6 +232,38 @@
   background: #fff;
 }
 
+.scope-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.scope-tone-amber {
+  background: linear-gradient(180deg, #fff8ef, #fff1e0);
+}
+
+.scope-tone-tea {
+  background: linear-gradient(180deg, #f2f6ef, #e8f0e2);
+}
+
+.scope-tone-copper {
+  background: linear-gradient(180deg, #fff4ef, #f6e5dc);
+}
+
+.scope-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2f1f14;
+}
+
+.scope-desc {
+  display: block;
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: #6b7280;
+}
+
 .entry-card {
   position: relative;
   overflow: hidden;

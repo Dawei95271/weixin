@@ -47,7 +47,12 @@ Page({
       })
       this.setData({
         projectName: data.projectName,
-        businessScopes: data.businessScopes,
+        businessScopes: (data.businessScopes || []).map((item, index) => ({
+          id: `${item.title || 'scope'}-${index}`,
+          title: item.title || '服务范围',
+          subtitle: item.subtitle || '',
+          tone: item.tone || 'amber'
+        })),
         homeBanners: (data.homeBanners || []).map((item, index) => ({
           id: `${item.title || 'banner'}-${index}`,
           title: item.title || '酒店二楼餐饮服务',
