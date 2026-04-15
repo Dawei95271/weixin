@@ -262,6 +262,14 @@
   color: #6b7280;
 }
 
+.entry-action {
+  display: inline-block;
+  margin-top: 14rpx;
+  font-size: 22rpx;
+  color: #8d5524;
+  font-weight: 600;
+}
+
 .topic-card {
   padding: 28rpx;
   border-radius: 26rpx;

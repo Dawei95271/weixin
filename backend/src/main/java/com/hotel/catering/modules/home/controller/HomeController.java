@@ -56,15 +56,15 @@ public class HomeController {
     }
 
     private List<Map<String, String>> parseBanners(String rawValue) {
-        return parseJsonItems(rawValue, defaultBanners());
+        return parseJsonItems(rawValue, defaultBanners(), "title");
     }
 
     private List<Map<String, String>> parseServiceEntries(String rawValue) {
-        return parseJsonItems(rawValue, defaultServiceEntries());
+        return parseJsonItems(rawValue, defaultServiceEntries(), "title");
     }
 
     private List<Map<String, String>> parseTopicCards(String rawValue) {
-        return parseJsonItems(rawValue, defaultTopicCards());
+        return parseJsonItems(rawValue, defaultTopicCards(), "title");
     }
 
     private List<Map<String, Object>> parseSectionSettings(String rawValue) {
@@ -91,13 +91,28 @@ public class HomeController {
         }
     }
 
-    private List<Map<String, String>> parseJsonItems(String rawValue, List<Map<String, String>> fallback) {
+    private List<Map<String, String>> parseJsonItems(String rawValue, List<Map<String, String>> fallback, String matchKey) {
         if (rawValue == null || rawValue.isBlank()) {
             return fallback;
         }
         try {
-            return objectMapper.readValue(rawValue, new TypeReference<List<Map<String, String>>>() {
+            List<Map<String, String>> parsed = objectMapper.readValue(rawValue, new TypeReference<List<Map<String, String>>>() {
             });
+            if (parsed == null || parsed.isEmpty()) {
+                return fallback;
+            }
+            Map<String, Map<String, String>> fallbackMap = new LinkedHashMap<>();
+            for (Map<String, String> item : fallback) {
+                fallbackMap.put(item.getOrDefault(matchKey, ""), item);
+            }
+            List<Map<String, String>> merged = new ArrayList<>();
+            for (Map<String, String> item : parsed) {
+                Map<String, String> base = fallbackMap.getOrDefault(item.getOrDefault(matchKey, ""), Map.of());
+                Map<String, String> next = new LinkedHashMap<>(base);
+                next.putAll(item);
+                merged.add(next);
+            }
+            return merged;
         } catch (Exception ignored) {
             return fallback;
         }
@@ -163,6 +178,7 @@ public class HomeController {
             Map.of(
                 "title", "客房扫码点餐",
                 "subtitle", "扫码识别房间后即可享受二楼送餐服务",
+                "actionText", "立即进入",
                 "linkType", "ROOM",
                 "linkValue", "",
                 "tone", "amber"
@@ -170,6 +186,7 @@ public class HomeController {
             Map.of(
                 "title", "包间提前预约",
                 "subtitle", "十个包间可选，早餐中餐晚餐均可预约",
+                "actionText", "去预约",
                 "linkType", "PRIVATE_ROOM",
                 "linkValue", "",
                 "tone", "tea"
@@ -177,6 +194,7 @@ public class HomeController {
             Map.of(
                 "title", "婚宴寿宴预约",
                 "subtitle", "线上留资，营业时间内优先电话跟进",
+                "actionText", "立即咨询",
                 "linkType", "BANQUET",
                 "linkValue", "",
                 "tone", "copper"
@@ -189,6 +207,7 @@ public class HomeController {
             Map.of(
                 "title", "在线点餐",
                 "subtitle", "浏览菜品，加入购物车，快速下单",
+                "actionText", "去点餐",
                 "linkType", "MENU",
                 "linkValue", "",
                 "tone", "amber"
@@ -196,6 +215,7 @@ public class HomeController {
             Map.of(
                 "title", "购物车",
                 "subtitle", "查看已选菜品，准备提交订单",
+                "actionText", "查看购物车",
                 "linkType", "CART",
                 "linkValue", "",
                 "tone", "tea"
@@ -203,6 +223,7 @@ public class HomeController {
             Map.of(
                 "title", "客房扫码点餐",
                 "subtitle", "先识别房间，再进入送餐场景下单",
+                "actionText", "识别房间",
                 "linkType", "ROOM",
                 "linkValue", "",
                 "tone", "copper"
@@ -210,6 +231,7 @@ public class HomeController {
             Map.of(
                 "title", "包间预约",
                 "subtitle", "选择日期、时段和包间，提前预约到店",
+                "actionText", "查看包间",
                 "linkType", "PRIVATE_ROOM",
                 "linkValue", "",
                 "tone", "amber"
@@ -217,6 +239,7 @@ public class HomeController {
             Map.of(
                 "title", "宴席预约",
                 "subtitle", "婚宴、寿宴、商务宴先线上留资，后续人工跟进",
+                "actionText", "提交需求",
                 "linkType", "BANQUET",
                 "linkValue", "",
                 "tone", "tea"
@@ -224,6 +247,7 @@ public class HomeController {
             Map.of(
                 "title", "我的预约",
                 "subtitle", "查看包间预约和宴席预约记录",
+                "actionText", "查看记录",
                 "linkType", "RESERVATION",
                 "linkValue", "",
                 "tone", "copper"
@@ -231,6 +255,7 @@ public class HomeController {
             Map.of(
                 "title", "我的服务",
                 "subtitle", "查看订单、预约和客房点餐状态",
+                "actionText", "进入中心",
                 "linkType", "MINE",
                 "linkValue", "",
                 "tone", "amber"
@@ -244,6 +269,7 @@ public class HomeController {
                 "eyebrow", "ROOM DINING",
                 "title", "客房送餐专场",
                 "subtitle", "扫码识别房间后即可下单，配送费与起送金额按后台配置自动展示",
+                "actionText", "马上点餐",
                 "linkType", "ROOM",
                 "linkValue", "",
                 "tone", "amber"
@@ -252,6 +278,7 @@ public class HomeController {
                 "eyebrow", "PRIVATE DINING",
                 "title", "包间预订推荐",
                 "subtitle", "十个包间支持早餐、中餐、晚餐预约，可先预点菜再到店",
+                "actionText", "查看包间",
                 "linkType", "PRIVATE_ROOM",
                 "linkValue", "",
                 "tone", "tea"
@@ -260,6 +287,7 @@ public class HomeController {
                 "eyebrow", "BANQUET",
                 "title", "婚宴寿宴咨询",
                 "subtitle", "线上留资，营业时间内优先人工电话跟进，适合婚礼和大型宴席",
+                "actionText", "提交咨询",
                 "linkType", "BANQUET",
                 "linkValue", "",
                 "tone", "copper"

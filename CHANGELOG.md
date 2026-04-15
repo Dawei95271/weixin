@@ -291,3 +291,9 @@
 - Added configurable hero-copy support to the public home API so homepage first-screen tag, title, description, notice label, and CTA texts can be managed centrally.
 - Extended the admin business-configuration page with a dedicated hero-copy editor.
 - Updated the mini-program home page hero block to consume backend-driven copy instead of fixed literals.
+
+### Home CTA Copy And Preview
+
+- Extended homepage banner, service-entry, and topic-card payloads with configurable CTA copy defaults.
+- Updated the admin business-configuration page so operations can edit CTA texts and see a real-time homepage preview before saving.
+- Updated the mini-program home page to render backend-driven CTA labels across banners, service entries, and topic cards.

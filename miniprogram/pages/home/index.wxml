@@ -46,7 +46,7 @@
           <text class="banner-label">HOT PICKS</text>
           <text class="banner-title">{{item.title}}</text>
           <text class="banner-subtitle">{{item.subtitle}}</text>
-          <text class="banner-action">点击进入</text>
+          <text class="banner-action">{{item.actionText || '点击进入'}}</text>
         </view>
       </swiper-item>
     </swiper>
@@ -95,6 +95,7 @@
         >
           <text class="entry-title">{{entry.title}}</text>
           <text class="entry-desc">{{entry.subtitle}}</text>
+          <text class="entry-action">{{entry.actionText || '立即进入'}}</text>
         </view>
       </view>
     </view>
@@ -116,7 +117,7 @@
           <text class="topic-eyebrow">{{topic.eyebrow}}</text>
           <text class="topic-title">{{topic.title}}</text>
           <text class="topic-subtitle">{{topic.subtitle}}</text>
-          <text class="topic-action">立即查看</text>
+          <text class="topic-action">{{topic.actionText || '立即查看'}}</text>
         </view>
       </view>
     </view>

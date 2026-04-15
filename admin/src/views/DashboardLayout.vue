@@ -165,7 +165,7 @@
 
         <div v-if="currentTab === 'configs'" class="result-summary">
           当前共管理 {{ configSections.length }} 组运营配置、{{ bannerItems.length }} 条首页轮播、{{ serviceEntryItems.length }} 个首页入口、{{ topicCardItems.length }} 张专题卡片、{{ featuredDishIds.length }} 道推荐菜、{{ homeSectionItems.length }} 个首页模块和 1 组头图文案
-          <span class="result-summary-detail">支持修改营业时段、配送费用、公告、客房送餐提示、首页轮播运营位、首页服务入口、活动专题卡片、推荐菜编排、首页模块显隐文案和头图 CTA 文案</span>
+          <span class="result-summary-detail">支持修改营业时段、配送费用、公告、客房送餐提示、首页轮播运营位、首页服务入口、活动专题卡片、推荐菜编排、首页模块显隐文案、CTA 文案，并提供首页实时预览。</span>
         </div>
 
         <div v-if="currentTab === 'configs'" class="config-grid">
@@ -239,6 +239,10 @@
                   <el-input v-model="item.subtitle" placeholder="例如 扫码识别房间后即可享受二楼送餐服务" />
                 </label>
                 <label class="config-field">
+                  <span class="config-label">按钮文案</span>
+                  <el-input v-model="item.actionText" placeholder="例如 立即进入" />
+                </label>
+                <label class="config-field">
                   <span class="config-label">跳转类型</span>
                   <el-select v-model="item.linkType">
                     <el-option label="不跳转" value="NONE" />
@@ -270,6 +274,7 @@
                 <span class="banner-preview-tag">HOT PICKS</span>
                 <strong>{{ item.title || '轮播标题' }}</strong>
                 <span>{{ item.subtitle || '这里会展示轮播副标题和活动说明。' }}</span>
+                <em>{{ item.actionText || '立即进入' }}</em>
               </div>
             </div>
           </div>
@@ -319,6 +324,10 @@
                   <el-input v-model="item.subtitle" placeholder="例如 浏览菜品，加入购物车，快速下单" />
                 </label>
                 <label class="config-field">
+                  <span class="config-label">按钮文案</span>
+                  <el-input v-model="item.actionText" placeholder="例如 去点餐" />
+                </label>
+                <label class="config-field">
                   <span class="config-label">跳转类型</span>
                   <el-select v-model="item.linkType">
                     <el-option label="不跳转" value="NONE" />
@@ -346,6 +355,11 @@
                 <span class="config-label">页面路径</span>
                 <el-input v-model="item.linkValue" placeholder="例如 /pages/menu/index" />
               </label>
+              <div class="inline-preview-chip">
+                <strong>{{ item.title || '服务入口' }}</strong>
+                <span>{{ item.subtitle || '首页常用服务快捷入口' }}</span>
+                <em>{{ item.actionText || '立即进入' }}</em>
+              </div>
             </div>
           </div>
         </div>
@@ -398,6 +412,10 @@
                   <el-input v-model="item.subtitle" placeholder="例如 扫码识别房间后即可下单，配送费与起送金额自动展示" />
                 </label>
                 <label class="config-field">
+                  <span class="config-label">按钮文案</span>
+                  <el-input v-model="item.actionText" placeholder="例如 马上点餐" />
+                </label>
+                <label class="config-field">
                   <span class="config-label">风格</span>
                   <el-select v-model="item.tone">
                     <el-option label="琥珀金" value="amber" />
@@ -425,6 +443,12 @@
                 <span class="config-label">页面路径</span>
                 <el-input v-model="item.linkValue" placeholder="例如 /pages/banquet/index" />
               </label>
+              <div class="banner-preview" :class="`banner-preview--${item.tone}`">
+                <span class="banner-preview-tag">{{ item.eyebrow || 'SPECIAL' }}</span>
+                <strong>{{ item.title || '专题标题' }}</strong>
+                <span>{{ item.subtitle || '这里会展示专题卡片描述。' }}</span>
+                <em>{{ item.actionText || '立即查看' }}</em>
+              </div>
             </div>
           </div>
         </div>
@@ -551,6 +575,98 @@
               <span class="config-label">描述文案</span>
               <el-input v-model="heroSettings.description" type="textarea" :rows="3" placeholder="输入首页第一屏描述文案" />
             </label>
+          </div>
+        </div>
+
+        <div v-if="currentTab === 'configs'" class="banner-editor">
+          <div class="panel-head">
+            <div>
+              <h3>首页实时预览</h3>
+              <span class="workspace-caption">根据当前配置即时生成首页预览，便于运营同学在保存前确认排版和文案。</span>
+            </div>
+          </div>
+          <div class="home-preview">
+            <section class="home-preview-hero">
+              <span class="home-preview-tag">{{ homePreviewHero.tag }}</span>
+              <strong class="home-preview-title">{{ homePreviewHero.title }}</strong>
+              <p class="home-preview-desc">{{ homePreviewHero.description }}</p>
+              <div class="home-preview-notice">
+                <span>{{ homePreviewHero.noticeLabel }}</span>
+                <strong>{{ homePreviewNotice }}</strong>
+              </div>
+              <div class="home-preview-actions">
+                <button type="button" class="home-preview-btn home-preview-btn--primary">{{ homePreviewHero.primaryButtonText }}</button>
+                <button type="button" class="home-preview-btn">{{ homePreviewHero.secondaryButtonText }}</button>
+                <button type="button" class="home-preview-btn" v-if="configForm.CONTACT_PHONE">{{ homePreviewHero.contactButtonText }}</button>
+              </div>
+            </section>
+
+            <section class="home-preview-section">
+              <div class="home-preview-section-head">
+                <strong>营业信息</strong>
+                <span>联系电话 {{ configForm.CONTACT_PHONE || '待配置' }}</span>
+              </div>
+              <div class="home-preview-hours">
+                <div v-for="item in homePreviewBusinessHours" :key="item.label" class="home-preview-hour">
+                  <span>{{ item.label }}</span>
+                  <strong>{{ item.value }}</strong>
+                </div>
+              </div>
+              <div class="home-preview-meta">
+                <span>配送费 ¥{{ configForm.DELIVERY_FEE || '0' }}</span>
+                <span>起送金额 ¥{{ configForm.MIN_ORDER_AMOUNT || '0' }}</span>
+              </div>
+            </section>
+
+            <section v-for="section in homePreviewSections" :key="section.key" class="home-preview-section">
+              <div class="home-preview-section-head">
+                <strong>{{ section.title }}</strong>
+                <span>{{ section.subtitle }}</span>
+              </div>
+
+              <div v-if="section.key === 'businessScopes'" class="home-preview-chip-list">
+                <span class="home-preview-chip">点餐</span>
+                <span class="home-preview-chip">客房送餐</span>
+                <span class="home-preview-chip">包间预约</span>
+                <span class="home-preview-chip">宴席预约</span>
+              </div>
+
+              <div v-else-if="section.key === 'homeBanners'" class="home-preview-banner-list">
+                <article v-for="item in previewBannerItems" :key="item.title + item.subtitle" class="banner-preview" :class="`banner-preview--${item.tone}`">
+                  <span class="banner-preview-tag">HOT PICKS</span>
+                  <strong>{{ item.title || '轮播标题' }}</strong>
+                  <span>{{ item.subtitle || '这里会展示轮播副标题和活动说明。' }}</span>
+                  <em>{{ item.actionText || '立即进入' }}</em>
+                </article>
+              </div>
+
+              <div v-else-if="section.key === 'serviceEntries'" class="home-preview-entry-list">
+                <article v-for="item in previewServiceEntryItems" :key="item.title + item.subtitle" class="inline-preview-chip">
+                  <strong>{{ item.title || '服务入口' }}</strong>
+                  <span>{{ item.subtitle || '首页常用服务快捷入口' }}</span>
+                  <em>{{ item.actionText || '立即进入' }}</em>
+                </article>
+              </div>
+
+              <div v-else-if="section.key === 'topicCards'" class="home-preview-topic-list">
+                <article v-for="item in previewTopicCardItems" :key="item.title + item.subtitle" class="banner-preview" :class="`banner-preview--${item.tone}`">
+                  <span class="banner-preview-tag">{{ item.eyebrow || 'SPECIAL' }}</span>
+                  <strong>{{ item.title || '专题标题' }}</strong>
+                  <span>{{ item.subtitle || '这里会展示专题卡片描述。' }}</span>
+                  <em>{{ item.actionText || '立即查看' }}</em>
+                </article>
+              </div>
+
+              <div v-else-if="section.key === 'featuredDishes'" class="featured-dish-list">
+                <div v-if="selectedFeaturedDishes.length" v-for="item in selectedFeaturedDishes" :key="item.id" class="featured-dish-chip">
+                  <strong>{{ item.name }}</strong>
+                  <span>{{ item.subtitle || '首页推荐菜' }}</span>
+                </div>
+                <div v-else class="task-empty">
+                  当前未手动配置首页推荐菜，系统将优先使用已标记为推荐的菜品。
+                </div>
+              </div>
+            </section>
           </div>
         </div>
 
@@ -1393,6 +1509,7 @@ type BannerItem = {
   eyebrow?: string
   title: string
   subtitle: string
+  actionText?: string
   linkType: string
   linkValue: string
   tone: string
@@ -1470,6 +1587,7 @@ function createDefaultBannerItem(): BannerItem {
     id: `banner-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     title: '',
     subtitle: '',
+    actionText: '',
     linkType: 'NONE',
     linkValue: '',
     tone: 'amber'
@@ -1481,6 +1599,7 @@ function createDefaultServiceEntryItem(): BannerItem {
     id: `entry-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     title: '',
     subtitle: '',
+    actionText: '',
     linkType: 'NONE',
     linkValue: '',
     tone: 'amber'
@@ -1493,6 +1612,7 @@ function createDefaultTopicCardItem(): BannerItem {
     eyebrow: '',
     title: '',
     subtitle: '',
+    actionText: '',
     linkType: 'NONE',
     linkValue: '',
     tone: 'amber'
@@ -1571,6 +1691,32 @@ const selectedFeaturedDishes = computed(() => {
     .map((id) => dishMap.get(id))
     .filter(Boolean)
 })
+
+const homePreviewSections = computed(() =>
+  homeSectionItems.value.filter((item) => item.enabled && ['businessScopes', 'homeBanners', 'serviceEntries', 'topicCards', 'featuredDishes'].includes(item.key))
+)
+
+const homePreviewNotice = computed(() => configForm.value.HOME_NOTICE?.trim() || '可在这里放置当天活动、营业提醒或服务说明。')
+
+const homePreviewBusinessHours = computed(() => [
+  { label: '早餐', value: configForm.value.BREAKFAST_HOURS?.trim() || '待配置' },
+  { label: '中餐', value: configForm.value.LUNCH_HOURS?.trim() || '待配置' },
+  { label: '晚餐', value: configForm.value.DINNER_HOURS?.trim() || '待配置' }
+])
+
+const previewBannerItems = computed(() => normalizeBannerItems(bannerItems.value).slice(0, 3))
+const previewServiceEntryItems = computed(() => normalizeServiceEntryItems(serviceEntryItems.value).slice(0, 6))
+const previewTopicCardItems = computed(() => normalizeTopicCardItems(topicCardItems.value).slice(0, 3))
+
+const homePreviewHero = computed(() => ({
+  tag: heroSettings.value.tag.trim() || 'HOTEL FLOOR 2 DINING',
+  title: heroSettings.value.title.trim() || '酒店二楼餐饮服务',
+  description: heroSettings.value.description.trim() || '早餐、中餐、晚餐、包间预约、客房扫码送餐，一次放进一个小程序里。',
+  noticeLabel: heroSettings.value.noticeLabel.trim() || '今日公告',
+  primaryButtonText: heroSettings.value.primaryButtonText.trim() || '立即点餐',
+  secondaryButtonText: heroSettings.value.secondaryButtonText.trim() || '客房点餐',
+  contactButtonText: heroSettings.value.contactButtonText.trim() || '联系商家'
+}))
 
 const workspaceHighlights = computed(() => [
   {
@@ -2047,6 +2193,7 @@ function parseBannerItems(rawValue?: string) {
         ...createDefaultBannerItem(),
         title: '客房扫码点餐',
         subtitle: '扫码识别房间后即可享受二楼送餐服务',
+        actionText: '立即进入',
         linkType: 'ROOM',
         tone: 'amber'
       }
@@ -2061,6 +2208,7 @@ function parseBannerItems(rawValue?: string) {
       id: `banner-${index}-${Math.random().toString(36).slice(2, 6)}`,
       title: String(item.title || ''),
       subtitle: String(item.subtitle || ''),
+      actionText: String(item.actionText || '立即进入'),
       linkType: String(item.linkType || 'NONE'),
       linkValue: String(item.linkValue || ''),
       tone: ['amber', 'tea', 'copper'].includes(String(item.tone)) ? String(item.tone) : 'amber'
@@ -2077,6 +2225,7 @@ function parseServiceEntryItems(rawValue?: string) {
         ...createDefaultServiceEntryItem(),
         title: '在线点餐',
         subtitle: '浏览菜品，加入购物车，快速下单',
+        actionText: '去点餐',
         linkType: 'MENU',
         tone: 'amber'
       }
@@ -2091,6 +2240,7 @@ function parseServiceEntryItems(rawValue?: string) {
       id: `entry-${index}-${Math.random().toString(36).slice(2, 6)}`,
       title: String(item.title || ''),
       subtitle: String(item.subtitle || ''),
+      actionText: String(item.actionText || '立即进入'),
       linkType: String(item.linkType || 'NONE'),
       linkValue: String(item.linkValue || ''),
       tone: ['amber', 'tea', 'copper'].includes(String(item.tone)) ? String(item.tone) : 'amber'
@@ -2108,6 +2258,7 @@ function parseTopicCardItems(rawValue?: string) {
         eyebrow: 'ROOM DINING',
         title: '客房送餐专场',
         subtitle: '扫码识别房间后即可下单，配送费与起送金额按后台配置自动展示',
+        actionText: '马上点餐',
         linkType: 'ROOM',
         tone: 'amber'
       }
@@ -2123,6 +2274,7 @@ function parseTopicCardItems(rawValue?: string) {
       eyebrow: String(item.eyebrow || ''),
       title: String(item.title || ''),
       subtitle: String(item.subtitle || ''),
+      actionText: String(item.actionText || '立即查看'),
       linkType: String(item.linkType || 'NONE'),
       linkValue: String(item.linkValue || ''),
       tone: ['amber', 'tea', 'copper'].includes(String(item.tone)) ? String(item.tone) : 'amber'
@@ -2222,6 +2374,7 @@ function normalizeBannerItems(items: BannerItem[]) {
   return items.map((item) => ({
     title: item.title.trim(),
     subtitle: item.subtitle.trim(),
+    actionText: String(item.actionText || '').trim(),
     linkType: item.linkType || 'NONE',
     linkValue: item.linkType === 'PATH' ? item.linkValue.trim() : '',
     tone: item.tone || 'amber'
@@ -2232,6 +2385,7 @@ function normalizeServiceEntryItems(items: BannerItem[]) {
   return items.map((item) => ({
     title: item.title.trim(),
     subtitle: item.subtitle.trim(),
+    actionText: String(item.actionText || '').trim(),
     linkType: item.linkType || 'NONE',
     linkValue: item.linkType === 'PATH' ? item.linkValue.trim() : '',
     tone: item.tone || 'amber'
@@ -2243,6 +2397,7 @@ function normalizeTopicCardItems(items: BannerItem[]) {
     eyebrow: String(item.eyebrow || '').trim(),
     title: item.title.trim(),
     subtitle: item.subtitle.trim(),
+    actionText: String(item.actionText || '').trim(),
     linkType: item.linkType || 'NONE',
     linkValue: item.linkType === 'PATH' ? item.linkValue.trim() : '',
     tone: item.tone || 'amber'
@@ -3088,6 +3243,176 @@ onMounted(() => {
   border-radius: 18px;
   padding: 18px;
   background: rgba(255, 255, 255, 0.9);
+}
+
+.home-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.home-preview-hero {
+  border-radius: 24px;
+  padding: 24px;
+  color: #fff8f0;
+  background:
+    radial-gradient(circle at top right, rgba(255, 223, 179, 0.22), transparent 35%),
+    linear-gradient(135deg, #442717, #b87938);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.home-preview-tag {
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  color: rgba(255, 248, 240, 0.78);
+}
+
+.home-preview-title {
+  font-size: 30px;
+}
+
+.home-preview-desc {
+  margin: 0;
+  line-height: 1.7;
+  color: rgba(255, 248, 240, 0.92);
+}
+
+.home-preview-notice {
+  border-radius: 16px;
+  padding: 14px 16px;
+  background: rgba(255, 248, 240, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.home-preview-notice span {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: rgba(255, 248, 240, 0.75);
+}
+
+.home-preview-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.home-preview-btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: rgba(255, 248, 240, 0.14);
+  color: #fff8f0;
+}
+
+.home-preview-btn--primary {
+  background: #fff8f0;
+  color: #7d4f1d;
+}
+
+.home-preview-section {
+  border-radius: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.home-preview-section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.home-preview-section-head strong {
+  color: #2b2118;
+}
+
+.home-preview-section-head span {
+  color: #8b5e34;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.home-preview-hours,
+.home-preview-entry-list,
+.home-preview-banner-list,
+.home-preview-topic-list,
+.home-preview-chip-list {
+  display: grid;
+  gap: 12px;
+}
+
+.home-preview-hours {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.home-preview-hour {
+  border-radius: 16px;
+  padding: 14px 16px;
+  background: linear-gradient(180deg, #fffdf8, #fff6eb);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.home-preview-hour span,
+.home-preview-meta span {
+  color: #8b5e34;
+  font-size: 13px;
+}
+
+.home-preview-hour strong {
+  color: #2b2118;
+}
+
+.home-preview-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.home-preview-chip-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.home-preview-chip,
+.inline-preview-chip {
+  border-radius: 16px;
+  padding: 14px 16px;
+  background: linear-gradient(180deg, #fffdf8, #fff6eb);
+}
+
+.inline-preview-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inline-preview-chip strong {
+  color: #2b2118;
+}
+
+.inline-preview-chip span {
+  color: #8b5e34;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.inline-preview-chip em,
+.banner-preview em {
+  color: rgba(255, 248, 240, 0.88);
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.inline-preview-chip em {
+  color: #8d5524;
 }
 
 .featured-dish-list {
