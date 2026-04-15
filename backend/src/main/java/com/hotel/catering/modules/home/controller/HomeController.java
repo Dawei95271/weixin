@@ -50,6 +50,7 @@ public class HomeController {
         result.put("serviceEntries", parseServiceEntries(configs.get("HOME_SERVICE_ENTRIES")));
         result.put("topicCards", parseTopicCards(configs.get("HOME_TOPIC_CARDS")));
         result.put("featuredDishes", loadFeaturedDishes(configs.get("HOME_FEATURED_DISH_IDS")));
+        result.put("sectionSettings", parseSectionSettings(configs.get("HOME_SECTION_SETTINGS")));
         return ApiResponse.success(result);
     }
 
@@ -63,6 +64,18 @@ public class HomeController {
 
     private List<Map<String, String>> parseTopicCards(String rawValue) {
         return parseJsonItems(rawValue, defaultTopicCards());
+    }
+
+    private List<Map<String, Object>> parseSectionSettings(String rawValue) {
+        if (rawValue == null || rawValue.isBlank()) {
+            return defaultSectionSettings();
+        }
+        try {
+            return objectMapper.readValue(rawValue, new TypeReference<List<Map<String, Object>>>() {
+            });
+        } catch (Exception ignored) {
+            return defaultSectionSettings();
+        }
     }
 
     private List<Map<String, String>> parseJsonItems(String rawValue, List<Map<String, String>> fallback) {
@@ -238,6 +251,16 @@ public class HomeController {
                 "linkValue", "",
                 "tone", "copper"
             )
+        );
+    }
+
+    private List<Map<String, Object>> defaultSectionSettings() {
+        return List.of(
+            Map.of("key", "businessScopes", "title", "服务范围", "subtitle", "当前小程序覆盖的餐饮与预约服务", "enabled", true),
+            Map.of("key", "homeBanners", "title", "本周主推", "subtitle", "后台可维护的首页轮播运营位", "enabled", true),
+            Map.of("key", "serviceEntries", "title", "推荐入口", "subtitle", "首页常用服务快捷入口", "enabled", true),
+            Map.of("key", "topicCards", "title", "活动专题", "subtitle", "适合运营排活动和主推场景", "enabled", true),
+            Map.of("key", "featuredDishes", "title", "今日推荐", "subtitle", "当前首页重点推荐菜品", "enabled", true)
         );
     }
 }

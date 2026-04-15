@@ -164,8 +164,8 @@
         </div>
 
         <div v-if="currentTab === 'configs'" class="result-summary">
-          当前共管理 {{ configSections.length }} 组运营配置、{{ bannerItems.length }} 条首页轮播、{{ serviceEntryItems.length }} 个首页入口、{{ topicCardItems.length }} 张专题卡片和 {{ featuredDishIds.length }} 道推荐菜
-          <span class="result-summary-detail">支持修改营业时段、配送费用、公告、客房送餐提示、首页轮播运营位、首页服务入口、活动专题卡片和推荐菜编排</span>
+          当前共管理 {{ configSections.length }} 组运营配置、{{ bannerItems.length }} 条首页轮播、{{ serviceEntryItems.length }} 个首页入口、{{ topicCardItems.length }} 张专题卡片、{{ featuredDishIds.length }} 道推荐菜和 {{ homeSectionItems.length }} 个首页模块
+          <span class="result-summary-detail">支持修改营业时段、配送费用、公告、客房送餐提示、首页轮播运营位、首页服务入口、活动专题卡片、推荐菜编排和首页模块显隐文案</span>
         </div>
 
         <div v-if="currentTab === 'configs'" class="config-grid">
@@ -464,6 +464,36 @@
               </div>
               <div v-else class="task-empty">
                 当前未手动配置首页推荐菜，系统将优先使用已标记为推荐的菜品。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="currentTab === 'configs'" class="banner-editor">
+          <div class="panel-head">
+            <div>
+              <h3>首页模块编排</h3>
+              <span class="workspace-caption">统一控制首页模块的标题、副标题与显隐状态，适合做首页运营节奏调整</span>
+            </div>
+          </div>
+          <div class="banner-editor-list">
+            <div v-for="item in homeSectionItems" :key="item.key" class="banner-editor-card">
+              <div class="banner-editor-head">
+                <div>
+                  <strong>{{ item.title || item.key }}</strong>
+                  <p>{{ item.key }}</p>
+                </div>
+                <el-switch v-model="item.enabled" active-text="显示" inactive-text="隐藏" />
+              </div>
+              <div class="banner-editor-grid">
+                <label class="config-field">
+                  <span class="config-label">模块标题</span>
+                  <el-input v-model="item.title" placeholder="输入首页模块标题" />
+                </label>
+                <label class="config-field">
+                  <span class="config-label">模块副标题</span>
+                  <el-input v-model="item.subtitle" placeholder="输入首页模块副标题" />
+                </label>
               </div>
             </div>
           </div>
@@ -1313,6 +1343,13 @@ type BannerItem = {
   tone: string
 }
 
+type HomeSectionItem = {
+  key: string
+  title: string
+  subtitle: string
+  enabled: boolean
+}
+
 const configForm = ref<Record<string, string>>({
   CONTACT_PHONE: '',
   DELIVERY_FEE: '',
@@ -1325,12 +1362,14 @@ const configForm = ref<Record<string, string>>({
   HOME_BANNERS: '',
   HOME_SERVICE_ENTRIES: '',
   HOME_TOPIC_CARDS: '',
-  HOME_FEATURED_DISH_IDS: ''
+  HOME_FEATURED_DISH_IDS: '',
+  HOME_SECTION_SETTINGS: ''
 })
 const bannerItems = ref<BannerItem[]>([])
 const serviceEntryItems = ref<BannerItem[]>([])
 const topicCardItems = ref<BannerItem[]>([])
 const featuredDishIds = ref<number[]>([])
+const homeSectionItems = ref<HomeSectionItem[]>([])
 
 const configSections = [
   {
@@ -1393,6 +1432,16 @@ function createDefaultTopicCardItem(): BannerItem {
     linkValue: '',
     tone: 'amber'
   }
+}
+
+function defaultHomeSections(): HomeSectionItem[] {
+  return [
+    { key: 'businessScopes', title: '服务范围', subtitle: '当前小程序覆盖的餐饮与预约服务', enabled: true },
+    { key: 'homeBanners', title: '本周主推', subtitle: '后台可维护的首页轮播运营位', enabled: true },
+    { key: 'serviceEntries', title: '推荐入口', subtitle: '首页常用服务快捷入口', enabled: true },
+    { key: 'topicCards', title: '活动专题', subtitle: '适合运营排活动和主推场景', enabled: true },
+    { key: 'featuredDishes', title: '今日推荐', subtitle: '当前首页重点推荐菜品', enabled: true }
+  ]
 }
 
 const realName = computed(() => localStorage.getItem('admin_real_name') || '管理员')
@@ -1922,6 +1971,7 @@ function syncConfigForm(configs: Array<{ configKey: string; configValue: string 
   serviceEntryItems.value = parseServiceEntryItems(nextValue.HOME_SERVICE_ENTRIES)
   topicCardItems.value = parseTopicCardItems(nextValue.HOME_TOPIC_CARDS)
   featuredDishIds.value = parseFeaturedDishIds(nextValue.HOME_FEATURED_DISH_IDS)
+  homeSectionItems.value = parseHomeSectionItems(nextValue.HOME_SECTION_SETTINGS)
 }
 
 function parseBannerItems(rawValue?: string) {
@@ -2030,6 +2080,35 @@ function parseFeaturedDishIds(rawValue?: string) {
       .filter((item) => Number.isInteger(item) && item > 0)
   } catch {
     return []
+  }
+}
+
+function parseHomeSectionItems(rawValue?: string) {
+  if (!rawValue) {
+    return defaultHomeSections()
+  }
+  try {
+    const parsed = JSON.parse(rawValue)
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      return defaultHomeSections()
+    }
+    const fallbackMap = new Map(defaultHomeSections().map((item) => [item.key, item]))
+    return parsed
+      .map((item) => {
+        const fallback = fallbackMap.get(String(item.key || ''))
+        if (!fallback) {
+          return null
+        }
+        return {
+          key: fallback.key,
+          title: String(item.title || fallback.title),
+          subtitle: String(item.subtitle || fallback.subtitle),
+          enabled: item.enabled !== false
+        }
+      })
+      .filter(Boolean)
+  } catch {
+    return defaultHomeSections()
   }
 }
 
@@ -2481,6 +2560,10 @@ async function submitBusinessConfigs() {
       ElMessage.warning('首页推荐菜最多选择 6 道')
       return
     }
+    if (homeSectionItems.value.some((item) => !item.title.trim())) {
+      ElMessage.warning('首页模块标题不能为空')
+      return
+    }
     const items = configSections.flatMap((section) =>
       section.fields.map((field) => ({
         configKey: field.key,
@@ -2507,6 +2590,16 @@ async function submitBusinessConfigs() {
       configKey: 'HOME_FEATURED_DISH_IDS',
       configName: '首页推荐菜品',
       configValue: JSON.stringify(featuredDishIds.value)
+    })
+    items.push({
+      configKey: 'HOME_SECTION_SETTINGS',
+      configName: '首页模块编排',
+      configValue: JSON.stringify(homeSectionItems.value.map((item) => ({
+        key: item.key,
+        title: item.title.trim(),
+        subtitle: item.subtitle.trim(),
+        enabled: item.enabled
+      })))
     })
     const result = await saveBusinessConfigs({ items })
     businessConfigs.value = result

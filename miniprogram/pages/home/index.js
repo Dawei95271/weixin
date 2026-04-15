@@ -10,6 +10,7 @@ Page({
     serviceEntries: [],
     topicCards: [],
     featuredDishes: [],
+    sectionSettings: {},
     contactPhone: '',
     homeNotice: '',
     businessHours: [],
@@ -71,6 +72,7 @@ Page({
           tone: item.tone || 'amber'
         })),
         featuredDishes: data.featuredDishes || [],
+        sectionSettings: this.buildSectionSettings(data.sectionSettings || []),
         contactPhone: data.contactPhone || '',
         homeNotice: data.homeNotice || '',
         deliveryFee: data.deliveryFee || '',
@@ -93,6 +95,27 @@ Page({
       })
       this.setData({ loading: false })
     }
+  },
+
+  buildSectionSettings(items) {
+    const defaults = {
+      businessScopes: { title: '服务范围', subtitle: '当前小程序覆盖的餐饮与预约服务', enabled: true },
+      homeBanners: { title: '本周主推', subtitle: '后台可维护的首页轮播运营位', enabled: true },
+      serviceEntries: { title: '推荐入口', subtitle: '首页常用服务快捷入口', enabled: true },
+      topicCards: { title: '活动专题', subtitle: '适合运营排活动和主推场景', enabled: true },
+      featuredDishes: { title: '今日推荐', subtitle: '当前首页重点推荐菜品', enabled: true }
+    }
+    return (items || []).reduce((acc, item) => {
+      if (!item || !item.key) {
+        return acc
+      }
+      acc[item.key] = {
+        title: item.title || defaults[item.key]?.title || '首页模块',
+        subtitle: item.subtitle || defaults[item.key]?.subtitle || '',
+        enabled: item.enabled !== false
+      }
+      return acc
+    }, { ...defaults })
   },
 
   goMenu() {

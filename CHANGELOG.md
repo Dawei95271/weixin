@@ -274,3 +274,9 @@
 - Added configurable featured-dish support to the public home API and seeded default homepage featured-dish ids.
 - Extended the admin business-configuration page with a featured-dish selector so operations can curate the homepage recommendation list by dish id and order.
 - Switched the mini-program home page to consume featured dishes directly from the home API instead of slicing the dish list locally.
+
+### Configurable Home Section Settings
+
+- Added configurable home-section settings to the public home API so homepage module titles, subtitles, and visibility can be controlled centrally.
+- Extended the admin business-configuration page with a homepage section editor for module-level content orchestration.
+- Updated the mini-program home page to honor backend-driven section settings for banners, service entries, topic cards, featured dishes, and service scope blocks.

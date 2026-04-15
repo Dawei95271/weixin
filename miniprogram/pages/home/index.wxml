@@ -35,10 +35,10 @@
     </view>
   </view>
 
-  <view class="section-card" wx:if="{{homeBanners.length}}">
+  <view class="section-card" wx:if="{{sectionSettings.homeBanners.enabled && homeBanners.length}}">
     <view class="section-head">
-      <view class="section-title">本周主推</view>
-      <text class="section-subtitle">后台可维护的首页轮播运营位</text>
+      <view class="section-title">{{sectionSettings.homeBanners.title}}</view>
+      <text class="section-subtitle">{{sectionSettings.homeBanners.subtitle}}</text>
     </view>
     <swiper class="banner-swiper" indicator-dots circular autoplay interval="4200" duration="500">
       <swiper-item wx:for="{{homeBanners}}" wx:key="id">
@@ -66,8 +66,11 @@
     </view>
   </view>
 
-  <view class="section-card">
-    <view class="section-title">服务范围</view>
+  <view class="section-card" wx:if="{{sectionSettings.businessScopes.enabled}}">
+    <view class="section-head">
+      <view class="section-title">{{sectionSettings.businessScopes.title}}</view>
+      <text class="section-subtitle">{{sectionSettings.businessScopes.subtitle}}</text>
+    </view>
     <view class="scope-list">
       <view class="scope-item" wx:for="{{businessScopes}}" wx:key="*this">
         <text>{{item}}</text>
@@ -75,8 +78,11 @@
     </view>
   </view>
 
-  <view class="section-card">
-    <view class="section-title">推荐入口</view>
+  <view class="section-card" wx:if="{{sectionSettings.serviceEntries.enabled}}">
+    <view class="section-head">
+      <view class="section-title">{{sectionSettings.serviceEntries.title}}</view>
+      <text class="section-subtitle">{{sectionSettings.serviceEntries.subtitle}}</text>
+    </view>
     <view class="entry-grid">
       <view
         class="entry-card entry-tone-{{item.tone}}"
@@ -91,10 +97,10 @@
     </view>
   </view>
 
-  <view class="section-card" wx:if="{{topicCards.length}}">
+  <view class="section-card" wx:if="{{sectionSettings.topicCards.enabled && topicCards.length}}">
     <view class="section-head">
-      <view class="section-title">活动专题</view>
-      <text class="section-subtitle">适合运营排活动和主推场景</text>
+      <view class="section-title">{{sectionSettings.topicCards.title}}</view>
+      <text class="section-subtitle">{{sectionSettings.topicCards.subtitle}}</text>
     </view>
     <view class="topic-grid">
       <view
@@ -112,8 +118,11 @@
     </view>
   </view>
 
-  <view class="section-card" wx:if="{{featuredDishes.length}}">
-    <view class="section-title">今日推荐</view>
+  <view class="section-card" wx:if="{{sectionSettings.featuredDishes.enabled && featuredDishes.length}}">
+    <view class="section-head">
+      <view class="section-title">{{sectionSettings.featuredDishes.title}}</view>
+      <text class="section-subtitle">{{sectionSettings.featuredDishes.subtitle}}</text>
+    </view>
     <view class="featured-list">
       <view class="featured-card" wx:for="{{featuredDishes}}" wx:key="id">
         <view class="featured-copy">
